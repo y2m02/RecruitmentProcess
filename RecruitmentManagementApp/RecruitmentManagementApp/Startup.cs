@@ -2,9 +2,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RecruitmentManagementApp.Models;
+using RecruitmentManagementApp.Models.Entities;
 using TaskManagerApi.Mappings;
 
 namespace RecruitmentManagementApp
@@ -34,6 +37,9 @@ namespace RecruitmentManagementApp
             );
 
             services.AddSingleton(mappingConfig.CreateMapper());
+
+            services.AddDbContext<RecruitmentManagementContext>(w =>
+                w.UseSqlServer(Configuration.GetConnectionString("RecruitmentManagementConnection")));
 
             //.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
         }
