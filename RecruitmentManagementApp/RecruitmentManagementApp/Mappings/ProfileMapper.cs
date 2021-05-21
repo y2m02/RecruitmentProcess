@@ -1,19 +1,28 @@
-﻿using System;
+﻿using System.Linq;
 using AutoMapper;
+using RecruitmentManagementApp.Models.Entities;
+using RecruitmentManagementApp.Services;
 
-namespace TaskManagerApi.Mappings
+namespace RecruitmentManagementApp.Mappings
 {
     public class ProfileMapper : Profile
     {
         public ProfileMapper()
         {
-            //CreateMap<Store, StoreResponse>()
-            //    .ForMember(
-            //        destination => destination.Used,
-            //        member => member.MapFrom(field => field.Assignments.Count > 0)
-            //    );
-
-            //CreateMap<AssignmentRequest, Assignment>();
+            CreateMap<Status, StatusViewModel>()
+                .ForMember(
+                    destination => destination.Id,
+                    member => member.MapFrom(field => field.StatusId)
+                )
+                .ForMember(
+                    destination => destination.InUse,
+                    member => member.MapFrom(
+                        field =>
+                            field.Candidates.Any() ||
+                            field.Recruitments.Any() ||
+                            field.RecruitmentUpdateHistories.Any()
+                    )
+                );
         }
     }
 }
