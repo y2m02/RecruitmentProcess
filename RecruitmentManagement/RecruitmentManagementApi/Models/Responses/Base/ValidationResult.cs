@@ -2,9 +2,9 @@
 
 namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Validation : BaseResponse
+    public class ValidationResult : BaseResult
     {
-        public Validation(IEnumerable<string> validationErrors)
+        public ValidationResult(IEnumerable<string> validationErrors)
         {
             ValidationErrors = validationErrors;
         }

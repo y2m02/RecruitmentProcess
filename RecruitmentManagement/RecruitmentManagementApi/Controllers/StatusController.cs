@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RecruitmentManagementApi.Models.Entities;
+using RecruitmentManagementApi.Models.Request;
+using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
 
@@ -21,26 +25,28 @@ namespace RecruitmentManagementApi.Controllers
         [Route("Get")]
         public async Task<IActionResult> GetAll()
         {
-            var response = await statusService.GetAll<StatusResponse>();
+            var response = await statusService.GetAll<StatusResponse>().ConfigureAwait(false);
 
             return response.IsSuccess<List<StatusResponse>>()
                 ? Ok(response)
                 : InternalServerError(response);
         }
 
-        //[HttpGet]
-        //[Route("Get/{id}")]
-        //public async Task<StatusResponse> GetById(int id)
-        //{
-        //    return Mapper.Map<StatusResponse>(await _statusRepository.GetById(id));
-        //}
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> Create(StatusRequest request)
+        {
+            var result = await statusService.Create(request).ConfigureAwait(false);
 
-        //[HttpPost]
-        //[Route("Create")]
-        //public async Task Create(StatusRequest request)
-        //{
-        //    await _statusRepository.Create(Mapper.Map<Status>(request));
-        //}
+            if (result.HasValidations())
+            {
+                return BadRequest(result);
+            }
+
+            return result.IsSuccess()
+                ? Ok(result)
+                : InternalServerError(result);
+        }
 
         //[HttpPost]
         //[Route("BatchCreate")]

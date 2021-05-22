@@ -1,11 +1,9 @@
-﻿namespace RecruitmentManagementApi.Models.Responses
+﻿using RecruitmentManagementApi.Models.Responses.Base;
+
+namespace RecruitmentManagementApi.Models.Responses
 {
-    public class StatusResponse
+    public class StatusResponse : BaseResponse
     {
-        public int Id { get; set; }
-
         public string Description { get; set; }
-
-        public bool InUse { get; set; }
     }
 }

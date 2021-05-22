@@ -1,8 +1,8 @@
 ﻿namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Failure : BaseResponse
+    public class FailureResult : BaseResult
     {
-        public Failure(string errorMessage)
+        public FailureResult(string errorMessage)
         {
             ErrorMessage = $"Hubo un error duranto el proceso:\n\n {errorMessage}";
         }

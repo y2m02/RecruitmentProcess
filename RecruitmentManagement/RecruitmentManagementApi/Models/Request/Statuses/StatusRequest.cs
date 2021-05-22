@@ -2,13 +2,13 @@
 using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 
-namespace RecruitmentManagementApi.Models.Request
+namespace RecruitmentManagementApi.Models.Request.Statuses
 {
-    public class StatusRequest : BaseRequest
+    public class StatusRequest : IBaseRequest
     {
         public string Description { get; set; }
 
-        public override IEnumerable<string> Validate()
+        public virtual IEnumerable<string> Validate()
         {
             if (Description.IsEmpty())
             {

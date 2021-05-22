@@ -1,8 +1,8 @@
 ﻿namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Success<T> : BaseResponse
+    public class SuccessResult<T> : BaseResult
     {
-        public Success(T model)
+        public SuccessResult(T model)
         {
             Model = model;
         }
