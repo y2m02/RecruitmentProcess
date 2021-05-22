@@ -10,7 +10,7 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public abstract class BaseService<TModel, TViewModel>
+    public abstract class BaseService<TModel>
     {
         protected readonly IMapper Mapper;
 
@@ -21,13 +21,13 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected abstract IBaseRepository<TModel> Repository { get; }
 
-        public Task<BaseResponse> GetAll()
+        public Task<BaseResponse> GetAll<TResponse>()
         {
             return HandleErrors(
                 async () =>
                 {
                     return Success(
-                        Mapper.Map<List<TViewModel>>(
+                        Mapper.Map<List<TResponse>>(
                             await Repository.GetAll().ConfigureAwait(false)
                         )
                     );

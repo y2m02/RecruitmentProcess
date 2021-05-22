@@ -1,12 +1,13 @@
-﻿using RecruitmentManagementApi.Models.Request.Base;
+﻿using System.Threading.Tasks;
+using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
     public interface IBaseService
     {
-        BaseResponse GetAll();
-        BaseResponse Upsert(BaseRequest entity);
-        BaseResponse Delete(BaseRequest entity);
+        Task<BaseResponse> GetAll<TResponse>();
+        Task<BaseResponse> Upsert(BaseRequest entity);
+        Task<BaseResponse> Delete(BaseResponse entity);
     }
 }
