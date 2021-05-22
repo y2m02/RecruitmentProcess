@@ -2,7 +2,7 @@
 
 namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Validation : ResponseType
+    public class Validation : BaseResponse
     {
         public Validation(IEnumerable<string> validationErrors)
         {

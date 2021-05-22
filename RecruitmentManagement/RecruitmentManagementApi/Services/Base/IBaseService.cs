@@ -1,11 +1,12 @@
-﻿using RecruitmentManagementApi.Models.Responses.Base;
+﻿using RecruitmentManagementApi.Models.Request.Base;
+using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
     public interface IBaseService
     {
-        ResponseType GetAll();
-        ResponseType Upsert(BaseResponse entity);
-        ResponseType Delete(BaseResponse entity);
+        BaseResponse GetAll();
+        BaseResponse Upsert(BaseRequest entity);
+        BaseResponse Delete(BaseRequest entity);
     }
 }

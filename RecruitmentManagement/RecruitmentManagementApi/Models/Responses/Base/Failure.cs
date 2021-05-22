@@ -1,6 +1,6 @@
 ﻿namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Failure : ResponseType
+    public class Failure : BaseResponse
     {
         public Failure(string errorMessage)
         {

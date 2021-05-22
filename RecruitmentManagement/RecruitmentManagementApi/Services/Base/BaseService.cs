@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories.Base;
 
@@ -19,14 +20,14 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected abstract IBaseRepository<TModel> Repository { get; }
 
-        public ResponseType GetAll()
+        public BaseResponse GetAll()
         {
             return HandleErrors(
                 () => Success(mapper.Map<IEnumerable<TViewModel>>(Repository.GetAll()))
             );
         }
 
-        public ResponseType Upsert(BaseResponse entity)
+        public BaseResponse Upsert(BaseRequest entity)
         {
             return HandleErrors(
                 () =>
@@ -54,7 +55,7 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        public ResponseType Delete(BaseResponse entity)
+        public BaseResponse Delete(BaseResponse entity)
         {
             return HandleErrors(
                 () =>
@@ -66,7 +67,7 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        protected static ResponseType HandleErrors(Func<ResponseType> executor)
+        protected static BaseResponse HandleErrors(Func<BaseResponse> executor)
         {
             try
             {
@@ -78,8 +79,8 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected ResponseType HandleErrors<T>(
-            Func<T, ResponseType> executor,
+        protected BaseResponse HandleErrors<T>(
+            Func<T, BaseResponse> executor,
             T request
         )
         {
@@ -93,7 +94,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected static ResponseType Success<T>(T model)
+        protected static BaseResponse Success<T>(T model)
         {
             return new Success<T>(model);
         }

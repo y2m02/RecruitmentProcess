@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Services;
+using RecruitmentManagementApi.Models.Request;
+using RecruitmentManagementApi.Models.Responses;
 
 namespace RecruitmentManagementApi.Mappings
 {
@@ -22,6 +23,12 @@ namespace RecruitmentManagementApi.Mappings
                             field.Recruitments.Any() ||
                             field.RecruitmentUpdateHistories.Any()
                     )
+                );
+
+            CreateMap<StatusRequest, Status>()
+                .ForMember(
+                    destination => destination.StatusId,
+                    member => member.MapFrom(field => field.Id)
                 );
         }
     }
