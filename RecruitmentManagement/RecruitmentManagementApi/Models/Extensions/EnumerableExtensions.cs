@@ -34,7 +34,7 @@ namespace RecruitmentManagementApi.Models.Extensions
             return list.Select(selector).ToList();
         }
 
-        public static List<T> PrettyWhere<T>(this IEnumerable<T> list, Func<T, bool> filter)
+        public static List<T> ListWhere<T>(this IEnumerable<T> list, Func<T, bool> filter)
         {
             return list.Where(filter).ToList();
         }
