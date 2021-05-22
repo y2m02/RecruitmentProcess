@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using RecruitmentManagementApi.Mappings;
 using RecruitmentManagementApi.Models.Entities;
+using RecruitmentManagementApi.Repositories;
+using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi
 {
@@ -50,6 +54,8 @@ namespace RecruitmentManagementApi
                         Configuration.GetConnectionString("RecruitmentManagementConnection")
                     )
             );
+
+            RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +82,30 @@ namespace RecruitmentManagementApi
             app.UseSwagger();
 
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger XML Api Demo v1"));
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            var names = new List<string>
+            {
+                "Service", "Repository",
+            };
+
+            services.Scan(
+                scan =>
+                    scan.FromAssemblies(
+                            typeof(StatusService).Assembly,
+                            typeof(StatusRepository).Assembly
+                        )
+                        .AddClasses(
+                            x => x.Where(
+                                c => names.Any(
+                                    name => c.Name.EndsWith(name)
+                                )
+                            )
+                        )
+                        .AsMatchingInterface()
+            );
         }
     }
 }

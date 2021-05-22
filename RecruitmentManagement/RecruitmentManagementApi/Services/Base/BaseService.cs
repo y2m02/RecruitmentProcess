@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;

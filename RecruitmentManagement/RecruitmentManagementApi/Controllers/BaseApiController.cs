@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RecruitmentManagementApi.Controllers
@@ -7,6 +7,9 @@ namespace RecruitmentManagementApi.Controllers
     [ApiController]
     public class BaseApiController : Controller
     {
-        
+        protected ObjectResult InternalServerError(object value)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, value);
+        }
     }
 }

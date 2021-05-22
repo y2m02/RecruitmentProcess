@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Responses;
-using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -19,11 +19,13 @@ namespace RecruitmentManagementApi.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public async Task<BaseResponse> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var baseResponse = await statusService.GetAll<StatusResponse>();
+            var response = await statusService.GetAll<StatusResponse>();
 
-            return baseResponse;
+            return response.IsSuccess<List<StatusResponse>>()
+                ? Ok(response)
+                : InternalServerError(response);
         }
 
         //[HttpGet]

@@ -4,10 +4,6 @@ namespace RecruitmentManagementApi.Models.Responses.Base
 {
     public class BaseResponse
     {
-        public int Id { get; set; }
-
-        public bool InUse { get; set; }
-
         public bool IsSuccess()
         {
             return this is Success<bool>;
