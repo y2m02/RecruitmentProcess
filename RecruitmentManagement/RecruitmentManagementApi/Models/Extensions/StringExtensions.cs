@@ -11,7 +11,7 @@ namespace RecruitmentManagementApi.Models.Extensions
                 string.IsNullOrWhiteSpace(str);
         }
 
-        public static bool HasValue(this string str)
+        public static bool IsNotEmpty(this string str)
         {
             return !IsEmpty(str);
         }

@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
@@ -27,7 +23,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             var response = await statusService.GetAll<StatusResponse>().ConfigureAwait(false);
 
-            return response.IsSuccess<List<StatusResponse>>()
+            return response.IsSuccess()
                 ? Ok(response)
                 : InternalServerError(response);
         }

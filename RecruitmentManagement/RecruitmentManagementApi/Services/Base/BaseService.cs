@@ -21,13 +21,13 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected abstract IBaseRepository<TModel> Repository { get; }
 
-        public Task<BaseResult> GetAll<TResponse>()
+        public Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
         {
             return HandleErrors(
                 async () =>
                 {
-                    return Success(
-                        Mapper.Map<List<TResponse>>(
+                    return new Result(
+                        response: Mapper.Map<List<TResponse>>(
                             await Repository.GetAll().ConfigureAwait(false)
                         )
                     );
@@ -35,29 +35,29 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        public Task<BaseResult> Create(IBaseRequest entity)
+        public Task<Result> Create(IBaseRequest entity)
         {
             return Upsert(entity, UpsertActionType.Create);
         }
 
-        public Task<BaseResult> Update(IBaseRequest entity)
+        public Task<Result> Update(IBaseRequest entity)
         {
             return Upsert(entity, UpsertActionType.Update);
         }
 
-        public Task<BaseResult> Delete(IBaseRequest entity)
+        public Task<Result> Delete(IBaseRequest entity)
         {
             return HandleErrors(
                 async () =>
                 {
                     await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
-                    return Success(true);
+                    return new Result(response: "Removed");
                 }
             );
         }
 
-        protected async Task<BaseResult> HandleErrors(Func<Task<BaseResult>> executor)
+        protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
         {
             try
             {
@@ -65,12 +65,12 @@ namespace RecruitmentManagementApi.Services.Base
             }
             catch (Exception ex)
             {
-                return new FailureResult(ex.Message);
+                return new Result(errorMessage: ex.Message);
             }
         }
 
-        protected BaseResult HandleErrors<T>(
-            Func<T, BaseResult> executor,
+        protected Result HandleErrors<T>(
+            Func<T, Result> executor,
             T request
         )
         {
@@ -80,16 +80,11 @@ namespace RecruitmentManagementApi.Services.Base
             }
             catch (Exception ex)
             {
-                return new FailureResult(ex.Message);
+                return new Result(errorMessage: ex.Message);
             }
         }
 
-        protected BaseResult Success<T>(T model)
-        {
-            return new SuccessResult<T>(model);
-        }
-
-        private Task<BaseResult> Upsert(IBaseRequest entity, UpsertActionType actionType)
+        private Task<Result> Upsert(IBaseRequest entity, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>
@@ -98,21 +93,23 @@ namespace RecruitmentManagementApi.Services.Base
 
                     if (validations.Any())
                     {
-                        return new ValidationResult(validations);
+                        return new Result(validationErrors: validations);
                     }
 
                     switch (actionType)
                     {
                         case UpsertActionType.Create:
                             await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
                             break;
 
                         case UpsertActionType.Update:
                             await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
                             break;
                     }
 
-                    return Success(true);
+                    return new Result(response: "Success");
                 }
             );
         }
