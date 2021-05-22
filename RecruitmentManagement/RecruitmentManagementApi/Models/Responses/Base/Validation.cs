@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace RecruitmentManagementApi.Models.ViewModels.Base
+namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Validation : BaseReturnViewModel
+    public class Validation : ResponseType
     {
         public Validation(IEnumerable<string> validationErrors)
         {

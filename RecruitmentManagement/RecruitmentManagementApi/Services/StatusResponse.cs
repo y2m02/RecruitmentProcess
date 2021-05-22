@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Extensions;
-using RecruitmentManagementApi.Models.ViewModels.Base;
+using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public class StatusViewModel : BaseViewModel
+    public class StatusResponse : BaseResponse
     {
         /// <summary>
         ///     This property's going to be set automatically.

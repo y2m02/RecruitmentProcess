@@ -1,6 +1,6 @@
-﻿namespace RecruitmentManagementApi.Models.ViewModels.Base
+﻿namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public class Success<T> : BaseReturnViewModel
+    public class Success<T> : ResponseType
     {
         public Success(T model)
         {

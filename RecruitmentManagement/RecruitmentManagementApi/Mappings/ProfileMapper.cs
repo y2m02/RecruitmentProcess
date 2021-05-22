@@ -9,7 +9,7 @@ namespace RecruitmentManagementApi.Mappings
     {
         public ProfileMapper()
         {
-            CreateMap<Status, StatusViewModel>()
+            CreateMap<Status, StatusResponse>()
                 .ForMember(
                     destination => destination.Id,
                     member => member.MapFrom(field => field.StatusId)

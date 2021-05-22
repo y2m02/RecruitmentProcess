@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using RecruitmentManagementApi.Models.Enums;
 
-namespace RecruitmentManagementApi.Models.ViewModels.Base
+namespace RecruitmentManagementApi.Models.Responses.Base
 {
-    public abstract class BaseViewModel : BaseReturnViewModel
+    public abstract class BaseResponse : ResponseType
     {
         public int Id { get; set; }
 

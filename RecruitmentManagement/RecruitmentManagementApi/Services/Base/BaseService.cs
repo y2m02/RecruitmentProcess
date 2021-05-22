@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Enums;
-using RecruitmentManagementApi.Models.ViewModels.Base;
+using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Services.Base
@@ -19,14 +19,14 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected abstract IBaseRepository<TModel> Repository { get; }
 
-        public BaseReturnViewModel GetAll()
+        public ResponseType GetAll()
         {
             return HandleErrors(
                 () => Success(mapper.Map<IEnumerable<TViewModel>>(Repository.GetAll()))
             );
         }
 
-        public BaseReturnViewModel Upsert(BaseViewModel entity)
+        public ResponseType Upsert(BaseResponse entity)
         {
             return HandleErrors(
                 () =>
@@ -54,7 +54,7 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        public BaseReturnViewModel Delete(BaseViewModel entity)
+        public ResponseType Delete(BaseResponse entity)
         {
             return HandleErrors(
                 () =>
@@ -66,7 +66,7 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        protected static BaseReturnViewModel HandleErrors(Func<BaseReturnViewModel> executor)
+        protected static ResponseType HandleErrors(Func<ResponseType> executor)
         {
             try
             {
@@ -78,8 +78,8 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected BaseReturnViewModel HandleErrors<T>(
-            Func<T, BaseReturnViewModel> executor,
+        protected ResponseType HandleErrors<T>(
+            Func<T, ResponseType> executor,
             T request
         )
         {
@@ -93,7 +93,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected static BaseReturnViewModel Success<T>(T model)
+        protected static ResponseType Success<T>(T model)
         {
             return new Success<T>(model);
         }

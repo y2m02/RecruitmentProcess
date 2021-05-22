@@ -1,11 +1,11 @@
-﻿using RecruitmentManagementApi.Models.ViewModels.Base;
+﻿using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
     public interface IBaseService
     {
-        BaseReturnViewModel GetAll();
-        BaseReturnViewModel Upsert(BaseViewModel entity);
-        BaseReturnViewModel Delete(BaseViewModel entity);
+        ResponseType GetAll();
+        ResponseType Upsert(BaseResponse entity);
+        ResponseType Delete(BaseResponse entity);
     }
 }
