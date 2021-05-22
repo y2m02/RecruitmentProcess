@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Base;
@@ -11,26 +12,33 @@ namespace RecruitmentManagementApi.Services.Base
 {
     public abstract class BaseService<TModel, TViewModel>
     {
-        protected readonly IMapper mapper;
+        protected readonly IMapper Mapper;
 
         protected BaseService(IMapper mapper)
         {
-            this.mapper = mapper;
+            Mapper = mapper;
         }
 
         protected abstract IBaseRepository<TModel> Repository { get; }
 
-        public BaseResponse GetAll()
+        public Task<BaseResponse> GetAll()
         {
             return HandleErrors(
-                () => Success(mapper.Map<IEnumerable<TViewModel>>(Repository.GetAll()))
+                async () =>
+                {
+                    return Success(
+                        Mapper.Map<List<TViewModel>>(
+                            await Repository.GetAll().ConfigureAwait(false)
+                        )
+                    );
+                }
             );
         }
 
-        public BaseResponse Upsert(BaseRequest entity)
+        public Task<BaseResponse> Upsert(BaseRequest entity)
         {
             return HandleErrors(
-                () =>
+               async () =>
                 {
                     var validations = entity.Validate().ToList();
 
@@ -42,11 +50,11 @@ namespace RecruitmentManagementApi.Services.Base
                     switch (entity.UpsertActionType)
                     {
                         case UpsertActionType.Create:
-                            Repository.Create(mapper.Map<TModel>(entity));
+                            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
                             break;
 
                         case UpsertActionType.Update:
-                            Repository.Update(mapper.Map<TModel>(entity));
+                            await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
                             break;
                     }
 
@@ -55,23 +63,23 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        public BaseResponse Delete(BaseResponse entity)
+        public Task<BaseResponse> Delete(BaseResponse entity)
         {
             return HandleErrors(
-                () =>
+                async () =>
                 {
-                    Repository.Delete(mapper.Map<TModel>(entity));
+                     await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
                     return Success(true);
                 }
             );
         }
 
-        protected static BaseResponse HandleErrors(Func<BaseResponse> executor)
+        protected async Task<BaseResponse> HandleErrors(Func<Task<BaseResponse>> executor)
         {
             try
             {
-                return executor();
+                return await executor();
             }
             catch (Exception ex)
             {
@@ -94,7 +102,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected static BaseResponse Success<T>(T model)
+        protected BaseResponse Success<T>(T model)
         {
             return new Success<T>(model);
         }
