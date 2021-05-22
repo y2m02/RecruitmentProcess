@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Repositories.Base;
@@ -11,29 +12,31 @@ namespace RecruitmentManagementApi.Repositories
     public class StatusRepository :
         BaseRepository<Status>,
         IStatusRepository
+
     {
         public StatusRepository(RecruitmentManagementContext context) : base(context) { }
 
-        public IEnumerable<Status> GetAll()
+        public Task<List<Status>> GetAll()
         {
             return Context.Statuses
-                .OrderBy(w => w.Description)
-                .AsNoTracking();
+                .OrderBy(x => x.StatusId)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public void Create(Status entity)
+        public Task Create(Status entity)
         {
-            Add(entity);
+            return Add(entity);
         }
 
-        public void Update(Status entity)
+        public Task Update(Status entity)
         {
-            Modify(entity);
+            return Modify(entity);
         }
 
-        public void Delete(Status entity)
+        public Task Delete(Status entity)
         {
-            Remove(entity);
+            return Remove(entity);
         }
     }
 }

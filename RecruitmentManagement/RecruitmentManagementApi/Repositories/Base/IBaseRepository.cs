@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RecruitmentManagementApi.Repositories.Base
 {
     public interface IBaseRepository<TModel>
     {
-        IEnumerable<TModel> GetAll();
-        void Create(TModel entity);
-        void Update(TModel entity);
-        void Delete(TModel entity);
+        Task<List<TModel>> GetAll();
+        Task Create(TModel entity);
+        Task Update(TModel entity);
+        Task Delete(TModel entity);
     }
 }

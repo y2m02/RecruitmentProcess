@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagementApi.Models.Entities;
 
@@ -13,25 +14,25 @@ namespace RecruitmentManagementApi.Repositories.Base
 
         protected RecruitmentManagementContext Context { get; }
 
-        protected void Add(TModel entity)
+        protected async Task Add(TModel entity)
         {
             Context.Entry(entity).State = EntityState.Added;
 
-            SaveChangesAndDetach(entity);
+            await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
-        protected void Modify(TModel entity)
+        protected async Task Modify(TModel entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
 
-            SaveChangesAndDetach(entity);
+            await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
-        protected void Remove(TModel entity)
+        protected async Task Remove(TModel entity)
         {
             Context.Entry(entity).State = EntityState.Deleted;
 
-            SaveChangesAndDetach(entity);
+            await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
         protected void AddPropertiesToModify(TModel entity, List<string> properties)
@@ -44,9 +45,9 @@ namespace RecruitmentManagementApi.Repositories.Base
             );
         }
 
-        private void SaveChangesAndDetach(TModel entity)
+        private async Task SaveChangesAndDetach(TModel entity)
         {
-            Context.SaveChanges();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
 
             Context.Entry(entity).State = EntityState.Detached;
         }
