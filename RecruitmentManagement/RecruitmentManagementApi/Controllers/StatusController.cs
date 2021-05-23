@@ -10,78 +10,78 @@ namespace RecruitmentManagementApi.Controllers
 {
     public class StatusController : BaseApiController
     {
-        private readonly IStatusService statusService;
+        //private readonly IStatusService statusService;
 
-        public StatusController(
-            IStatusService statusService
-        )
-        {
-            this.statusService = statusService;
-        }
+        //public StatusController(
+        //    IStatusService statusService
+        //)
+        //{
+        //    this.statusService = statusService;
+        //}
 
-        [HttpGet]
-        [Route("Get")]
-        public async Task<IActionResult> GetAll()
-        {
-            var response = await statusService.GetAll<StatusResponse>().ConfigureAwait(false);
+        //[HttpGet]
+        //[Route("Get")]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var response = await statusService.GetAll<StatusResponse>().ConfigureAwait(false);
 
-            return response.Succeeded()
-                ? Ok(response)
-                : InternalServerError(response);
-        }
+        //    return response.Succeeded()
+        //        ? Ok(response)
+        //        : InternalServerError(response);
+        //}
 
-        [HttpPost]
-        [Route("Create")]
-        public async Task<IActionResult> Create(StatusRequest request)
-        {
-            return base.ValidateResult(await statusService.Create(request).ConfigureAwait(false));
-        }
+        //[HttpPost]
+        //[Route("Create")]
+        //public async Task<IActionResult> Create(StatusRequest request)
+        //{
+        //    return base.ValidateResult(await statusService.Create(request).ConfigureAwait(false));
+        //}
 
-        [HttpPost]
-        [Route("BatchCreate")]
-        public async Task<IActionResult> BatchCreate(IEnumerable<StatusRequest> requests)
-        {
-            return ValidateResult(await statusService.BatchCreate(requests).ConfigureAwait(false));
-        }
+        //[HttpPost]
+        //[Route("BatchCreate")]
+        //public async Task<IActionResult> BatchCreate(IEnumerable<StatusRequest> requests)
+        //{
+        //    return ValidateResult(await statusService.BatchCreate(requests).ConfigureAwait(false));
+        //}
 
-        [HttpPut]
-        [Route("Update")]
-        public async Task<IActionResult> Update(UpdateStatusRequest request)
-        {
-            return base.ValidateResult(await statusService.Update(request).ConfigureAwait(false));
-        }
+        //[HttpPut]
+        //[Route("Update")]
+        //public async Task<IActionResult> Update(UpdateStatusRequest request)
+        //{
+        //    return base.ValidateResult(await statusService.Update(request).ConfigureAwait(false));
+        //}
 
-        [HttpPut]
-        [Route("BatchUpdate")]
-        public async Task<IActionResult> BatchUpdate(IEnumerable<UpdateStatusRequest> requests)
-        {
-            return ValidateResult(await statusService.BatchUpdate(requests).ConfigureAwait(false));
-        }
+        //[HttpPut]
+        //[Route("BatchUpdate")]
+        //public async Task<IActionResult> BatchUpdate(IEnumerable<UpdateStatusRequest> requests)
+        //{
+        //    return ValidateResult(await statusService.BatchUpdate(requests).ConfigureAwait(false));
+        //}
 
-        [HttpDelete]
-        [Route("Delete")]
-        public async Task<IActionResult> Delete(DeleteStatusRequest request)
-        {
-            return base.ValidateResult(await statusService.Delete(request).ConfigureAwait(false));
-        }
+        //[HttpDelete]
+        //[Route("Delete")]
+        //public async Task<IActionResult> Delete(DeleteStatusRequest request)
+        //{
+        //    return base.ValidateResult(await statusService.Delete(request).ConfigureAwait(false));
+        //}
 
-        [HttpDelete]
-        [Route("BatchDelete")]
-        public async Task<IActionResult> BatchDelete(IEnumerable<DeleteStatusRequest> requests)
-        {
-            return ValidateResult(await statusService.BatchDelete(requests).ConfigureAwait(false));
-        }
+        //[HttpDelete]
+        //[Route("BatchDelete")]
+        //public async Task<IActionResult> BatchDelete(IEnumerable<DeleteStatusRequest> requests)
+        //{
+        //    return ValidateResult(await statusService.BatchDelete(requests).ConfigureAwait(false));
+        //}
 
-        private new IActionResult ValidateResult(Result result)
-        {
-            if (result.PartialSucceeded() || result.Succeeded())
-            {
-                return Ok(result);
-            }
+        //private new IActionResult ValidateResult(Result result)
+        //{
+        //    if (result.PartialSucceeded() || result.Succeeded())
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return result.HasValidations()
-                ? BadRequest(result)
-                : InternalServerError(result);
-        }
+        //    return result.HasValidations()
+        //        ? BadRequest(result)
+        //        : InternalServerError(result);
+        //}
     }
 }
