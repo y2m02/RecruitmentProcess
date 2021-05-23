@@ -10,7 +10,6 @@ using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
-using RecruitmentManagementApi.Repositories.Base;
 using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
@@ -31,12 +30,10 @@ namespace RecruitmentManagementApi.Services
         public StatusService(
             IMapper mapper,
             IStatusRepository statusRepository
-        ) : base(mapper)
+        ) : base(mapper, statusRepository)
         {
             this.statusRepository = statusRepository;
         }
-
-        protected override IBaseRepository<Status> Repository => statusRepository;
 
         public Task<Result> BatchCreate(IEnumerable<StatusRequest> statuses)
         {
@@ -55,7 +52,7 @@ namespace RecruitmentManagementApi.Services
                 {
                     var (statusesToSubmit, validationErrors) = SplitRequest(statuses);
 
-                    await ((IStatusRepository)Repository).BatchDelete(
+                    await statusRepository.BatchDelete(
                         Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
                     ).ConfigureAwait(false);
 
@@ -83,7 +80,7 @@ namespace RecruitmentManagementApi.Services
                     switch (actionType)
                     {
                         case UpsertActionType.Create:
-                            await ((IStatusRepository)Repository).BatchCreate(
+                            await statusRepository.BatchCreate(
                                     Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
                                 )
                                 .ConfigureAwait(false);
@@ -92,7 +89,7 @@ namespace RecruitmentManagementApi.Services
                             break;
 
                         case UpsertActionType.Update:
-                            await ((IStatusRepository)Repository).BatchUpdate(
+                            await statusRepository.BatchUpdate(
                                     Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
                                 )
                                 .ConfigureAwait(false);

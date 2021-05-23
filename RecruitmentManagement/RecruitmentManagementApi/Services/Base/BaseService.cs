@@ -15,13 +15,16 @@ namespace RecruitmentManagementApi.Services.Base
     public abstract class BaseService<TModel>
     {
         protected readonly IMapper Mapper;
+        protected readonly IBaseRepository<TModel> Repository;
 
-        protected BaseService(IMapper mapper)
+        protected BaseService(
+            IMapper mapper,
+            IBaseRepository<TModel> repository
+        )
         {
             Mapper = mapper;
+            Repository = repository;
         }
-
-        protected abstract IBaseRepository<TModel> Repository { get; }
 
         public Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
         {
@@ -95,6 +98,20 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
+        protected virtual async Task<string> CreateEntity(IRequest entity)
+        {
+            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Created;
+        }
+
+        private async Task<string> UpdateEntity(IRequest entity)
+        {
+            await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Updated;
+        }
+
         private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)
         {
             return HandleErrors(
@@ -107,24 +124,13 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    var action = string.Empty;
+                    var action = actionType == UpsertActionType.Create
+                        ? await CreateEntity(entity).ConfigureAwait(false)
+                        : await UpdateEntity(entity).ConfigureAwait(false);
 
-                    switch (actionType)
-                    {
-                        case UpsertActionType.Create:
-                            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-                            action = ConsumerMessages.Created;
-                            break;
-
-                        case UpsertActionType.Update:
-                            await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-                            
-                            action = ConsumerMessages.Updated;
-                            break;
-                    }
-
-                    return new Result(response: ConsumerMessages.SuccessResponse.Format(1, 1, action));
+                    return new Result(
+                        response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
+                    );
                 }
             );
         }

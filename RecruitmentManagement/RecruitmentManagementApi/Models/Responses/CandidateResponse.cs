@@ -14,6 +14,8 @@ namespace RecruitmentManagementApi.Models.Responses
 
         public string GitHub { get; set; }
 
+        public int RecruitmentId { get; set; }
+
         public RecruitmentStatus RecruitmentStatus { get; set; }
     }
 }

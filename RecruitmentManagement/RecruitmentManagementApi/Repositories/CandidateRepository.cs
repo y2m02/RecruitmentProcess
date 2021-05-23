@@ -22,9 +22,11 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
-        public Task Create(Candidate entity)
+        public async Task Create(Candidate entity)
         {
-            return Add(entity);
+            await Context.Candidates.AddAsync(entity).ConfigureAwait(false);
+
+            await Save().ConfigureAwait(false);
         }
 
         public async Task Update(Candidate entity)
