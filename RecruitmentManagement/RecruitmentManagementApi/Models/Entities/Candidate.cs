@@ -23,7 +23,5 @@ namespace RecruitmentManagementApi.Models.Entities
         public string GitHub { get; set; }
 
         public Recruitment Recruitment { get; set; }
-
-        public ICollection<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
     }
 }

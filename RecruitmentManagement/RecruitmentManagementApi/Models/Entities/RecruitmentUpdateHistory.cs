@@ -17,21 +17,12 @@ namespace RecruitmentManagementApi.Models.Entities
         [StringLength(1000)]
         public string Note { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string ChangeReason { get; set; }
-
         public int RecruitmentId { get; set; }
-
-        public int? CandidateId { get; set; }
         
         [Required]
         public RecruitmentStatus Status { get; set; }
 
         [ForeignKey(nameof(RecruitmentId))]
         public Recruitment Recruitment { get; set; }
-
-        [ForeignKey(nameof(CandidateId))]
-        public Candidate Candidate { get; set; }
     }
 }

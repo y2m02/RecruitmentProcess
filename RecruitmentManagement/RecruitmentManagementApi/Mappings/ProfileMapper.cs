@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
+using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Candidates;
+using RecruitmentManagementApi.Models.Request.Recruitments;
+using RecruitmentManagementApi.Models.Request.RecruitmentUpdateHistories;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
 
@@ -51,9 +54,7 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.InUse,
                     member => member.MapFrom(
-                        field =>
-                            field.Recruitment.HasValue() ||
-                            field.RecruitmentUpdateHistories.Any()
+                        field => field.Recruitment.HasValue()
                     )
                 )
                 .ForMember(
@@ -62,6 +63,22 @@ namespace RecruitmentManagementApi.Mappings
                 );
 
             CreateMap<CandidateRequest, Candidate>()
+                .ForMember(
+                    destination => destination.Date,
+                    member => member.MapFrom(field => DateTime.Now)
+                );
+
+            CreateMap<RecruitmentRequest, Recruitment>()
+                .ForMember(
+                    destination => destination.Date,
+                    member => member.MapFrom(field => DateTime.Now)
+                )
+                .ForMember(
+                    destination => destination.Status,
+                    member => member.MapFrom(field => RecruitmentStatus.Pending)
+                );
+
+            CreateMap<RecruitmentUpdateHistoryRequest, RecruitmentUpdateHistory>()
                 .ForMember(
                     destination => destination.Date,
                     member => member.MapFrom(field => DateTime.Now)
