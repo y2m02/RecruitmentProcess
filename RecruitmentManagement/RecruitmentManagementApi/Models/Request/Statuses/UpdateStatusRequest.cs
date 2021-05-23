@@ -11,7 +11,7 @@ namespace RecruitmentManagementApi.Models.Request.Statuses
         {
             if (Id <= 0)
             {
-                yield return UserMessages.FieldRequired.Format("Id");
+                yield return ConsumerMessages.FieldRequired.Format("Id");
             }
 
             foreach (var validationError in base.Validate())

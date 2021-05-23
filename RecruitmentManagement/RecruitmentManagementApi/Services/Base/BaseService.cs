@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories.Base;
@@ -52,7 +54,9 @@ namespace RecruitmentManagementApi.Services.Base
                 {
                     await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
-                    return new Result(response: "Removed");
+                    return new Result(
+                        response: ConsumerMessages.SuccessResponse.Format(1,"eliminado/s")
+                    );
                 }
             );
         }
@@ -96,18 +100,23 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
+                    var successMessage = string.Empty;
                     switch (actionType)
                     {
                         case UpsertActionType.Create:
                             await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+                            successMessage = ConsumerMessages.SuccessResponse.Format(1, "creado/s");
                             break;
 
                         case UpsertActionType.Update:
                             await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+                            
+                            successMessage = ConsumerMessages.SuccessResponse.Format(1, "actualizado/s");
                             break;
                     }
 
-                    return new Result(response: "Success");
+                    return new Result(response: successMessage);
                 }
             );
         }

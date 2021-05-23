@@ -12,7 +12,7 @@ namespace RecruitmentManagementApi.Models.Request.Statuses
         {
             if (Description.IsEmpty())
             {
-                yield return UserMessages.FieldRequired.Format("Descripción");
+                yield return ConsumerMessages.FieldRequired.Format("Descripción");
             }
         }
     }

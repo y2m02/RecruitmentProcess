@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses.Base;
@@ -67,23 +69,35 @@ namespace RecruitmentManagementApi.Services
                         statusesToSubmit.Add(status);
                     }
 
+                    var successMessage = string.Empty;
+
                     switch (actionType)
                     {
                         case UpsertActionType.Create:
                             await ((IStatusRepository)Repository).BatchCreate(
                                 Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
                             ).ConfigureAwait(false);
+
+                            successMessage = ConsumerMessages.SuccessResponse.Format(
+                                statusesToSubmit.Count,
+                                "creado/s"
+                            );
                             break;
 
                         case UpsertActionType.Update:
                             await ((IStatusRepository)Repository).BatchUpdate(
                                 Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
                             ).ConfigureAwait(false);
+
+                            successMessage = ConsumerMessages.SuccessResponse.Format(
+                                statusesToSubmit.Count,
+                                "actualizado/s"
+                            );
                             break;
                     }
 
                     return new Result(
-                        response: statusesToSubmit.Select(_ => "Success"),
+                        response: successMessage,
                         validationErrors: statusesToValidate
                     );
                 }
