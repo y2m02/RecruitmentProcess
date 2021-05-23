@@ -52,6 +52,13 @@ namespace RecruitmentManagementApi.Services.Base
             return HandleErrors(
                 async () =>
                 {
+                    var validations = entity.Validate().ToList();
+
+                    if (validations.Any())
+                    {
+                        return new Result(validationErrors: validations);
+                    }
+
                     await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
                     return new Result(
