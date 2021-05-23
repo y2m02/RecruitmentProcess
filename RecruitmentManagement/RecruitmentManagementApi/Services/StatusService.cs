@@ -62,7 +62,8 @@ namespace RecruitmentManagementApi.Services
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(
                             statusesToSubmit.Count,
-                            "eliminado/s"
+                            statuses.Count(),
+                            ConsumerMessages.Deleted
                         ),
                         validationErrors: validationErrors
                     );
@@ -77,7 +78,7 @@ namespace RecruitmentManagementApi.Services
                 {
                     var (statusesToSubmit, validationErrors) = SplitRequest(statuses);
 
-                    var successMessage = string.Empty;
+                    var action = string.Empty;
 
                     switch (actionType)
                     {
@@ -87,11 +88,7 @@ namespace RecruitmentManagementApi.Services
                                 )
                                 .ConfigureAwait(false);
 
-                            successMessage = ConsumerMessages.SuccessResponse.Format(
-                                statusesToSubmit.Count,
-                                "creado/s"
-                            );
-
+                            action = ConsumerMessages.Created;
                             break;
 
                         case UpsertActionType.Update:
@@ -100,16 +97,16 @@ namespace RecruitmentManagementApi.Services
                                 )
                                 .ConfigureAwait(false);
 
-                            successMessage = ConsumerMessages.SuccessResponse.Format(
-                                statusesToSubmit.Count,
-                                "actualizado/s"
-                            );
-
+                            action = ConsumerMessages.Updated;
                             break;
                     }
 
                     return new Result(
-                        response: successMessage,
+                        response: ConsumerMessages.SuccessResponse.Format(
+                            statusesToSubmit.Count,
+                            statuses.Count(),
+                            action
+                        ),
                         validationErrors: validationErrors
                     );
                 }

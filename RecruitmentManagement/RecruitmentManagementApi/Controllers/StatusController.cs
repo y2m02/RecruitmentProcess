@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
+using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -33,88 +34,46 @@ namespace RecruitmentManagementApi.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create(StatusRequest request)
         {
-            var result = await statusService.Create(request).ConfigureAwait(false);
-
-            if (result.HasValidations())
-            {
-                return BadRequest(result);
-            }
-
-            return result.IsSuccess()
-                ? Ok(result)
-                : InternalServerError(result);
+            return base.ValidateResult(await statusService.Create(request).ConfigureAwait(false));
         }
 
         [HttpPost]
         [Route("BatchCreate")]
         public async Task<IActionResult> BatchCreate(IEnumerable<StatusRequest> requests)
         {
-            var result = await statusService.BatchCreate(requests).ConfigureAwait(false);
-
-            if (result.IsPartialSuccess() || result.IsSuccess())
-            {
-                return Ok(result);
-            }
-
-            return result.HasValidations()
-                ? BadRequest(result)
-                : InternalServerError(result);
+            return ValidateResult(await statusService.BatchCreate(requests).ConfigureAwait(false));
         }
-        
+
         [HttpPut]
         [Route("Update")]
         public async Task<IActionResult> Update(UpdateStatusRequest request)
         {
-            var result = await statusService.Update(request).ConfigureAwait(false);
-
-            if (result.HasValidations())
-            {
-                return BadRequest(result);
-            }
-
-            return result.IsSuccess()
-                ? Ok(result)
-                : InternalServerError(result);
+            return base.ValidateResult(await statusService.Update(request).ConfigureAwait(false));
         }
 
         [HttpPut]
         [Route("BatchUpdate")]
         public async Task<IActionResult> BatchUpdate(IEnumerable<UpdateStatusRequest> requests)
         {
-            var result = await statusService.BatchUpdate(requests).ConfigureAwait(false);
-
-            if (result.IsPartialSuccess() || result.IsSuccess())
-            {
-                return Ok(result);
-            }
-
-            return result.HasValidations()
-                ? BadRequest(result)
-                : InternalServerError(result);
+            return ValidateResult(await statusService.BatchUpdate(requests).ConfigureAwait(false));
         }
-        
+
         [HttpDelete]
         [Route("Delete")]
         public async Task<IActionResult> Delete(DeleteStatusRequest request)
         {
-            var result = await statusService.Delete(request).ConfigureAwait(false);
-
-            if (result.HasValidations())
-            {
-                return BadRequest(result);
-            }
-
-            return result.IsSuccess()
-                ? Ok(result)
-                : InternalServerError(result);
+            return base.ValidateResult(await statusService.Delete(request).ConfigureAwait(false));
         }
 
         [HttpDelete]
         [Route("BatchDelete")]
         public async Task<IActionResult> BatchDelete(IEnumerable<DeleteStatusRequest> requests)
         {
-            var result = await statusService.BatchDelete(requests).ConfigureAwait(false);
+            return ValidateResult(await statusService.BatchDelete(requests).ConfigureAwait(false));
+        }
 
+        private new IActionResult ValidateResult(Result result)
+        {
             if (result.IsPartialSuccess() || result.IsSuccess())
             {
                 return Ok(result);

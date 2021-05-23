@@ -62,7 +62,7 @@ namespace RecruitmentManagementApi.Services.Base
                     await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
                     return new Result(
-                        response: ConsumerMessages.SuccessResponse.Format(1,"eliminado/s")
+                        response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
                     );
                 }
             );
@@ -107,23 +107,24 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    var successMessage = string.Empty;
+                    var action = string.Empty;
+
                     switch (actionType)
                     {
                         case UpsertActionType.Create:
                             await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
-                            successMessage = ConsumerMessages.SuccessResponse.Format(1, "creado/s");
+                            action = ConsumerMessages.Created;
                             break;
 
                         case UpsertActionType.Update:
                             await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
                             
-                            successMessage = ConsumerMessages.SuccessResponse.Format(1, "actualizado/s");
+                            action = ConsumerMessages.Updated;
                             break;
                     }
 
-                    return new Result(response: successMessage);
+                    return new Result(response: ConsumerMessages.SuccessResponse.Format(1, 1, action));
                 }
             );
         }
