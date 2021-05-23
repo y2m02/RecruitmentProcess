@@ -61,26 +61,22 @@ namespace RecruitmentManagementApi.Controllers
                 : InternalServerError(result);
         }
 
-        //[HttpPost]
-        //[Route("BatchCreate")]
-        //public async Task BatchCreate(IEnumerable<StatusRequest> request)
-        //{
-        //    await _statusRepository.BatchCreate(Mapper.Map<IEnumerable<Status>>(request));
-        //}
+        
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(UpdateStatusRequest request)
+        {
+            var result = await statusService.Update(request).ConfigureAwait(false);
 
-        //[HttpPut]
-        //[Route("Update")]
-        //public async Task Update(UpdateStatusRequest request)
-        //{
-        //    await _statusRepository.Update(Mapper.Map<Status>(request));
-        //}
+            if (result.HasValidations())
+            {
+                return BadRequest(result);
+            }
 
-        //[HttpPut]
-        //[Route("BatchUpdate")]
-        //public async Task BatchUpdate(IEnumerable<UpdateStatusRequest> request)
-        //{
-        //    await _statusRepository.BatchUpdate(Mapper.Map<IEnumerable<Status>>(request));
-        //}
+            return result.IsSuccess()
+                ? Ok(result)
+                : InternalServerError(result);
+        }
 
         //[HttpDelete]
         //[Route("Delete/{id}")]

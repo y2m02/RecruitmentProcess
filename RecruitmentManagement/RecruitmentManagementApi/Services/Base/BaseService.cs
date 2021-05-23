@@ -100,12 +100,10 @@ namespace RecruitmentManagementApi.Services.Base
                     {
                         case UpsertActionType.Create:
                             await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
                             break;
 
                         case UpsertActionType.Update:
                             await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
                             break;
                     }
 
