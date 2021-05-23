@@ -23,7 +23,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             var response = await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false);
 
-            return response.IsSuccess()
+            return response.Succeeded()
                 ? Ok(response)
                 : InternalServerError(response);
         }

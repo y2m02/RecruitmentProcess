@@ -15,7 +15,7 @@ namespace RecruitmentManagementApi.Controllers
 
         protected ActionResult ValidateResult(Result result)
         {
-            if (result.IsSuccess())
+            if (result.Succeeded())
             {
                 return Ok(result);
             }

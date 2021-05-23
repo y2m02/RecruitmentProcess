@@ -18,6 +18,6 @@ namespace RecruitmentManagementApi.Models.Responses
 
         public RecruitmentStatus Status { get; set; }
 
-        public List<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
+        public List<RecruitmentUpdateHistoryResponse> RecruitmentUpdateHistories { get; set; }
     }
 }

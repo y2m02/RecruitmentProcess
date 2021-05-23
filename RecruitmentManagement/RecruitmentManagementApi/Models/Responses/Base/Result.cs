@@ -39,12 +39,12 @@ namespace RecruitmentManagementApi.Models.Responses.Base
 
         public string Error { get; }
 
-        public bool IsSuccess() => Response.HasValue() && !HasValidations() && !Failed();
+        public bool Succeeded() => Response.HasValue() && !HasValidations() && !Failed();
 
         public bool HasValidations() => ValidationErrors.Any();
 
         public bool Failed() => Error.IsNotEmpty();
 
-        public bool IsPartialSuccess() => Response.HasValue() && HasValidations();
+        public bool PartialSucceeded() => Response.HasValue() && HasValidations();
     }
 }

@@ -25,7 +25,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             var response = await statusService.GetAll<StatusResponse>().ConfigureAwait(false);
 
-            return response.IsSuccess()
+            return response.Succeeded()
                 ? Ok(response)
                 : InternalServerError(response);
         }
@@ -74,7 +74,7 @@ namespace RecruitmentManagementApi.Controllers
 
         private new IActionResult ValidateResult(Result result)
         {
-            if (result.IsPartialSuccess() || result.IsSuccess())
+            if (result.PartialSucceeded() || result.Succeeded())
             {
                 return Ok(result);
             }
