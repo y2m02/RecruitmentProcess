@@ -2,12 +2,12 @@
 {
     public enum RecruitmentStatus
     {
-        Pending,
-        Interview,
-        Test,
-        HR,
-        USA,
-        Hired,
-        Discarded,
+        Pending = 0,
+        Interview = 1,
+        Test = 2,
+        HR = 3,
+        USA = 4,
+        Hired = 5,
+        Discarded = 6,
     }
 }

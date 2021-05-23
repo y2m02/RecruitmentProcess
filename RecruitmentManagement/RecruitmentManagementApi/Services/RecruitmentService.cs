@@ -29,19 +29,26 @@ namespace RecruitmentManagementApi.Services
 
         protected override async Task<string> UpdateEntity(IRequest entity)
         {
-            var recruitment = Mapper.Map<Recruitment>(entity);
+            var recruitmentToUpdate = Mapper.Map<Recruitment>(entity);
 
-            await Repository.Update(recruitment).ConfigureAwait(false);
+            var currentStatus = await ((IRecruitmentRepository)Repository)
+                .GetStatus(recruitmentToUpdate.RecruitmentId)
+                .ConfigureAwait(false);
 
-            await recruitmentUpdateHistoryRepository.Create(
-                new()
-                {
-                    RecruitmentId = recruitment.RecruitmentId,
-                    Date = DateTime.Now,
-                    Status = recruitment.Status,
-                    Note = recruitment.Note,
-                }
-            ).ConfigureAwait(false);
+            await Repository.Update(recruitmentToUpdate).ConfigureAwait(false);
+
+            if (currentStatus != recruitmentToUpdate.Status)
+            {
+                await recruitmentUpdateHistoryRepository.Create(
+                    new()
+                    {
+                        RecruitmentId = recruitmentToUpdate.RecruitmentId,
+                        Date = DateTime.Now,
+                        Status = recruitmentToUpdate.Status,
+                        Note = recruitmentToUpdate.Note,
+                    }
+                ).ConfigureAwait(false);
+            }
 
             return ConsumerMessages.Updated;
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
@@ -9,7 +11,7 @@ namespace RecruitmentManagementApi.Models.Request.Recruitments
     {
         public int Id { get; set; }
 
-        public RecruitmentStatus ? Status { get; set; }
+        public RecruitmentStatus? Status { get; set; }
 
         public string Note { get; set; }
 
@@ -23,6 +25,21 @@ namespace RecruitmentManagementApi.Models.Request.Recruitments
             if (!Status.HasValue)
             {
                 yield return ConsumerMessages.FieldRequired.Format(nameof(Status));
+            }
+
+            var allowedValues = Enum
+                .GetValues(typeof(RecruitmentStatus))
+                .Cast<RecruitmentStatus>()
+                .EagerSelect(status => (int)status);
+
+            if (Status.HasValue && !allowedValues.Contains((int)Status))
+            {
+                yield return ConsumerMessages
+                    .AllowedValues
+                    .Format(
+                        nameof(Status),
+                        allowedValues.Join(",")
+                    );
             }
         }
     }

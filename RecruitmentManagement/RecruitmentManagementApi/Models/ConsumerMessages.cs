@@ -11,5 +11,7 @@
         public const string Updated = "updated";
 
         public const string Deleted = "removed";
+
+        public const string AllowedValues = "The field {0} does not match with any of its allowed values: {1}";
     }
 }
