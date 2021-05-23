@@ -24,10 +24,7 @@ namespace RecruitmentManagementApi.Repositories
 
         public Task<List<Status>> GetAll()
         {
-            return Context.Statuses
-                .OrderBy(x => x.StatusId)
-                .AsNoTracking()
-                .ToListAsync();
+            return Context.Statuses.AsNoTracking().ToListAsync();
         }
 
         public Task Create(Status entity)

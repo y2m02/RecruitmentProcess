@@ -50,7 +50,7 @@ namespace RecruitmentManagementApi.Repositories.Base
             await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private async Task SaveChangesAndDetach(TModel entity)
+        protected async Task SaveChangesAndDetach(TModel entity)
         {
             await Save();
 
