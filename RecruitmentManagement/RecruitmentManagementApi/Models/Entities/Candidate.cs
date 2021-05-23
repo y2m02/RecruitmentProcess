@@ -22,11 +22,6 @@ namespace RecruitmentManagementApi.Models.Entities
 
         public string GitHub { get; set; }
 
-        public int StatusId { get; set; }
-
-        [ForeignKey(nameof(StatusId))]
-        public Status Status { get; set; }
-
         public Recruitment Recruitment { get; set; }
 
         public ICollection<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }

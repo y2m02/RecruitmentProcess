@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecruitmentManagementApi.Models.Entities
@@ -13,11 +12,5 @@ namespace RecruitmentManagementApi.Models.Entities
         [Required]
         [StringLength(100)]
         public string Description { get; set; }
-
-        public ICollection<Candidate> Candidates { get; set; }
-
-        public ICollection<Recruitment> Recruitments { get; set; }
-
-        public ICollection<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
     }
 }

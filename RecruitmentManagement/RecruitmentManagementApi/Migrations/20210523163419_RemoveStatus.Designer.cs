@@ -10,8 +10,8 @@ using RecruitmentManagementApi.Models.Entities;
 namespace RecruitmentManagementApi.Migrations
 {
     [DbContext(typeof(RecruitmentManagementContext))]
-    [Migration("20210522190637_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210523163419_RemoveStatus")]
+    partial class RemoveStatus
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,12 +42,7 @@ namespace RecruitmentManagementApi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.HasKey("CandidateId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("Candidates");
                 });
@@ -69,15 +64,13 @@ namespace RecruitmentManagementApi.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("RecruitmentId");
 
                     b.HasIndex("CandidateId")
                         .IsUnique();
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("Recruitments");
                 });
@@ -107,7 +100,7 @@ namespace RecruitmentManagementApi.Migrations
                     b.Property<int>("RecruitmentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("RecruitmentUpdateHistoryId");
@@ -115,8 +108,6 @@ namespace RecruitmentManagementApi.Migrations
                     b.HasIndex("CandidateId");
 
                     b.HasIndex("RecruitmentId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("RecruitmentUpdateHistories");
                 });
@@ -138,17 +129,6 @@ namespace RecruitmentManagementApi.Migrations
                     b.ToTable("Statuses");
                 });
 
-            modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.Candidate", b =>
-                {
-                    b.HasOne("RecruitmentManagementApi.Models.Entities.Status", "Status")
-                        .WithMany("Candidates")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
             modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.Recruitment", b =>
                 {
                     b.HasOne("RecruitmentManagementApi.Models.Entities.Candidate", "Candidate")
@@ -157,13 +137,7 @@ namespace RecruitmentManagementApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RecruitmentManagementApi.Models.Entities.Status", "Status")
-                        .WithMany("Recruitments")
-                        .HasForeignKey("StatusId");
-
                     b.Navigation("Candidate");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.RecruitmentUpdateHistory", b =>
@@ -173,20 +147,14 @@ namespace RecruitmentManagementApi.Migrations
                         .HasForeignKey("CandidateId");
 
                     b.HasOne("RecruitmentManagementApi.Models.Entities.Recruitment", "Recruitment")
-                        .WithMany()
+                        .WithMany("RecruitmentUpdateHistories")
                         .HasForeignKey("RecruitmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RecruitmentManagementApi.Models.Entities.Status", "Status")
-                        .WithMany("RecruitmentUpdateHistories")
-                        .HasForeignKey("StatusId");
-
                     b.Navigation("Candidate");
 
                     b.Navigation("Recruitment");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.Candidate", b =>
@@ -196,12 +164,8 @@ namespace RecruitmentManagementApi.Migrations
                     b.Navigation("RecruitmentUpdateHistories");
                 });
 
-            modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.Status", b =>
+            modelBuilder.Entity("RecruitmentManagementApi.Models.Entities.Recruitment", b =>
                 {
-                    b.Navigation("Candidates");
-
-                    b.Navigation("Recruitments");
-
                     b.Navigation("RecruitmentUpdateHistories");
                 });
 #pragma warning restore 612, 618

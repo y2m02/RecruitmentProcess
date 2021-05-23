@@ -17,7 +17,7 @@ namespace RecruitmentManagementApi.Repositories
         public Task<List<Candidate>> GetAll()
         {
             return Context.Candidates
-                .Include(x => x.Status)
+                .Include(x => x.Recruitment)
                 .AsNoTracking()
                 .ToListAsync();
         }

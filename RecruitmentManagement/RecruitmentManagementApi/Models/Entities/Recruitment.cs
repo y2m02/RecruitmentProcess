@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RecruitmentManagementApi.Models.Enums;
 
 namespace RecruitmentManagementApi.Models.Entities
 {
@@ -18,12 +20,12 @@ namespace RecruitmentManagementApi.Models.Entities
 
         public int CandidateId { get; set; }
 
-        public int? StatusId { get; set; }
+        [Required]
+        public RecruitmentStatus Status { get; set; }
 
         [ForeignKey(nameof(CandidateId))]
         public Candidate Candidate { get; set; }
 
-        [ForeignKey(nameof(StatusId))]
-        public Status Status { get; set; }
+        public ICollection<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
     }
 }

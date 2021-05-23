@@ -15,16 +15,16 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.Id,
                     member => member.MapFrom(field => field.StatusId)
-                )
-                .ForMember(
-                    destination => destination.InUse,
-                    member => member.MapFrom(
-                        field =>
-                            field.Candidates.Any() ||
-                            field.Recruitments.Any() ||
-                            field.RecruitmentUpdateHistories.Any()
-                    )
                 );
+                //.ForMember(
+                //    destination => destination.InUse,
+                //    member => member.MapFrom(
+                //        field =>
+                //            field.Candidates.Any() ||
+                //            field.Recruitments.Any() ||
+                //            field.RecruitmentUpdateHistories.Any()
+                //    )
+                //);
 
             CreateMap<StatusRequest, Status>();
 
@@ -53,10 +53,6 @@ namespace RecruitmentManagementApi.Mappings
                             field.Recruitment.HasValue() ||
                             field.RecruitmentUpdateHistories.Any()
                     )
-                )
-                .ForMember(
-                    destination => destination.StatusDescription,
-                    member => member.MapFrom(field => field.Status.Description)
                 );
         }
     }
