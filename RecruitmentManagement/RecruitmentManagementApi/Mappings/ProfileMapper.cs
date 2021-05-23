@@ -32,6 +32,12 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.StatusId,
                     member => member.MapFrom(field => field.Id)
                 );
+
+            CreateMap<DeleteStatusRequest, Status>()
+                .ForMember(
+                    destination => destination.StatusId,
+                    member => member.MapFrom(field => field.Id)
+                );
         }
     }
 }

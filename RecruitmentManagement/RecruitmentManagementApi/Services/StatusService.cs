@@ -19,6 +19,7 @@ namespace RecruitmentManagementApi.Services
     {
         Task<Result> BatchCreate(IEnumerable<StatusRequest> statuses);
         Task<Result> BatchUpdate(IEnumerable<UpdateStatusRequest> statuses);
+        Task<Result> BatchDelete(IEnumerable<DeleteStatusRequest> statuses);
     }
 
     public class StatusService :
@@ -47,27 +48,34 @@ namespace RecruitmentManagementApi.Services
             return BatchUpsert(statuses, UpsertActionType.Update);
         }
 
+        public Task<Result> BatchDelete(IEnumerable<DeleteStatusRequest> statuses)
+        {
+            return HandleErrors(
+                async () =>
+                {
+                    var (statusesToSubmit, validationErrors) = SplitRequest(statuses);
+
+                    await ((IStatusRepository)Repository).BatchDelete(
+                        Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
+                    ).ConfigureAwait(false);
+
+                    return new Result(
+                        response: ConsumerMessages.SuccessResponse.Format(
+                            statusesToSubmit.Count,
+                            "eliminado/s"
+                        ),
+                        validationErrors: validationErrors
+                    );
+                }
+            );
+        }
+
         private Task<Result> BatchUpsert(IEnumerable<IRequest> statuses, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>
                 {
-                    var statusesToSubmit = new List<IRequest>();
-                    var statusesToValidate = new List<string>();
-
-                    foreach (var status in statuses)
-                    {
-                        var validations = status.Validate().ToList();
-
-                        if (validations.Any())
-                        {
-                            statusesToValidate.AddRange(validations);
-
-                            continue;
-                        }
-
-                        statusesToSubmit.Add(status);
-                    }
+                    var (statusesToSubmit, validationErrors) = SplitRequest(statuses);
 
                     var successMessage = string.Empty;
 
@@ -75,33 +83,59 @@ namespace RecruitmentManagementApi.Services
                     {
                         case UpsertActionType.Create:
                             await ((IStatusRepository)Repository).BatchCreate(
-                                Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
-                            ).ConfigureAwait(false);
+                                    Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
+                                )
+                                .ConfigureAwait(false);
 
                             successMessage = ConsumerMessages.SuccessResponse.Format(
                                 statusesToSubmit.Count,
                                 "creado/s"
                             );
+
                             break;
 
                         case UpsertActionType.Update:
                             await ((IStatusRepository)Repository).BatchUpdate(
-                                Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
-                            ).ConfigureAwait(false);
+                                    Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
+                                )
+                                .ConfigureAwait(false);
 
                             successMessage = ConsumerMessages.SuccessResponse.Format(
                                 statusesToSubmit.Count,
                                 "actualizado/s"
                             );
+
                             break;
                     }
 
                     return new Result(
                         response: successMessage,
-                        validationErrors: statusesToValidate
+                        validationErrors: validationErrors
                     );
                 }
             );
+        }
+
+        private static (List<IRequest> validated, List<string> validationErrors) SplitRequest(IEnumerable<IRequest> statuses)
+        {
+            var statusesToSubmit = new List<IRequest>();
+            var validationErrors = new List<string>();
+
+            foreach (var status in statuses)
+            {
+                var validations = status.Validate().ToList();
+
+                if (validations.Any())
+                {
+                    validationErrors.AddRange(validations);
+
+                    continue;
+                }
+
+                statusesToSubmit.Add(status);
+            }
+
+            return (statusesToSubmit, validationErrors);
         }
     }
 }

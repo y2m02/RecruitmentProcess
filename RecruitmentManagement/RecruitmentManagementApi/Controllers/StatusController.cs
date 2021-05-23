@@ -92,12 +92,37 @@ namespace RecruitmentManagementApi.Controllers
                 ? BadRequest(result)
                 : InternalServerError(result);
         }
+        
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(DeleteStatusRequest request)
+        {
+            var result = await statusService.Delete(request).ConfigureAwait(false);
 
-        //[HttpDelete]
-        //[Route("Delete/{id}")]
-        //public async Task Delete(int id)
-        //{
-        //    await _statusRepository.Delete(Mapper.Map<Status>(new DeleteStatusRequest(id)));
-        //}
+            if (result.HasValidations())
+            {
+                return BadRequest(result);
+            }
+
+            return result.IsSuccess()
+                ? Ok(result)
+                : InternalServerError(result);
+        }
+
+        [HttpDelete]
+        [Route("BatchDelete")]
+        public async Task<IActionResult> BatchDelete(IEnumerable<DeleteStatusRequest> requests)
+        {
+            var result = await statusService.BatchDelete(requests).ConfigureAwait(false);
+
+            if (result.IsPartialSuccess() || result.IsSuccess())
+            {
+                return Ok(result);
+            }
+
+            return result.HasValidations()
+                ? BadRequest(result)
+                : InternalServerError(result);
+        }
     }
 }

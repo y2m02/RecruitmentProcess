@@ -12,6 +12,7 @@ namespace RecruitmentManagementApi.Repositories
     {
         Task BatchCreate(IEnumerable<Status> statuses);
         Task BatchUpdate(IEnumerable<Status> statuses);
+        Task BatchDelete(IEnumerable<Status> statuses);
     }
 
     public class StatusRepository :
@@ -58,12 +59,24 @@ namespace RecruitmentManagementApi.Repositories
                 });
             });
 
-            await Save();
+            await Save().ConfigureAwait(false);
         }
 
         public Task Delete(Status entity)
         {
             return Remove(entity);
+        }
+
+        public async Task BatchDelete(IEnumerable<Status> statuses)
+        {
+            statuses.ForAll(entity =>
+            {
+                Context.Attach(entity);
+
+                Context.Entry(entity).State = EntityState.Deleted;
+            });
+
+            await Save().ConfigureAwait(false);
         }
     }
 }
