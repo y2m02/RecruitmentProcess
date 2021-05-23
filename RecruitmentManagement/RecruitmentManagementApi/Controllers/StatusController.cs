@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
@@ -41,6 +42,22 @@ namespace RecruitmentManagementApi.Controllers
 
             return result.IsSuccess()
                 ? Ok(result)
+                : InternalServerError(result);
+        }
+
+        [HttpPost]
+        [Route("BatchCreate")]
+        public async Task<IActionResult> BatchCreate(IEnumerable<StatusRequest> requests)
+        {
+            var result = await statusService.BatchCreate(requests).ConfigureAwait(false);
+
+            if (result.IsPartialSuccess() || result.IsSuccess())
+            {
+                return Ok(result);
+            }
+
+            return result.HasValidations()
+                ? BadRequest(result)
                 : InternalServerError(result);
         }
 

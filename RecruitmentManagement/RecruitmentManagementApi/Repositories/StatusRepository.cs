@@ -7,7 +7,10 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface IStatusRepository : IBaseRepository<Status> { }
+    public interface IStatusRepository : IBaseRepository<Status>
+    {
+        Task BatchCreate(IEnumerable<Status> statuses);
+    }
 
     public class StatusRepository :
         BaseRepository<Status>,
@@ -27,6 +30,13 @@ namespace RecruitmentManagementApi.Repositories
         public Task Create(Status entity)
         {
             return Add(entity);
+        }
+
+        public async Task BatchCreate(IEnumerable<Status> statuses)
+        {
+            await Context.Statuses.AddRangeAsync(statuses).ConfigureAwait(false);
+
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public Task Update(Status entity)

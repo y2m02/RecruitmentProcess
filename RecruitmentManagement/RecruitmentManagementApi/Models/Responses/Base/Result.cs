@@ -45,6 +45,6 @@ namespace RecruitmentManagementApi.Models.Responses.Base
 
         public bool Failed() => Error.IsNotEmpty();
 
-        public bool IsPartialSuccess() => IsSuccess() && HasValidations();
+        public bool IsPartialSuccess() => Response.HasValue() && HasValidations();
     }
 }
