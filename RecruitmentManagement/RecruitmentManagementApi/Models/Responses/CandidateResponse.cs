@@ -1,4 +1,5 @@
 ﻿using System;
+using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Models.Responses
@@ -13,8 +14,6 @@ namespace RecruitmentManagementApi.Models.Responses
 
         public string GitHub { get; set; }
 
-        public int StatusId { get; set; }
-
-        public int StatusDescription { get; set; }
+        public RecruitmentStatus RecruitmentStatus { get; set; }
     }
 }

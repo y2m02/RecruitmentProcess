@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Extensions;
+using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses;
 
@@ -16,15 +18,16 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.Id,
                     member => member.MapFrom(field => field.StatusId)
                 );
-                //.ForMember(
-                //    destination => destination.InUse,
-                //    member => member.MapFrom(
-                //        field =>
-                //            field.Candidates.Any() ||
-                //            field.Recruitments.Any() ||
-                //            field.RecruitmentUpdateHistories.Any()
-                //    )
-                //);
+
+            //.ForMember(
+            //    destination => destination.InUse,
+            //    member => member.MapFrom(
+            //        field =>
+            //            field.Candidates.Any() ||
+            //            field.Recruitments.Any() ||
+            //            field.RecruitmentUpdateHistories.Any()
+            //    )
+            //);
 
             CreateMap<StatusRequest, Status>();
 
@@ -40,7 +43,6 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.Id)
                 );
 
-
             CreateMap<Candidate, CandidateResponse>()
                 .ForMember(
                     destination => destination.Id,
@@ -53,6 +55,16 @@ namespace RecruitmentManagementApi.Mappings
                             field.Recruitment.HasValue() ||
                             field.RecruitmentUpdateHistories.Any()
                     )
+                )
+                .ForMember(
+                    destination => destination.RecruitmentStatus,
+                    member => member.MapFrom(field => field.Recruitment.Status)
+                );
+
+            CreateMap<CandidateRequest, Candidate>()
+                .ForMember(
+                    destination => destination.Date,
+                    member => member.MapFrom(field => DateTime.Now)
                 );
         }
     }

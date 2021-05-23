@@ -12,18 +12,11 @@ namespace RecruitmentManagementApi.Models.Request.Candidates
 
         public string GitHub { get; set; }
 
-        public int StatusId { get; set; }
-
         public virtual IEnumerable<string> Validate()
         {
             if (Name.IsEmpty())
             {
                 yield return ConsumerMessages.FieldRequired.Format(nameof(Name));
-            }
-
-            if (StatusId <= 0)
-            {
-                yield return ConsumerMessages.FieldRequired.Format(nameof(StatusId));
             }
         }
     }
