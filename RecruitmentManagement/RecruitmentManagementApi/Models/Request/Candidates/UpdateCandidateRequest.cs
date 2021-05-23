@@ -14,7 +14,7 @@ namespace RecruitmentManagementApi.Models.Request.Candidates
         {
             if (Id <= 0)
             {
-                yield return ConsumerMessages.FieldRequired.Format("Id");
+                yield return ConsumerMessages.FieldRequired.Format(nameof(Id));
             }
 
             foreach (var validationError in base.Validate())

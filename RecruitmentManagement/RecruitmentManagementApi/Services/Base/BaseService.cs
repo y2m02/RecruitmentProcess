@@ -105,7 +105,7 @@ namespace RecruitmentManagementApi.Services.Base
             return ConsumerMessages.Created;
         }
 
-        private async Task<string> UpdateEntity(IRequest entity)
+        protected virtual async Task<string> UpdateEntity(IRequest entity)
         {
             await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 

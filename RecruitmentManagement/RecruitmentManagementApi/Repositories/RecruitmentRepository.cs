@@ -7,11 +7,7 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface IRecruitmentRepository
-    {
-        Task<List<Recruitment>> GetAll();
-        Task Update(Recruitment entity);
-    }
+    public interface IRecruitmentRepository : IBaseRepository<Recruitment> { }
 
     public class RecruitmentRepository :
         BaseRepository<Recruitment>,
@@ -29,6 +25,8 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
+        public Task Create(Recruitment entity) => Add(entity);
+
         public async Task Update(Recruitment entity)
         {
             Context.Attach(entity);
@@ -37,12 +35,14 @@ namespace RecruitmentManagementApi.Repositories
                 entity,
                 new()
                 {
-                    nameof(entity.Status),
+                    nameof(entity.Status), 
                     nameof(entity.Note),
                 }
             );
 
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
+
+        public Task Delete(Recruitment entity) => Remove(entity);
     }
 }

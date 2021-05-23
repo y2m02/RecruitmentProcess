@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Extensions;
@@ -72,6 +73,24 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.CandidateId,
                     member => member.MapFrom(field => field.Id)
+                );
+
+            
+            CreateMap<Recruitment, RecruitmentResponse>()
+                .ForMember(
+                    destination => destination.Id,
+                    member => member.MapFrom(field => field.RecruitmentId)
+                )
+                .ForMember(
+                    destination => destination.InUse,
+                    member => member.MapFrom(
+                        field => field.Candidate.HasValue() ||
+                                 field.RecruitmentUpdateHistories.Any()
+                    )
+                )
+                .ForMember(
+                    destination => destination.CandidateName,
+                    member => member.MapFrom(field => field.Candidate.Name)
                 );
         }
     }
