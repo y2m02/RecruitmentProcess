@@ -47,12 +47,12 @@ namespace RecruitmentManagementApi.Services
             return BatchUpsert(statuses, UpsertActionType.Update);
         }
 
-        private Task<Result> BatchUpsert(IEnumerable<IBaseRequest> statuses, UpsertActionType actionType)
+        private Task<Result> BatchUpsert(IEnumerable<IRequest> statuses, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>
                 {
-                    var statusesToSubmit = new List<IBaseRequest>();
+                    var statusesToSubmit = new List<IRequest>();
                     var statusesToValidate = new List<string>();
 
                     foreach (var status in statuses)

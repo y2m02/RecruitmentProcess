@@ -37,17 +37,17 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        public Task<Result> Create(IBaseRequest entity)
+        public Task<Result> Create(IRequest entity)
         {
             return Upsert(entity, UpsertActionType.Create);
         }
 
-        public Task<Result> Update(IBaseRequest entity)
+        public Task<Result> Update(IRequest entity)
         {
             return Upsert(entity, UpsertActionType.Update);
         }
 
-        public Task<Result> Delete(IBaseRequest entity)
+        public Task<Result> Delete(IRequest entity)
         {
             return HandleErrors(
                 async () =>
@@ -88,7 +88,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        private Task<Result> Upsert(IBaseRequest entity, UpsertActionType actionType)
+        private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>

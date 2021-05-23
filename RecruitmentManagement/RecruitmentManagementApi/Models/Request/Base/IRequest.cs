@@ -2,7 +2,7 @@
 
 namespace RecruitmentManagementApi.Models.Request.Base
 {
-    public interface IBaseRequest
+    public interface IRequest
     {
         public IEnumerable<string> Validate();
     }

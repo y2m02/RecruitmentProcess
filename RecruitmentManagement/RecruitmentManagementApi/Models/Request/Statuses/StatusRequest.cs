@@ -4,7 +4,7 @@ using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.Statuses
 {
-    public class StatusRequest : IBaseRequest
+    public class StatusRequest : IRequest
     {
         public string Description { get; set; }
 

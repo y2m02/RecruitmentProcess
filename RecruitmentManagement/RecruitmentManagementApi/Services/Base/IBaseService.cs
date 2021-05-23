@@ -7,8 +7,8 @@ namespace RecruitmentManagementApi.Services.Base
     public interface IBaseService
     {
         Task<Result> GetAll<TResponse>() where TResponse : BaseResponse;
-        Task<Result> Create(IBaseRequest entity);
-        Task<Result> Update(IBaseRequest entity);
-        Task<Result> Delete(IBaseRequest entity);
+        Task<Result> Create(IRequest entity);
+        Task<Result> Update(IRequest entity);
+        Task<Result> Delete(IRequest entity);
     }
 }
