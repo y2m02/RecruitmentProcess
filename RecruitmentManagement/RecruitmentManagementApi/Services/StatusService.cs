@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Request.Statuses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
@@ -15,6 +16,7 @@ namespace RecruitmentManagementApi.Services
     public interface IStatusService : IBaseService
     {
         Task<Result> BatchCreate(IEnumerable<StatusRequest> statuses);
+        Task<Result> BatchUpdate(IEnumerable<UpdateStatusRequest> statuses);
     }
 
     public class StatusService :
@@ -38,12 +40,17 @@ namespace RecruitmentManagementApi.Services
             return BatchUpsert(statuses, UpsertActionType.Create);
         }
 
-        private Task<Result> BatchUpsert(IEnumerable<StatusRequest> statuses, UpsertActionType actionType)
+        public Task<Result> BatchUpdate(IEnumerable<UpdateStatusRequest> statuses)
+        {
+            return BatchUpsert(statuses, UpsertActionType.Update);
+        }
+
+        private Task<Result> BatchUpsert(IEnumerable<IBaseRequest> statuses, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>
                 {
-                    var statusesToSubmit = new List<StatusRequest>();
+                    var statusesToSubmit = new List<IBaseRequest>();
                     var statusesToValidate = new List<string>();
 
                     foreach (var status in statuses)
@@ -64,22 +71,19 @@ namespace RecruitmentManagementApi.Services
                     {
                         case UpsertActionType.Create:
                             await ((IStatusRepository)Repository).BatchCreate(
-                                    Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
-                                )
-                                .ConfigureAwait(false);
-
+                                Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
+                            ).ConfigureAwait(false);
                             break;
 
                         case UpsertActionType.Update:
-                            //await Repository.Update(Mapper.Map<TModel>(statusToSubmit)).ConfigureAwait(false);
+                            await ((IStatusRepository)Repository).BatchUpdate(
+                                Mapper.Map<IEnumerable<Status>>(statusesToSubmit)
+                            ).ConfigureAwait(false);
                             break;
                     }
 
                     return new Result(
-                        response: new
-                        {
-                            success = statusesToSubmit.Select(x => x.Description),
-                        },
+                        response: statusesToSubmit.Select(_ => "Success"),
                         validationErrors: statusesToValidate
                     );
                 }

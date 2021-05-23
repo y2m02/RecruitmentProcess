@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Internal;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Repositories.Base;
@@ -10,6 +11,7 @@ namespace RecruitmentManagementApi.Repositories
     public interface IStatusRepository : IBaseRepository<Status>
     {
         Task BatchCreate(IEnumerable<Status> statuses);
+        Task BatchUpdate(IEnumerable<Status> statuses);
     }
 
     public class StatusRepository :
@@ -36,12 +38,27 @@ namespace RecruitmentManagementApi.Repositories
         {
             await Context.Statuses.AddRangeAsync(statuses).ConfigureAwait(false);
 
-            await Context.SaveChangesAsync().ConfigureAwait(false);
+            await Save().ConfigureAwait(false);
         }
 
         public Task Update(Status entity)
         {
             return Modify(entity);
+        }
+
+        public async Task BatchUpdate(IEnumerable<Status> statuses)
+        {
+            statuses.ForAll(entity =>
+            {
+                Context.Attach(entity);
+
+                AddPropertiesToModify(entity, new List<string>
+                {
+                    nameof(entity.Description)
+                });
+            });
+
+            await Save();
         }
 
         public Task Delete(Status entity)

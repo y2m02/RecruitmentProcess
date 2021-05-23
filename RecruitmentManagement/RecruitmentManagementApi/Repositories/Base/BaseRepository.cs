@@ -45,9 +45,14 @@ namespace RecruitmentManagementApi.Repositories.Base
             );
         }
 
-        private async Task SaveChangesAndDetach(TModel entity)
+        protected async Task Save()
         {
             await Context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private async Task SaveChangesAndDetach(TModel entity)
+        {
+            await Save();
 
             Context.Entry(entity).State = EntityState.Detached;
         }

@@ -60,7 +60,6 @@ namespace RecruitmentManagementApi.Controllers
                 ? BadRequest(result)
                 : InternalServerError(result);
         }
-
         
         [HttpPut]
         [Route("Update")]
@@ -75,6 +74,22 @@ namespace RecruitmentManagementApi.Controllers
 
             return result.IsSuccess()
                 ? Ok(result)
+                : InternalServerError(result);
+        }
+
+        [HttpPut]
+        [Route("BatchUpdate")]
+        public async Task<IActionResult> BatchUpdate(IEnumerable<UpdateStatusRequest> requests)
+        {
+            var result = await statusService.BatchUpdate(requests).ConfigureAwait(false);
+
+            if (result.IsPartialSuccess() || result.IsSuccess())
+            {
+                return Ok(result);
+            }
+
+            return result.HasValidations()
+                ? BadRequest(result)
                 : InternalServerError(result);
         }
 
