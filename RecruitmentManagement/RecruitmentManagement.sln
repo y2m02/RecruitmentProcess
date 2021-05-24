@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecruitmentManagementApi", "RecruitmentManagementApi\RecruitmentManagementApi.csproj", "{267BF21D-4447-4225-AC64-9762A78AF287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecruitmentManagementApi", "RecruitmentManagementApi\RecruitmentManagementApi.csproj", "{267BF21D-4447-4225-AC64-9762A78AF287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecruitmentManagementApp", "RecruitmentManagementApp\RecruitmentManagementApp.csproj", "{F2CF2C90-907E-4A0D-BE04-0ECC2DBE3A74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{267BF21D-4447-4225-AC64-9762A78AF287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267BF21D-4447-4225-AC64-9762A78AF287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267BF21D-4447-4225-AC64-9762A78AF287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2CF2C90-907E-4A0D-BE04-0ECC2DBE3A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2CF2C90-907E-4A0D-BE04-0ECC2DBE3A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2CF2C90-907E-4A0D-BE04-0ECC2DBE3A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2CF2C90-907E-4A0D-BE04-0ECC2DBE3A74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

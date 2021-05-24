@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HelpersLibrary.ApiClientHelper">
+      <HintPath>C:\Users\Raimy Mejía\Documents\Repositories\HelpersLibrary\HelpersLibrary\ApiClientHelper\bin\Debug\netcoreapp3.1\HelpersLibrary.ApiClientHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="HelpersLibrary.Extensions">
+      <HintPath>C:\Users\Raimy Mejía\Documents\Repositories\HelpersLibrary\HelpersLibrary\Extensions\bin\Debug\netcoreapp3.1\HelpersLibrary.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
