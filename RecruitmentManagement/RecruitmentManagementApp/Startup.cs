@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using RecruitmentManagementApp.Client;
 
 namespace RecruitmentManagementApp
@@ -21,8 +22,13 @@ namespace RecruitmentManagementApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            //.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(
+                    options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()
+                );
+
+            // Add Kendo UI services to the services container
+            services.AddKendo();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
 

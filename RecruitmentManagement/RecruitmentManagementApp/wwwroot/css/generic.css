@@ -1,0 +1,81 @@
+﻿.requiredFields {
+    font-size: 10px;
+    padding-left: 20px;
+    padding-top: 10px;
+    text-align: left;
+}
+
+.fieldNameAlign {
+    text-align: left;
+}
+
+.rounded-circle:hover {
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5);
+}
+
+/*.custom-file-input, .rounded-circle {
+    cursor: pointer;
+}*/
+
+.product-photo {
+    background-position: center center;
+    background-size: 32px 35px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0, 0, 0, .2);
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    margin-right: 5px;
+    vertical-align: middle;
+    width: 32px;
+}
+
+.status-description {
+    display: inline-block;
+    line-height: 32px;
+    padding-left: 3px;
+    vertical-align: middle;
+}
+
+#imageId {
+    display: block;
+    height: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+}
+
+.outOfDate {
+    background-color: red !important;
+    color: white !important;
+}
+
+.k-alt outOfDate {
+    background-color: red;
+    color: white;
+}
+
+/*.outOfDate:hover {
+    background-color: red !important;
+    color: white !important;
+}*/
+
+.editButton, .cancelButton {
+    color: black !important;
+}
+
+.fieldRequired {
+    border-color: red;
+}
+
+/*body.modal-open {
+    overflow: hidden;
+}*/
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1470px !important;
+    }
+}
