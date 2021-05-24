@@ -1,0 +1,108 @@
+﻿@using HelpersLibrary.Extensions
+@using Kendo.Mvc
+@using RecruitmentManagementApp.Models.ViewModels
+@{
+    ViewData["Title"] = "Candidatos";
+}
+
+<h1>Candidatos</h1>
+<div>
+    @*<div>
+        <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAssignment">
+            <i class="fas fa-plus"
+               aria-hidden="true">
+            </i>
+            Crear
+        </button>
+        <br />
+        <br />
+    </div>*@
+    @*@await Html.PartialAsync("CreatePartial")*@
+    <div>
+        @(Html.Kendo().Grid<CandidateViewModel>()
+            .Name("Candidates")
+            .Columns(columns =>
+            {
+                columns.Bound(c => c.Id).Hidden();
+                columns.Bound(c => c.Name).Width(190).Groupable(false);
+                columns.Bound(c => c.Date).Width(150);
+                columns.Bound(c => c.Curriculum).Width(150).Groupable(false);
+                columns.Bound(c => c.GitHub).Width(150).Groupable(false);
+                columns.Bound(c => c.StatusDescription)
+                    .Filterable(ftb => ftb
+                        .Multi(true)
+                        .CheckAll(false)
+                        .Messages(msg => msg.SelectedItemsFormat("{0} opciones seleccionadas"))
+                    )
+                    //.ClientTemplate(@"<img src='images/statuses/#= StatusDescription #.png' class='rounded-circle' height='40' width='40' asp-append-version='true'/><div class='status-description'>#: StatusDescription #</div>")
+                    .Width(90);
+                //columns.Command(command =>
+                //{
+                //    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
+                //    command.Custom("btnDelete")
+                //        .Visible("deleteVisible")
+                //        .Text("Eliminar")
+                //        .Click("showRecordToDelete");
+                //}).Width(110);
+            })
+            .Resizable(c => c.Columns(true))
+            .Pageable(pageable => pageable
+                .Refresh(true)
+                .PageSizes(new[] { 20, 35, 50, 100 })
+                .Messages(msg => msg
+                    .Empty("Sin registros")
+                    .ItemsPerPage("registros por página")
+                    .First("Ir a la primera página")
+                    .Last("Ir a la última página")
+                    .Next("Página siguiente")
+                    .Previous("Página anterior")
+                    .Refresh("Refrescar")
+                    .Display("{0} - {1} de {2} registros")
+                    .Page("Página")
+                    .MorePages("Más páginas")))
+            .Navigatable()
+            .Sortable()
+            .Groupable(g => g
+                .Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
+            .Filterable(filterable => filterable
+                .Extra(true)
+                .Operators(op =>
+                    op.ForString(str => str.Clear()
+                        .Contains("Contiene")
+                        .DoesNotContain("No contiene")
+                        .IsEqualTo("Es igual a")
+                        .IsNotEqualTo("Es diferente de")
+                        .StartsWith("Comienza con")
+                        .EndsWith("Termina con"))
+                        .ForDate(date => date.Clear()
+                            .IsEqualTo("Es igual a")
+                            .IsNotEqualTo("Es diferente de")
+                            .IsGreaterThanOrEqualTo("Mayor o igual que")
+                            .IsGreaterThan("Después de")
+                            .IsLessThanOrEqualTo("Hasta")
+                            .IsLessThan("Antes de"))
+                        .ForNumber(num => num.Clear()
+                            .IsEqualTo("Es igual a")
+                            .IsNotEqualTo("Es diferente de")
+                            .IsGreaterThanOrEqualTo("Mayor o igual que")
+                            .IsGreaterThan("Mayor que")
+                            .IsLessThanOrEqualTo("Menor o igual que")
+                            .IsLessThan("Menor que")))
+                .Messages(msg => msg
+                    .Info("Mostrar registros con valor que:")
+                    .And("Y")
+                    .Or("O")
+                    .Filter("Filtrar")
+                    .Clear("Limpiar")))
+            .Scrollable(s => s.Height(700))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .ServerOperation(false)
+                .Sort(s => s.Add("StatusDescription").Descending())
+                .Model(model => model.Id(p => p.Id))
+                .Read(read => read.Action("GetAll", "Candidate"))
+                .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Descending))
+            ))
+    </div>
+</div>

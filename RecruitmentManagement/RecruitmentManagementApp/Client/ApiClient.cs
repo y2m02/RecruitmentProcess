@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using HelpersLibrary.ApiClientHelper;
 using Microsoft.Extensions.Configuration;
+using RecruitmentManagementApp.Models;
 
 namespace RecruitmentManagementApp.Client
 {
@@ -49,7 +49,9 @@ namespace RecruitmentManagementApp.Client
 
             if (response.Successful)
             {
-                return await response.JsonAsync<TResponse>().ConfigureAwait(false);
+                var a = await response.JsonAsync<Result<TResponse>>().ConfigureAwait(false);
+
+                return default;
             }
 
             var message = await response.BodyAsync().ConfigureAwait(false);

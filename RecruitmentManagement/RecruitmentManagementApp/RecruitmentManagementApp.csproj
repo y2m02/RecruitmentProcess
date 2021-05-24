@@ -12,9 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="HelpersLibrary.ApiClientHelper">
-      <HintPath>C:\Users\Raimy Mejía\Documents\Repositories\HelpersLibrary\HelpersLibrary\ApiClientHelper\bin\Debug\netcoreapp3.1\HelpersLibrary.ApiClientHelper.dll</HintPath>
-    </Reference>
     <Reference Include="HelpersLibrary.Extensions">
       <HintPath>C:\Users\Raimy Mejía\Documents\Repositories\HelpersLibrary\HelpersLibrary\Extensions\bin\Debug\netcoreapp3.1\HelpersLibrary.Extensions.dll</HintPath>
     </Reference>
