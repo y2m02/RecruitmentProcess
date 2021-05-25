@@ -49,9 +49,7 @@ namespace RecruitmentManagementApp.Client
 
             if (response.Successful)
             {
-                var a = await response.JsonAsync<Result<TResponse>>().ConfigureAwait(false);
-
-                return a.Response;
+                return (await response.JsonAsync<Result<TResponse>>().ConfigureAwait(false)).Response;
             }
 
             var message = await response.BodyAsync().ConfigureAwait(false);

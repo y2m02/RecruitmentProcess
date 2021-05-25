@@ -60,19 +60,15 @@ namespace RecruitmentManagementApp.Client
         public bool Successful => Status is >= 200 and < 300;
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            HttpResponse?.Dispose();
-        }
+        public void Dispose() => HttpResponse?.Dispose();
+       
 
         /// <summary>
         ///     Get the body of the response.
         /// </summary>
         public Task<string> BodyAsync()
         {
-            var readAsStringAsync = HttpResponse.Content.ReadAsStringAsync();
-
-            return readAsStringAsync;
+            return HttpResponse.Content.ReadAsStringAsync();
         }
 
         /// <summary>

@@ -24,10 +24,8 @@
             .Columns(columns =>
             {
                 columns.Bound(c => c.Id).Hidden();
-                columns.Bound(c => c.Name).Width(190).Groupable(false);
-                columns.Bound(c => c.Date).Width(150);
-                columns.Bound(c => c.Curriculum).Width(150).Groupable(false);
-                columns.Bound(c => c.GitHub).Width(150).Groupable(false);
+                columns.Bound(c => c.Name).Groupable(false).Width(200);
+                columns.Bound(c => c.Date).Format("{0:dd/MM/yyyy}").Width(100);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
                         .Multi(true)
@@ -36,14 +34,12 @@
                     )
                     //.ClientTemplate(@"<img src='images/statuses/#= StatusDescription #.png' class='rounded-circle' height='40' width='40' asp-append-version='true'/><div class='status-description'>#: StatusDescription #</div>")
                     .Width(90);
-                //columns.Command(command =>
-                //{
-                //    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
-                //    command.Custom("btnDelete")
-                //        .Visible("deleteVisible")
-                //        .Text("Eliminar")
-                //        .Click("showRecordToDelete");
-                //}).Width(110);
+                columns.Bound(c => c.Curriculum).Groupable(false).Width(150);
+                columns.Bound(c => c.GitHub).Groupable(false).Width(150);
+                columns.Command(command =>
+                {
+                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
+                }).Width(90);
             })
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
