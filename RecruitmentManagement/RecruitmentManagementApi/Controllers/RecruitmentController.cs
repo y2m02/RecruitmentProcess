@@ -28,6 +28,17 @@ namespace RecruitmentManagementApi.Controllers
                 : InternalServerError(response);
         }
 
+        [HttpGet]
+        [Route("GetHistoryById/{id}")]
+        public async Task<IActionResult> GetHistoryById(int id)
+        {
+            var response = await recruitmentService.GetHistoryById(id).ConfigureAwait(false);
+
+            return response.Succeeded()
+                ? Ok(response)
+                : InternalServerError(response);
+        }
+
         [HttpPut]
         [Route("Update")]
         public async Task<IActionResult> Update(UpdateRecruitmentRequest request)

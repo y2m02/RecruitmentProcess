@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Request.Base;
+using RecruitmentManagementApi.Models.Responses;
+using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
 using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface IRecruitmentService : IBaseService { }
+    public interface IRecruitmentService : IBaseService
+    {
+        Task<Result> GetHistoryById(int id);
+    }
 
     public class RecruitmentService :
         BaseService<Recruitment>,
@@ -51,6 +57,20 @@ namespace RecruitmentManagementApi.Services
             }
 
             return ConsumerMessages.Updated;
+        }
+
+        public Task<Result> GetHistoryById(int id)
+        {
+            return HandleErrors(
+                async () =>
+                {
+                    return new Result(
+                        response: Mapper.Map<List<RecruitmentUpdateHistoryResponse>>(
+                            await ((IRecruitmentRepository)Repository).GetHistoryById(id).ConfigureAwait(false)
+                        )
+                    );
+                }
+            );
         }
     }
 }
