@@ -1,0 +1,60 @@
+﻿@using RecruitmentManagementApp.Models.ViewModels
+<style>
+    .k-detail-cell .k-tabstrip .k-content {
+        padding: 0.2em;
+    }
+</style>
+
+<script id="recruitmentUpdateHistory" type="text/kendo-tmpl">
+        @(Html.Kendo().TabStrip()
+            .Name("tabStrip_#=Id#")
+            .SelectedIndex(0)
+            .Animation(animation => animation.Open(open => open.Fade(FadeDirection.In)))
+            .Items(items =>
+            {
+                items.Add()
+                    .Text("Historial")
+                    .Content(
+                        @<text>
+                            @(Html.Kendo().Grid<RecruitmentUpdateHistoryViewModel>()
+                                .Name("Recruitments_#=Id#")
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(c => c.Id).Hidden();
+                                    columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(100);
+                                    columns.Bound(c => c.StatusDescription).Width(100);
+                                    columns.Bound(c => c.Note).Width(100);
+                                })
+                                .Pageable(pageable => pageable
+                                    .Refresh(true)
+                                    .PageSizes(new[] { 10, 15, 20 })
+                                    .Messages(msg => msg
+                                        .Empty("Sin registros")
+                                        .ItemsPerPage("registros por página")
+                                        .First("Ir a la primera página")
+                                        .Last("Ir a la última página")
+                                        .Next("Página siguiente")
+                                        .Previous("Página anterior")
+                                        .Refresh("Refrescar")
+                                        .Display("{0} - {1} de {2} registros")
+                                        .Page("Página")
+                                        .MorePages("Más páginas")))
+                                .Navigatable()
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .DataSource(dataSource => dataSource
+                                    .Ajax()
+                                    .PageSize(10)
+                                    .ServerOperation(false)
+                                    .Model(model => model.Id(p => p.Id))
+                                    .Read(read => read.Action(
+                                        "GetHistoryByRecruitmentId",
+                                        "Recruitment",
+                                        new { recruitmentId = "#=Id#" })
+                                    )
+                                )
+                                .ToClientTemplate())
+                    </text>
+                );
+            }).ToClientTemplate())
+
+</script>

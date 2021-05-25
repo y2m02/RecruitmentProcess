@@ -85,6 +85,7 @@
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
             .Scrollable(s => s.Height(700))
+            .ClientDetailTemplateId("recruitmentUpdateHistory")
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
@@ -96,5 +97,6 @@
             ))
     </div>
 </div>
+@await Html.PartialAsync("RecruitmentUpdateHistoryPartial")
 
 <script src="~/js/recruitment.js"></script>
