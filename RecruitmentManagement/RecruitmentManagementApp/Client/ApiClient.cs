@@ -10,7 +10,7 @@ namespace RecruitmentManagementApp.Client
     {
         Task<TResponse> Get<TResponse>(string resource);
         Task<TResponse> Post<TResponse>(string resource, object body = null);
-        Task Put<TResponse>(string resource, object body = null);
+        Task<TResponse> Put<TResponse>(string resource, object body = null);
         Task<TResponse> Delete<TResponse>(string resource);
     }
 
@@ -33,7 +33,7 @@ namespace RecruitmentManagementApp.Client
             return Execute<TResponse>(resource, client.WithBody(body).PostAsync);
         }
 
-        public Task Put<TResponse>(string resource, object body = null)
+        public Task<TResponse> Put<TResponse>(string resource, object body = null)
         {
             return Execute<TResponse>(resource, client.WithBody(body).PutAsync);
         }

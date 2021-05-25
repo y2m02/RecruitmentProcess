@@ -40,21 +40,13 @@
 
 function clearErrorMessage(parameters) {
     for (var i = 0; i < parameters.length; i++) {
-        if (parameters[i].key == "dtpDate") {
-            window.$(".k-picker-wrap").css("borderColor", "");
-        } else {
-            window.$("#" + parameters[i].key).css("borderColor", "");
-        }
-        window.$("#" + parameters[i].value).html("");
+        window.$("#" + parameters[i].field).css("borderColor", "");
+        window.$("#" + parameters[i].label).html("");
     }
 }
 
 function removeErrorMessage(id, messageId) {
-    if (id == "dtpDate") {
-        window.$(".k-picker-wrap").css("borderColor", "");
-    } else {
-        window.$("#" + id).css("borderColor", "");
-    }
+    window.$("#" + id).css("borderColor", "");
 
     window.$("#" + messageId).html("");
 }
@@ -63,12 +55,7 @@ function buildError(field, label) {
     var fieldId = "#" + field;
 
     if (window.$(fieldId).val() === "") {
-        if (field == "dtpDate") {
-            window.$(".k-picker-wrap").css("border-color", "red", "important");
-        } else {
-            window.$(fieldId).css("border-color", "red", "important");
-        }
-
+       window.$(fieldId).css("border-color", "red", "important");
 
         window.$("#" + label).html("Campo requerido");
         return false;
@@ -78,7 +65,6 @@ function buildError(field, label) {
 
     return true;
 }
-
 
 function GetDropDownListData(elementId, id, controllerName) {
     window.$.ajax({

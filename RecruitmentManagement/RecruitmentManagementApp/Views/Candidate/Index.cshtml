@@ -7,8 +7,8 @@
 
 <h1>Candidatos</h1>
 <div>
-    @*<div>
-        <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAssignment">
+    <div>
+        <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCandidate">
             <i class="fas fa-plus"
                aria-hidden="true">
             </i>
@@ -16,8 +16,8 @@
         </button>
         <br />
         <br />
-    </div>*@
-    @*@await Html.PartialAsync("CreatePartial")*@
+    </div>
+    @await Html.PartialAsync("CreatePartial")
     <div>
         @(Html.Kendo().Grid<CandidateViewModel>()
             .Name("Candidates")
@@ -25,7 +25,7 @@
             {
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
-                columns.Bound(c => c.Date).Format("{0:dd/MM/yyyy}").Width(100);
+                columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(100);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
                         .Multi(true)
@@ -102,3 +102,5 @@
             ))
     </div>
 </div>
+
+<script src="~/js/candidate.js"></script>

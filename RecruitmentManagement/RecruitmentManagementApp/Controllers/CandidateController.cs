@@ -4,6 +4,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApp.Client;
+using RecruitmentManagementApp.Models.Requests;
 using RecruitmentManagementApp.Models.ViewModels;
 
 namespace RecruitmentManagementApp.Controllers
@@ -29,6 +30,16 @@ namespace RecruitmentManagementApp.Controllers
                 .ConfigureAwait(false);
 
             return Json(await response.ToDataSourceResultAsync(request));
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Upsert(CandidateRequest request)
+        {
+            var response = request.IsUpdate()
+                ? await client.Put<string>(resource: "Candidate/Update", body: request).ConfigureAwait(false)
+                : await client.Post<string>(resource: "Candidate/Create", body: request).ConfigureAwait(false);
+
+            return Json(response);
         }
     }
 }

@@ -10,8 +10,10 @@ namespace RecruitmentManagementApp.Models.ViewModels
         [DisplayName("Nombre")]
         public string Name { get; set; }
 
-        [DisplayName("Fecha")]
         public DateTime Date { get; set; }
+
+        [DisplayName("Fecha")]
+        public DateTime CreatedDate => Date.Date;
 
         [DisplayName("Currículo")]
         public string Curriculum { get; set; }
