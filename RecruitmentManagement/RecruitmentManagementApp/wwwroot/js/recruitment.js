@@ -1,44 +1,42 @@
-﻿$("#Candidates").delegate(".editButton",
+﻿$("#Recruitments").delegate(".editButton",
     "click",
     function(e) {
         e.preventDefault();
 
-        var grid = window.$("#Candidates").data("kendoGrid");
+        var grid = window.$("#Recruitments").data("kendoGrid");
         var rowData = grid.dataItem(window.$(this).closest("tr"));
 
         fillFields(rowData);
 
-        window.$("#myModalCandidate").modal();
+        window.$("#myModalRecruitment").modal();
     });
 
 function fillFields(rowData) {
     window.$("#txtId").val(rowData.Id);
-    window.$("#txtName").val(rowData.Name);
-    window.$("#txtCurriculum").val(rowData.Curriculum);
-    window.$("#txtGitHub").val(rowData.GitHub);
+    window.$("#cbxStatus").val(rowData.Status);
+    window.$("#txtNote").val(rowData.Note);
 }
 
-$("#myModalCandidate").on("hidden.bs.modal",
+$("#myModalRecruitment").on("hidden.bs.modal",
     function() {
         window.$("#txtId").val("");
-        window.$("#txtName").val("");
-        window.$("#txtCurriculum").val("");
-        window.$("#txtGitHub").val("");
+        window.$("#cbxStatus").val("");
+        window.$("#txtNote").val("");
 
-        removeErrorMessage("txtName", "lblNameError");
+        removeErrorMessage("cbxStatus","lblStatusError");
     });
 
 function isValid() {
     document.body.style.cursor = "wait";
 
-    var name = buildError("txtName", "lblNameError");
+    var name = buildError("cbxStatus", "lblStatusError");
 
     document.body.style.cursor = "default";
 
     return name;
 }
 
-function upsertCandidate() {
+function updateRecruitment() {
     document.body.style.cursor = 'wait';
 
     if (!isValid()) {
@@ -47,26 +45,24 @@ function upsertCandidate() {
     }
 
     var id = window.$("#txtId").val();
-    var name = window.$("#txtName").val();
-    var curriculum = window.$("#txtCurriculum").val();
-    var gitHub = window.$("#txtGitHub").val();
+    var status = parseInt(window.$("#cbxStatus").val());
+    var note = window.$("#txtNote").val();
 
     var request = {
         "Id": id == '' ? 0 : parseInt(id),
-        "Name": name,
-        "Curriculum": curriculum,
-        "GitHub": gitHub
+        "Status": status,
+        "Note": note,
     };
 
     window.$.ajax({
-        url: "Candidate/Upsert",
+        url: "Recruitment/Update",
         data: { request: request },
-        type: "POST",
+        type: "PUT",
         content: "application/json;",
         dataType: "json",
         success: function (result) {
-            window.$('#myModalCandidate').modal('toggle');
-            RefreshGrid('Candidates');
+            window.$('#myModalRecruitment').modal('toggle');
+            RefreshGrid('Recruitments');
             document.body.style.cursor = 'default';
         },
         error: function (errorMessage) {
@@ -78,7 +74,7 @@ function upsertCandidate() {
     return true;
 }
 
-window.$("#txtName").on("input",
+window.$("#cbxStatus").on("change",
     function() {
-        removeErrorMessage("txtName", "lblNameError");
+        removeErrorMessage("cbxStatus","lblStatusError");
     });

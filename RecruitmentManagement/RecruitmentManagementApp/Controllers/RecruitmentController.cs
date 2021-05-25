@@ -34,7 +34,7 @@ namespace RecruitmentManagementApp.Controllers
             return Json(await response.ToDataSourceResultAsync(request));
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<JsonResult> Update(UpdateRecruitmentRequest request)
         {
             var response = await client

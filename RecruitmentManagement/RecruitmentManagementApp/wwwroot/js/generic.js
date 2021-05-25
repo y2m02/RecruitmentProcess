@@ -38,17 +38,10 @@
     });
 });
 
-function clearErrorMessage(parameters) {
-    for (var i = 0; i < parameters.length; i++) {
-        window.$("#" + parameters[i].field).css("borderColor", "");
-        window.$("#" + parameters[i].label).html("");
-    }
-}
+function removeErrorMessage(field, label) {
+    window.$("#" + field).css("borderColor", "");
 
-function removeErrorMessage(id, messageId) {
-    window.$("#" + id).css("borderColor", "");
-
-    window.$("#" + messageId).html("");
+    window.$("#" + label).html("");
 }
 
 function buildError(field, label) {

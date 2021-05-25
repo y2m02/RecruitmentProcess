@@ -7,7 +7,7 @@
 <h1>Reclutamiento</h1>
 <br />
 <div>
-    @*@await Html.PartialAsync("UpsertPartial")*@
+    @await Html.PartialAsync("UpdatePartial")
     <div>
         @(Html.Kendo().Grid<RecruitmentViewModel>()
             .Name("Recruitments")
@@ -97,4 +97,4 @@
     </div>
 </div>
 
-@*<script src="~/js/candidate.js"></script>*@
+<script src="~/js/recruitment.js"></script>

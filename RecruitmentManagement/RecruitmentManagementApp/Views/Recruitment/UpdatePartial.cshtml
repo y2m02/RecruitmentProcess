@@ -1,0 +1,92 @@
+﻿@using RecruitmentManagementApp.Models.Enums
+@using HelpersLibrary.Extensions
+@model RecruitmentManagementApp.Models.Requests.UpdateRecruitmentRequest
+
+@{
+    var statuses = Enum
+        .GetValues(typeof(RecruitmentStatus))
+        .Cast<RecruitmentStatus>()
+        .Select(status => new
+        {
+            Id = (int)status,
+            Value = status.GetDescription(),
+        });
+}
+
+<div class="modal fade" id="myModalRecruitment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Editar</h4>
+            </div>
+            <div class="requiredFields">
+                @Html.Label("", "Campos con (*) son obligatorios.", new { @class = "text-danger" })
+            </div>
+            @Html.TextBoxFor(model => model.Id, new { @class = "form-control", Id = "txtId", hidden = true })
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="fieldNameAlign">
+                        @Html.LabelFor(model => model.Status) @Html.Label("", "*", new { @class = "text-danger" })
+                    </div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fas fa-building"
+                                   aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                        @Html.DropDownListFor(
+                            model => model.Status,
+                            new SelectList(statuses, "Id", "Value"),
+                            "Elija una opción",
+                            new
+                            {
+                                @class = "form-control",
+                                Id = "cbxStatus",
+                                style = "width: 90%"
+                            })
+                        <span id="lblStatusError" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="fieldNameAlign">
+                        @Html.LabelFor(model => model.Note)
+                    </div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fas fa-pencil-alt"
+                                   aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                        @Html.TextBoxFor(
+                            model => model.Note,
+                            new
+                            {
+                                @class = "form-control",
+                                Id = "txtNote",
+                                style = "width: 90%"
+                            })
+                        <span id="lblNoteError" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="return updateRecruitment();">
+                    <i class="fas fa-save"
+                       aria-hidden="true">
+                    </i>
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fas fa-times"
+                       aria-hidden="true">
+                    </i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
