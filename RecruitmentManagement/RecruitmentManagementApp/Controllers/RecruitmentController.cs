@@ -40,14 +40,11 @@ namespace RecruitmentManagementApp.Controllers
         )
         {
             var response = await client
-                .Get<List<RecruitmentViewModel>>("Recruitment/Get")
+                .Get<List<RecruitmentUpdateHistoryViewModel>>($"Recruitment/GetHistoryById/{recruitmentId}")
                 .ConfigureAwait(false);
 
-            var history = response
-                .SelectMany(x => x.RecruitmentUpdateHistories)
-                .Where(x => x.RecruitmentId == recruitmentId);
 
-            return Json(await history.ToDataSourceResultAsync(request));
+            return Json(await response.ToDataSourceResultAsync(request));
         }
 
         [HttpPut]
