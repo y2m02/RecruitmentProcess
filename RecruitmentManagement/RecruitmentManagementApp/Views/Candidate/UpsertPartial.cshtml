@@ -1,4 +1,4 @@
-﻿@model RecruitmentManagementApp.Models.Requests.CandidateRequest
+﻿@model RecruitmentManagementApp.Models.Requests.UpsertCandidateRequest
 
 <div class="modal fade" id="myModalCandidate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnUpsert" onclick="return createCandidate();">
+                <button type="button" class="btn btn-primary" id="btnUpsert" onclick="return upsertCandidate();">
                     <i class="fas fa-save"
                        aria-hidden="true">
                     </i>

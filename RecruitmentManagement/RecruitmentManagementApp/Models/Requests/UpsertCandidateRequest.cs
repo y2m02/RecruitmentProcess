@@ -2,7 +2,7 @@
 
 namespace RecruitmentManagementApp.Models.Requests
 {
-    public class CandidateRequest : BaseRequest
+    public class UpsertCandidateRequest : BaseRequest
     {
         [DisplayName("Nombre")]
         public string Name { get; set; }

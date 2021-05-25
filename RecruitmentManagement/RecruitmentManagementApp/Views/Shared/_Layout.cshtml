@@ -40,7 +40,8 @@
                     .Name("Menu")
                     .Items(items =>
                     {
-                        items.Add().Text("Home").Action("Index", "Home", new {area = ""});
+                        items.Add().Text("Candidatos").Action("Index", "Candidate", new {area = ""});
+                        items.Add().Text("Reclutamiento").Action("Index", "Recruitment", new {area = ""});
                     })
                     )
                 </kendo-responsivepanel>

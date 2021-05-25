@@ -1,6 +1,6 @@
 ﻿namespace RecruitmentManagementApp.Models.Requests
 {
-    public class BaseRequest
+    public abstract class BaseRequest
     {
         public int Id { get; set; }
 

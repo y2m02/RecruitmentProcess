@@ -1,31 +1,20 @@
-﻿@using HelpersLibrary.Extensions
+﻿@using RecruitmentManagementApp.Models.ViewModels
 @using Kendo.Mvc
-@using RecruitmentManagementApp.Models.ViewModels
 @{
-    ViewData["Title"] = "Candidatos";
+    ViewData["Title"] = "Reclutamiento";
 }
 
-<h1>Candidatos</h1>
+<h1>Reclutamiento</h1>
 <br />
 <div>
+    @*@await Html.PartialAsync("UpsertPartial")*@
     <div>
-        <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCandidate">
-            <i class="fas fa-plus"
-               aria-hidden="true">
-            </i>
-            Crear
-        </button>
-        <br />
-        <br />
-    </div>
-    @await Html.PartialAsync("UpsertPartial")
-    <div>
-        @(Html.Kendo().Grid<CandidateViewModel>()
-            .Name("Candidates")
+        @(Html.Kendo().Grid<RecruitmentViewModel>()
+            .Name("Recruitments")
             .Columns(columns =>
             {
                 columns.Bound(c => c.Id).Hidden();
-                columns.Bound(c => c.Name).Groupable(false).Width(200);
+                columns.Bound(c => c.CandidateName).Groupable(false).Width(200);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(100);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
@@ -33,19 +22,23 @@
                         .CheckAll(false)
                         .Messages(msg => msg.SelectedItemsFormat("{0} opciones seleccionadas"))
                     )
-                    //.ClientTemplate(@"<img src='images/statuses/#= StatusDescription #.png' class='rounded-circle' height='40' width='40' asp-append-version='true'/><div class='status-description'>#: StatusDescription #</div>")
                     .Width(90);
-                columns.Bound(c => c.Curriculum).Groupable(false).Width(150);
-                columns.Bound(c => c.GitHub).Groupable(false).Width(150);
+                columns.Bound(c => c.Note).Groupable(false).Width(150);
                 columns.Command(command =>
                 {
-                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
+                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object>
+                    {
+                        ["class"] = "editButton",
+                    });
                 }).Width(90);
             })
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
                 .Refresh(true)
-                .PageSizes(new[] { 20, 35, 50, 100 })
+                .PageSizes(new[]
+                {
+                    20, 35, 50, 100,
+                })
                 .Messages(msg => msg
                     .Empty("Sin registros")
                     .ItemsPerPage("registros por página")
@@ -98,10 +91,10 @@
                 .ServerOperation(false)
                 .Sort(s => s.Add("StatusDescription").Descending())
                 .Model(model => model.Id(p => p.Id))
-                .Read(read => read.Action("GetAll", "Candidate"))
+                .Read(read => read.Action("GetAll", "Recruitment"))
                 .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Descending))
             ))
     </div>
 </div>
 
-<script src="~/js/candidate.js"></script>
+@*<script src="~/js/candidate.js"></script>*@

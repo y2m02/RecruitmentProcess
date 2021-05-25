@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Responses.Base;
 

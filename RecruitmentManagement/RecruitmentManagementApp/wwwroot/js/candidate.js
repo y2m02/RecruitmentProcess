@@ -43,7 +43,7 @@ function isValid() {
     return name;
 }
 
-function createCandidate() {
+function upsertCandidate() {
     document.body.style.cursor = 'wait';
 
     if (!isValid()) {

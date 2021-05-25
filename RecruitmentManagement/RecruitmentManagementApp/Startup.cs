@@ -62,7 +62,7 @@ namespace RecruitmentManagementApp
                 {
                     endpoints.MapControllerRoute(
                         name: "default",
-                        pattern: "{controller=Candidate}/{action=Index}/{id?}"
+                        pattern: "{controller=Recruitment}/{action=Index}/{id?}"
                     );
                 }
             );
