@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.14" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2021.2.511" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.406" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="HelpersLibrary.Extensions">
-      <HintPath>C:\Users\Raimy Mejía\Documents\Repositories\HelpersLibrary\HelpersLibrary\Extensions\bin\Debug\netcoreapp3.1\HelpersLibrary.Extensions.dll</HintPath>
+      <HintPath>..\HelpersLibrary.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
 

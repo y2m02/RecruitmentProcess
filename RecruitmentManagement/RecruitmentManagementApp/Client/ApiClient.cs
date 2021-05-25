@@ -51,7 +51,7 @@ namespace RecruitmentManagementApp.Client
             {
                 var a = await response.JsonAsync<Result<TResponse>>().ConfigureAwait(false);
 
-                return default;
+                return a.Response;
             }
 
             var message = await response.BodyAsync().ConfigureAwait(false);
