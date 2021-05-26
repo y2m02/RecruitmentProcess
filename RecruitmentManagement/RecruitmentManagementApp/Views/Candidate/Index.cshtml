@@ -99,7 +99,7 @@
                 .Sort(s => s.Add("StatusDescription").Descending())
                 .Model(model => model.Id(p => p.Id))
                 .Read(read => read.Action("GetAll", "Candidate"))
-                .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Descending))
+                .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Ascending))
             ))
     </div>
 </div>
