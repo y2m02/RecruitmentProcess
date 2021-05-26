@@ -14,6 +14,6 @@ namespace RecruitmentManagementApi.Models.Entities
         public string Key { get; set; }
 
         [Required]
-        public bool IsValid { get; set; }
+        public bool IsActive { get; set; }
     }
 }

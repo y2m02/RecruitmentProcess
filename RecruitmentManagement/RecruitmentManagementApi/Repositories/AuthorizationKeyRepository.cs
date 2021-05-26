@@ -22,7 +22,7 @@ namespace RecruitmentManagementApi.Repositories
         {
             return Context
                 .AuthorizationKeys
-                .AnyAsync(x => x.IsValid && x.Key == key);
+                .AnyAsync(x => x.IsActive && x.Key == key);
         }
     }
 }
