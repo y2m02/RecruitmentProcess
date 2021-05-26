@@ -14,10 +14,8 @@ namespace RecruitmentManagementApp.Models.ViewModels
         [DisplayName("Nombre")]
         public string CandidateName { get; set; }
 
-        public DateTime Date { get; set; }
-
         [DisplayName("Fecha")]
-        public DateTime CreatedDate => Date.Date;
+        public DateTime Date { get; set; }
 
         [DisplayName("Nota")]
         public string Note { get; set; }
