@@ -33,6 +33,20 @@ namespace RecruitmentManagementApi.Services
             this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
         }
 
+        public Task<Result> GetHistoryById(int id)
+        {
+            return HandleErrors(
+                async () =>
+                {
+                    return new Result(
+                        response: Mapper.Map<List<RecruitmentUpdateHistoryResponse>>(
+                            await recruitmentUpdateHistoryRepository.GetByRecruitmentId(id).ConfigureAwait(false)
+                        )
+                    );
+                }
+            );
+        }
+
         protected override async Task<string> UpdateEntity(IRequest entity)
         {
             var recruitmentToUpdate = Mapper.Map<Recruitment>(entity);
@@ -55,22 +69,15 @@ namespace RecruitmentManagementApi.Services
                     }
                 ).ConfigureAwait(false);
             }
+            else
+            {
+                await recruitmentUpdateHistoryRepository.UpdateLastHistoryNote(
+                    recruitmentToUpdate.RecruitmentId,
+                    recruitmentToUpdate.Note
+                ).ConfigureAwait(false);
+            }
 
             return ConsumerMessages.Updated;
-        }
-
-        public Task<Result> GetHistoryById(int id)
-        {
-            return HandleErrors(
-                async () =>
-                {
-                    return new Result(
-                        response: Mapper.Map<List<RecruitmentUpdateHistoryResponse>>(
-                            await ((IRecruitmentRepository)Repository).GetHistoryById(id).ConfigureAwait(false)
-                        )
-                    );
-                }
-            );
         }
     }
 }

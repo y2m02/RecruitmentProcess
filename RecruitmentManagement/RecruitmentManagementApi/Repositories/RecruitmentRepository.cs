@@ -12,7 +12,6 @@ namespace RecruitmentManagementApi.Repositories
     {
         Task<Recruitment> GetById(int id);
         Task<RecruitmentStatus> GetStatus(int id);
-        Task<List<RecruitmentUpdateHistory>> GetHistoryById(int id);
     }
 
     public class RecruitmentRepository :
@@ -41,16 +40,6 @@ namespace RecruitmentManagementApi.Repositories
         public async Task<RecruitmentStatus> GetStatus(int id)
         {
             return (await GetById(id).ConfigureAwait(false)).Status;
-        }
-
-        public Task<List<RecruitmentUpdateHistory>> GetHistoryById(int id)
-        {
-            return Context.RecruitmentUpdateHistories
-                .AsNoTracking()
-                .Where(x => x.RecruitmentId == id)
-                .OrderByDescending(r => r.Date)
-                .Skip(1)
-                .ToListAsync();
         }
 
         public Task Create(Recruitment entity) => Add(entity);
