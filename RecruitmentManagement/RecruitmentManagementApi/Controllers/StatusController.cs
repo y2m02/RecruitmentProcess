@@ -8,7 +8,7 @@ using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
 {
-    public class StatusController : BaseApiController
+    public class StatusController /*: BaseApiController*/
     {
         //private readonly IStatusService statusService;
 

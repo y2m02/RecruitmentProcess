@@ -24,13 +24,13 @@ namespace RecruitmentManagementApi.Models.Responses.Base
 
         public Result(string errorMessage)
         {
-            Error = $"Hubo un error duranto el proceso:\n\n {errorMessage}";
+            Error = $"There was an error while processing:\n\n {errorMessage}";
         }
 
         public Result(IEnumerable<string> validationErrors, string errorMessage)
         {
             ValidationErrors = validationErrors;
-            Error = $"Hubo un error duranto el proceso:\n\n {errorMessage}";
+            Error = $"There was an error while processing:\n\n {errorMessage}";
         }
 
         public object Response { get; }

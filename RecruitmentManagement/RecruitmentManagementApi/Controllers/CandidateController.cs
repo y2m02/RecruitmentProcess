@@ -11,35 +11,54 @@ namespace RecruitmentManagementApi.Controllers
         private readonly ICandidateService candidateService;
 
         public CandidateController(
+            IAuthorizationKeyService authorizationKeyService,
             ICandidateService candidateService
-        )
+        ) : base(authorizationKeyService)
         {
             this.candidateService = candidateService;
         }
 
         [HttpGet]
         [Route("Get")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromHeader] string apiKey)
         {
-            var response = await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false);
+            return await ValidateRequest(
+                apiKey,
+                async () =>
+                {
+                    var response = await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false);
 
-            return response.Succeeded()
-                ? Ok(response)
-                : InternalServerError(response);
+                    return response.Succeeded()
+                        ? Ok(response)
+                        : InternalServerError(response);
+                }
+            ).ConfigureAwait(false);
         }
 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> Create(CandidateRequest request)
+        public async Task<IActionResult> Create(
+            [FromHeader] string apiKey,
+            CandidateRequest request
+        )
         {
-            return ValidateResult(await candidateService.Create(request).ConfigureAwait(false));
+            return await ValidateRequest(
+                apiKey,
+                async () => ValidateResult(await candidateService.Create(request).ConfigureAwait(false))
+            ).ConfigureAwait(false);
         }
 
         [HttpPut]
         [Route("Update")]
-        public async Task<IActionResult> Update(UpdateCandidateRequest request)
+        public async Task<IActionResult> Update(
+            [FromHeader] string apiKey,
+            UpdateCandidateRequest request
+        )
         {
-            return ValidateResult(await candidateService.Update(request).ConfigureAwait(false));
+            return await ValidateRequest(
+                apiKey,
+                async () => ValidateResult(await candidateService.Update(request).ConfigureAwait(false))
+            ).ConfigureAwait(false);
         }
     }
 }
