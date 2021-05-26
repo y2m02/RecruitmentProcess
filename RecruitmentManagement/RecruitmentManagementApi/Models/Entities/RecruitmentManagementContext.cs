@@ -11,5 +11,6 @@ namespace RecruitmentManagementApi.Models.Entities
         public DbSet<Candidate> Candidates { get; set; }
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
+        public DbSet<AuthorizationKey> AuthorizationKeys { get; set; }
     }
 }
