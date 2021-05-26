@@ -20,7 +20,9 @@ namespace RecruitmentManagementApp.Client
 
         public ApiClient(IConfiguration configuration)
         {
-            client = client.WithBaseUrl(configuration.GetSection("API_URL").Value);
+            client = client
+                .WithBaseUrl(configuration.GetSection("API_URL").Value)
+                .WithHeader("apiKey", configuration.GetSection("API_KEY").Value);
         }
 
         public Task<TResponse> Get<TResponse>(string resource)
