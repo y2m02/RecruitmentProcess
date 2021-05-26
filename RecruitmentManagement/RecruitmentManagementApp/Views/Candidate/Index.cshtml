@@ -5,6 +5,12 @@
     ViewData["Title"] = "Candidatos";
 }
 
+<style>
+    .k-command-cell.k-command-cell.k-command-cell {
+        text-align: center;
+    }
+</style>
+
 <h1>Candidatos</h1>
 <br />
 <div>
@@ -24,6 +30,10 @@
             .Name("Candidates")
             .Columns(columns =>
             {
+                columns.Command(command =>
+                {
+                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
+                }).Width(90);
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(100);
@@ -37,10 +47,6 @@
                     .Width(90);
                 columns.Bound(c => c.Curriculum).Groupable(false).Width(150);
                 columns.Bound(c => c.GitHub).Groupable(false).Width(150);
-                columns.Command(command =>
-                {
-                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
-                }).Width(90);
             })
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
