@@ -2,6 +2,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RecruitmentManagementApi.Models;
+using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Services;
 
@@ -35,18 +37,11 @@ namespace RecruitmentManagementApi.Controllers
                 : InternalServerError(result);
         }
 
-
-
-        protected async Task<IActionResult> ValidateRequest(string apiKey, Func<Task<IActionResult>> executor)
+        protected async Task<IActionResult> ValidateApiKey(string apiKey, Func<Task<IActionResult>> executor)
         {
-            if (!await authorizationKeyService.Exists(apiKey).ConfigureAwait(false))
-            {
-                return Unauthorized(
-                    new { error = $"The key '{apiKey}' is invalid for this API" }
-                );
-            }
-
-            return await executor().ConfigureAwait(false);
+            return await authorizationKeyService.Exists(apiKey).ConfigureAwait(false)
+                ? await executor().ConfigureAwait(false)
+                : Unauthorized(new { error = ConsumerMessages.InvalidApiKey.Format(apiKey) });
         }
     }
 }

@@ -22,7 +22,7 @@ namespace RecruitmentManagementApi.Controllers
         [Route("Get")]
         public async Task<IActionResult> GetAll([FromHeader] string apiKey)
         {
-            return await ValidateRequest(
+            return await ValidateApiKey(
                 apiKey,
                 async () =>
                 {
@@ -42,7 +42,7 @@ namespace RecruitmentManagementApi.Controllers
             CandidateRequest request
         )
         {
-            return await ValidateRequest(
+            return await ValidateApiKey(
                 apiKey,
                 async () => ValidateResult(await candidateService.Create(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace RecruitmentManagementApi.Controllers
             UpdateCandidateRequest request
         )
         {
-            return await ValidateRequest(
+            return await ValidateApiKey(
                 apiKey,
                 async () => ValidateResult(await candidateService.Update(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
