@@ -27,16 +27,16 @@
                     });
                 }).Width(90);
                 columns.Bound(c => c.Id).Hidden();
-                columns.Bound(c => c.CandidateName).Groupable(false).Width(200);
-                columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(100);
+                columns.Bound(c => c.CandidateName).Groupable(false).Width(250);
+                columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
                         .Multi(true)
                         .CheckAll(false)
                         .Messages(msg => msg.SelectedItemsFormat("{0} opciones seleccionadas"))
                     )
-                    .Width(90);
-                columns.Bound(c => c.Note).Groupable(false).Width(150);
+                    .Width(150);
+                columns.Bound(c => c.Note).Groupable(false).Width(300);
             })
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable

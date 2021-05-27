@@ -23,7 +23,7 @@
                                     columns.Bound(c => c.Id).Hidden();
                                     columns.Bound(c => c.Date).Format("{0:dd/MM/yyyy hh:mm tt}").Width(100);
                                     columns.Bound(c => c.StatusDescription).Width(100);
-                                    columns.Bound(c => c.Note).Width(100);
+                                    columns.Bound(c => c.Note).Width(300);
                                 })
                                 .Pageable(pageable => pageable
                                     .Refresh(true)
