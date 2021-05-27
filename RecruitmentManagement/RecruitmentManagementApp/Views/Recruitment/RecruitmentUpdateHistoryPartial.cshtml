@@ -41,6 +41,7 @@
                                         .MorePages("Más páginas")))
                                 .Navigatable()
                                 .HtmlAttributes(new { style = "width:100%;" })
+                                .Scrollable(s => s.Height("auto"))
                                 .DataSource(dataSource => dataSource
                                     .Ajax()
                                     .PageSize(10)

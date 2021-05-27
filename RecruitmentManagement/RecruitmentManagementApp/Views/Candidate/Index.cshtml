@@ -63,8 +63,7 @@
                     .MorePages("Más páginas")))
             .Navigatable()
             .Sortable()
-            .Groupable(g => g
-                .Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
+            .Groupable(g => g.Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
             .Filterable(filterable => filterable
                 .Extra(true)
                 .Operators(op =>
@@ -95,7 +94,7 @@
                     .Or("O")
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
-            .Scrollable(s => s.Height(700))
+            .Scrollable(s => s.Height("auto"))
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
