@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApp.Client;
 using RecruitmentManagementApp.Models.Requests;
 using RecruitmentManagementApp.Models.ViewModels;
@@ -42,7 +40,6 @@ namespace RecruitmentManagementApp.Controllers
             var response = await client
                 .Get<List<RecruitmentUpdateHistoryViewModel>>($"Recruitment/GetHistoryById/{recruitmentId}")
                 .ConfigureAwait(false);
-
 
             return Json(await response.ToDataSourceResultAsync(request));
         }
