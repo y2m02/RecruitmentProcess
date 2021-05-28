@@ -61,13 +61,13 @@
                                 </i>
                             </span>
                         </div>
-                        @Html.TextBoxFor(
+                        @Html.TextAreaFor(
                             model => model.Note,
                             new
                             {
                                 @class = "form-control",
                                 Id = "txtNote",
-                                style = "width: 80%"
+                                style = "width: 80%; min-height: 90px; max-height: 90px;"
                             })
                         <span id="lblNoteError" class="text-danger"></span>
                     </div>
