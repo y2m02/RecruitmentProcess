@@ -60,5 +60,18 @@ namespace RecruitmentManagementApi.Controllers
                 async () => ValidateResult(await candidateService.Update(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(
+            [FromHeader] string apiKey,
+            DeleteCandidateRequest request
+        )
+        {
+            return await ValidateApiKey(
+                apiKey,
+                async () => ValidateResult(await candidateService.Delete(request).ConfigureAwait(false))
+            ).ConfigureAwait(false);
+        }
     }
 }

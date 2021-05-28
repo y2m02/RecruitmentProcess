@@ -76,6 +76,12 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.Id)
                 );
 
+            CreateMap<DeleteCandidateRequest, Candidate>()
+                .ForMember(
+                    destination => destination.CandidateId,
+                    member => member.MapFrom(field => field.Id)
+                );
+
             
             CreateMap<Recruitment, RecruitmentResponse>()
                 .ForMember(

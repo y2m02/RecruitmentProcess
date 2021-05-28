@@ -50,7 +50,7 @@ namespace RecruitmentManagementApi.Services.Base
             return Upsert(entity, UpsertActionType.Update);
         }
 
-        public Task<Result> Delete(IRequest entity)
+        public virtual Task<Result> Delete(IRequest entity)
         {
             return HandleErrors(
                 async () =>

@@ -35,6 +35,16 @@ namespace RecruitmentManagementApi.Repositories.Base
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
+        protected async Task Remove(IEnumerable<TModel> entities)
+        {
+            foreach (var entity in entities)
+            {
+                Context.Entry(entity).State = EntityState.Deleted;
+            }
+
+            await Save().ConfigureAwait(false);
+        }
+
         protected void AddPropertiesToModify(TModel entity, List<string> properties)
         {
             properties.ForEach(

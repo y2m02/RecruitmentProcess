@@ -10,8 +10,10 @@ namespace RecruitmentManagementApi.Repositories
     public interface IRecruitmentUpdateHistoryRepository
     {
         Task<List<RecruitmentUpdateHistory>> GetByRecruitmentId(int recruitmentId);
+        Task<List<RecruitmentUpdateHistory>> GetAllByRecruitmentId(int recruitmentId);
         Task Create(RecruitmentUpdateHistory entity);
         Task UpdateLastHistoryNote(int recruitmentId, string note);
+        Task BatchDelete(IEnumerable<RecruitmentUpdateHistory> entities);
     }
 
     public class RecruitmentUpdateHistoryRepository :
@@ -32,6 +34,14 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
+        public Task<List<RecruitmentUpdateHistory>> GetAllByRecruitmentId(int recruitmentId)
+        {
+            return Context.RecruitmentUpdateHistories
+                .AsNoTracking()
+                .Where(x => x.RecruitmentId == recruitmentId)
+                .ToListAsync();
+        }
+
         public Task Create(RecruitmentUpdateHistory entity) => Add(entity);
 
         public async Task UpdateLastHistoryNote(int recruitmentId, string note)
@@ -45,6 +55,11 @@ namespace RecruitmentManagementApi.Repositories
             history.Note = note;
 
             await Save().ConfigureAwait(false);
+        }
+
+        public Task BatchDelete(IEnumerable<RecruitmentUpdateHistory> entities)
+        {
+            return Remove(entities);
         }
     }
 }
