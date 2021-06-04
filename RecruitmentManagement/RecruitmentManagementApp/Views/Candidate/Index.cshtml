@@ -12,12 +12,17 @@
     .k-grid-content {
         min-height: 70px;
     }
+
+    #btnOpenModal, #btnEdit, #btnDelete {
+        color: white;
+        font-weight: bold;
+    }
 </style>
 
 <h1>Candidatos</h1>
 <br />
 <div>
-    <div>
+    @*<div>
         <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCandidate">
             <i class="fas fa-plus"
                aria-hidden="true">
@@ -26,17 +31,14 @@
         </button>
         <br />
         <br />
-    </div>
+    </div>*@
     @await Html.PartialAsync("UpsertPartial")
     <div>
         @(Html.Kendo().Grid<CandidateViewModel>()
             .Name("Candidates")
             .Columns(columns =>
             {
-                columns.Command(command =>
-                {
-                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
-                }).Width(90);
+                columns.Select().Width(50).ClientHeaderTemplate(" ");
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
@@ -50,6 +52,14 @@
                 columns.Bound(c => c.Curriculum).Groupable(false).Width(200);
                 columns.Bound(c => c.GitHub).Groupable(false).Width(200);
             })
+            .ToolBar(
+                x =>
+                {
+                    x.Custom().Name("+").HtmlAttributes(new { id = "btnOpenModal", @class = "btn btn-primary", type = "button" });
+                    x.Custom().Name("e").HtmlAttributes(new { id = "btnEdit", @class = "btn btn-success", type = "button" });
+                    x.Custom().Name("x").HtmlAttributes(new { id = "btnDelete", @class = "btn btn-danger", type = "button", onClick = "Edit();" });
+                }
+            )
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
                 .Refresh(true)
@@ -98,7 +108,8 @@
                     .Or("O")
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
-            .Scrollable(s => s.Height("auto"))
+            .Height(550)
+            .Scrollable()
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
@@ -112,3 +123,59 @@
 </div>
 
 <script src="~/js/candidate.js"></script>
+
+<script>
+$(function(){
+    $("#btnOpenModal, #btnEdit, #btnDelete").removeClass("k-button k-button-icontext");
+   
+    $('#btnOpenModal').attr('data-toggle', 'modal');
+    $('#btnOpenModal').attr('data-target', '#myModalCandidate');
+    
+    var grid = $("#Candidates").data("kendoGrid");
+
+    grid.tbody.on("click", ".k-checkbox", onChange);
+})
+    
+    function onChange(e) {
+        var grid = $("#Candidates").data("kendoGrid");
+        var row = $(e.target).closest("tr");
+
+        if (row.hasClass("k-state-selected")) {
+            setTimeout(function (e) {
+                var grid = $("#Candidates").data("kendoGrid");
+                grid.clearSelection();
+            })
+        } else {
+            grid.clearSelection();
+        };
+
+        //if (rows.length == 0) {
+        //    window.$("#btnOpenModal").prop("disabled", true);
+        //} else {
+        //    var grid = window.$("#Payments").data("kendoGrid");
+
+        //    rows.each(function () {
+        //        var rowData = grid.dataItem(this);
+
+        //        selectedRecords.push(rowData);
+        //    });
+
+        //    window.$("#btnOpenModal").prop("disabled", false);
+        //}
+    }
+    function Edit(){
+        var allSelected = $("#Candidates tr.k-state-selected");
+
+        if (allSelected.length > 0) {
+            var totalAmount = 0;
+
+            $.each(allSelected, function (e) {
+                var row = $(this);
+
+                var grid = row.closest(".k-grid").data("kendoGrid");
+
+                var dataItem = grid.dataItem(row);
+            });
+        }
+    }
+</script>
