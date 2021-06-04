@@ -25,7 +25,6 @@ namespace RecruitmentManagementApi.Repositories
         {
             return Context.Recruitments
                 .Include(x => x.Candidate)
-                .Include(x => x.RecruitmentUpdateHistories.OrderByDescending(r => r.Date).Skip(1))
                 .AsNoTracking()
                 .ToListAsync();
         }

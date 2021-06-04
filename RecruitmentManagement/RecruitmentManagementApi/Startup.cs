@@ -48,11 +48,13 @@ namespace RecruitmentManagementApi
 
             services.AddSingleton(mappingConfig.CreateMapper());
 
-            services.AddDbContext<RecruitmentManagementContext>(
-                x =>
-                    x.UseSqlServer(
-                        Configuration.GetConnectionString("RecruitmentManagementConnection")
-                    )
+            var mySqlConnectionStr = Configuration.GetConnectionString("RecruitmentManagementConnection");
+
+            services.AddDbContextPool<RecruitmentManagementContext>(
+                options => options.UseMySql(
+                    mySqlConnectionStr,
+                    ServerVersion.AutoDetect(mySqlConnectionStr)
+                )
             );
 
             RegisterServices(services);
@@ -94,8 +96,8 @@ namespace RecruitmentManagementApi
             services.Scan(
                 scan =>
                     scan.FromAssemblies(
-                            typeof(StatusService).Assembly,
-                            typeof(StatusRepository).Assembly
+                            typeof(CandidateService).Assembly,
+                            typeof(CandidateRepository).Assembly
                         )
                         .AddClasses(
                             x => x.Where(
