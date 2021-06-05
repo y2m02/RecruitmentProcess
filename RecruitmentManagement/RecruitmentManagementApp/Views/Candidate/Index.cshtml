@@ -8,31 +8,27 @@
     .k-command-cell.k-command-cell.k-command-cell {
         text-align: center;
     }
+
+    .k-grid-content {
+        min-height: 70px;
+    }
+
+    #btnOpenModal, #btnEdit, #btnDelete {
+        color: white;
+        font-weight: bold;
+    }
 </style>
 
 <h1>Candidatos</h1>
 <br />
 <div>
-    <div>
-        <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCandidate">
-            <i class="fas fa-plus"
-               aria-hidden="true">
-            </i>
-            Crear
-        </button>
-        <br />
-        <br />
-    </div>
     @await Html.PartialAsync("UpsertPartial")
     <div>
         @(Html.Kendo().Grid<CandidateViewModel>()
             .Name("Candidates")
             .Columns(columns =>
             {
-                columns.Command(command =>
-                {
-                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object> { ["class"] = "editButton" });
-                }).Width(90);
+                columns.Select().Width(50).ClientHeaderTemplate(" ");
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
@@ -46,6 +42,34 @@
                 columns.Bound(c => c.Curriculum).Groupable(false).Width(200);
                 columns.Bound(c => c.GitHub).Groupable(false).Width(200);
             })
+            .ToolBar(
+                x =>
+                {
+                    x.Custom().Name(" ").IconClass("k-icon k-i-plus").HtmlAttributes(
+                        new
+                        {
+                            id = "btnOpenModal",
+                            @class = "btn btn-primary",
+                            type = "button",
+                        });
+                    x.Custom().Name(" ").IconClass("k-icon k-i-edit k-i-pencil").HtmlAttributes(
+                        new
+                        {
+                            id = "btnEdit",
+                            @class = "btn btn-success",
+                            type = "button",
+                            onClick = "editCandidate();",
+                        });
+                    x.Custom().Name(" ").IconClass("k-icon k-i-close k-i-x").HtmlAttributes(
+                        new
+                        {
+                            id = "btnDelete",
+                            @class = "btn btn-danger",
+                            type = "button",
+                            onClick = "deleteCandidate();",
+                        });
+                }
+            )
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
                 .Refresh(true)
@@ -94,7 +118,7 @@
                     .Or("O")
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
-            .Scrollable(s => s.Height("auto"))
+            .Scrollable(x => x.Height(450))
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
@@ -107,4 +131,10 @@
     </div>
 </div>
 
+@await Html.PartialAsync("DeletePartial")
+
 <script src="~/js/candidate.js"></script>
+
+<script>
+
+</script>

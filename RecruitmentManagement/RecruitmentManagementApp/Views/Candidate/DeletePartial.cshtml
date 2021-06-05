@@ -1,19 +1,20 @@
 ﻿@model RecruitmentManagementApp.Models.Requests.UpsertCandidateRequest
 
-<div class="modal fade" id="myModalCandidate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Crear - Editar</h4>
+                <h4 class="modal-title" id="myModalLabel">Aviso</h4>
             </div>
-            <div class="requiredFields">
-                @Html.Label("", "Campos con (*) son obligatorios.", new { @class = "text-danger" })
-            </div>
-            @Html.TextBoxFor(model => model.Id, new { @class = "form-control", Id = "txtId", hidden = true })
+            <span id="lblCandidateId" hidden></span>
             <div class="modal-body">
                 <div class="form-group">
+                    <span id="lblDeleteMessage">Está a punto de eliminar este registro:</span>
+                </div>
+
+                <div class="form-group">
                     <div class="fieldNameAlign">
-                        @Html.LabelFor(model => model.Name) @Html.Label("", "*", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.Name)
                     </div>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
@@ -28,15 +29,15 @@
                             new
                             {
                                 @class = "form-control",
-                                Id = "txtName",
-                                style = "width: 80%"
+                                Id = "txtDeleteName",
+                                style = "width: 80%; background-color: white;",
+                                @readonly = true,
                             })
-                        <span id="lblNameError" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="fieldNameAlign">
-                        @Html.LabelFor(model => model.Curriculum) 
+                        @Html.LabelFor(model => model.Curriculum)
                     </div>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
@@ -51,15 +52,15 @@
                             new
                             {
                                 @class = "form-control",
-                                Id = "txtCurriculum",
-                                style = "width: 80%; min-height: 90px; max-height: 90px;"
+                                Id = "txtDeleteCurriculum",
+                                style = "width: 80%; min-height: 90px; max-height: 90px; background-color: white;",
+                                @readonly = true,
                             })
-                        <span id="lblCurriculumError" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="fieldNameAlign">
-                        @Html.LabelFor(model => model.GitHub) 
+                        @Html.LabelFor(model => model.GitHub)
                     </div>
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
@@ -74,25 +75,25 @@
                             new
                             {
                                 @class = "form-control",
-                                Id = "txtGitHub",
-                                style = "width: 80%; min-height: 90px; max-height: 90px;"
+                                Id = "txtDeleteGitHub",
+                                style = "width: 80%; min-height: 90px; max-height: 90px; background-color: white;",
+                                @readonly = true,
                             })
-                        <span id="lblGitHubError" class="text-danger"></span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnUpsert" onclick="return upsertCandidate();">
-                    <i class="fas fa-save"
+                <button type="button" class="btn btn-primary" id="btnDeleteCandidate">
+                    <i class="fas fa-check"
                        aria-hidden="true">
                     </i>
-                    Guardar
+                    De acuerdo
                 </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">
+                <button type="button" class="btn btn-deault" data-dismiss="modal">
                     <i class="fas fa-times"
                        aria-hidden="true">
                     </i>
-                    Cerrar
+                    Cancelar
                 </button>
             </div>
         </div>

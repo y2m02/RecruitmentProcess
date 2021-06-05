@@ -11,7 +11,7 @@ namespace RecruitmentManagementApp.Client
         Task<TResponse> Get<TResponse>(string resource);
         Task<TResponse> Post<TResponse>(string resource, object body = null);
         Task<TResponse> Put<TResponse>(string resource, object body = null);
-        Task<TResponse> Delete<TResponse>(string resource);
+        Task<TResponse> Delete<TResponse>(string resource, object body = null);
     }
 
     public class ApiClient : IApiClient
@@ -40,9 +40,9 @@ namespace RecruitmentManagementApp.Client
             return Execute<TResponse>(resource, client.WithBody(body).PutAsync);
         }
 
-        public Task<TResponse> Delete<TResponse>(string resource)
+        public Task<TResponse> Delete<TResponse>(string resource, object body = null)
         {
-            return Execute<TResponse>(resource, client.DeleteAsync);
+            return Execute<TResponse>(resource, client.WithBody(body).DeleteAsync);
         }
 
         private static async Task<TResponse> Execute<TResponse>(string resource, Func<string, Task<Response>> executor)

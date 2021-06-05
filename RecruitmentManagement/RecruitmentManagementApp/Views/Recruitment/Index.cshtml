@@ -8,6 +8,15 @@
     .k-command-cell.k-command-cell.k-command-cell {
         text-align: center;
     }
+
+    .k-grid-content {
+        min-height: 70px;
+    }
+
+    #btnEdit {
+        color: white;
+        font-weight: bold;
+    }
 </style>
 
 <h1>Reclutamiento</h1>
@@ -19,13 +28,14 @@
             .Name("Recruitments")
             .Columns(columns =>
             {
-                columns.Command(command =>
-                {
-                    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object>
-                    {
-                        ["class"] = "editButton",
-                    });
-                }).Width(90);
+                //columns.Command(command =>
+                //{
+                //    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object>
+                //    {
+                //        ["class"] = "editButton",
+                //    });
+                //}).Width(90);
+                columns.Select().Width(50).ClientHeaderTemplate(" ");
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.CandidateName).Groupable(false).Width(250);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
@@ -38,6 +48,19 @@
                     .Width(150);
                 columns.Bound(c => c.Note).Groupable(false).Width(300);
             })
+            .ToolBar(
+                x =>
+                {
+                    x.Custom().Name(" ").IconClass("k-icon k-i-edit k-i-pencil").HtmlAttributes(
+                        new
+                        {
+                            id = "btnEdit",
+                            @class = "btn btn-success",
+                            type = "button",
+                            onClick = "editRecruitment();",
+                        });
+                }
+            )
             .Resizable(c => c.Columns(true))
             .Pageable(pageable => pageable
                 .Refresh(true)
@@ -89,7 +112,7 @@
                     .Or("O")
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
-            .Scrollable(s => s.Height("auto"))
+            .Scrollable(x => x.Height(450))
             .ClientDetailTemplateId("recruitmentUpdateHistory")
             .DataSource(dataSource => dataSource
                 .Ajax()
