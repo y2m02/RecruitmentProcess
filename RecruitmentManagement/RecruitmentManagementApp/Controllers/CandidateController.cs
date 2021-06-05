@@ -41,5 +41,18 @@ namespace RecruitmentManagementApp.Controllers
 
             return Json(response);
         }
+
+        [HttpDelete]
+        public async Task<JsonResult> Delete(int id)
+        {
+            var response = await client
+                .Delete<string>(
+                    resource: "Candidate/Delete",
+                    body: new { Id = id }
+                )
+                .ConfigureAwait(false);
+
+            return Json(response);
+        }
     }
 }
