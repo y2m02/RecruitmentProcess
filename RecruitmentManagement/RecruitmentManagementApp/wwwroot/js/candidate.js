@@ -14,19 +14,6 @@ $(function () {
     grid.tbody.on("click", ".k-checkbox", onChange);
 });
 
-$("#Candidates").delegate(".editButton",
-    "click",
-    function (e) {
-        e.preventDefault();
-
-        var grid = window.$("#Candidates").data("kendoGrid");
-        var rowData = grid.dataItem(window.$(this).closest("tr"));
-
-        fillFields(rowData);
-
-        window.$("#myModalCandidate").modal();
-    });
-
 function fillFields(rowData) {
     window.$("#txtId").val(rowData.Id);
     window.$("#txtName").val(rowData.Name);
@@ -82,7 +69,11 @@ function upsertCandidate() {
         dataType: "json",
         success: function (result) {
             window.$('#myModalCandidate').modal('toggle');
+
             RefreshGrid('Candidates');
+            
+            $("#btnEdit, #btnDelete").prop("hidden", true);
+
             document.body.style.cursor = 'default';
         },
         error: function (errorMessage) {
@@ -122,18 +113,6 @@ function editCandidate() {
     fillFields(dataItem);
 
     window.$("#myModalCandidate").modal();
-
-    //$.each(allSelected, function (e) {
-    //    var row = $(this);
-
-    //    var grid = row.closest(".k-grid").data("kendoGrid");
-
-    //    var dataItem = grid.dataItem(row);
-
-    //    fillFields(dataItem);
-
-    //    window.$("#myModalCandidate").modal();
-    //});
 }
 
 function deleteCandidate() {
@@ -169,6 +148,8 @@ $("#btnDeleteCandidate").on("click",
                 window.$('#myModalDelete').modal('toggle');
 
                 RefreshGrid('Candidates');
+
+                $("#btnEdit, #btnDelete").prop("hidden", true);
 
                 document.body.style.cursor = 'default';
             },

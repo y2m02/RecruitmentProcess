@@ -22,16 +22,6 @@
 <h1>Candidatos</h1>
 <br />
 <div>
-    @*<div>
-            <button id="openModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalCandidate">
-                <i class="fas fa-plus"
-                   aria-hidden="true">
-                </i>
-                Crear
-            </button>
-            <br />
-            <br />
-        </div>*@
     @await Html.PartialAsync("UpsertPartial")
     <div>
         @(Html.Kendo().Grid<CandidateViewModel>()
@@ -55,14 +45,14 @@
             .ToolBar(
                 x =>
                 {
-                    x.Custom().Name("+").HtmlAttributes(
+                    x.Custom().Name(" ").IconClass("k-icon k-i-plus").HtmlAttributes(
                         new
                         {
                             id = "btnOpenModal",
                             @class = "btn btn-primary",
                             type = "button",
                         });
-                    x.Custom().Name("e").HtmlAttributes(
+                    x.Custom().Name(" ").IconClass("k-icon k-i-edit k-i-pencil").HtmlAttributes(
                         new
                         {
                             id = "btnEdit",
@@ -70,7 +60,7 @@
                             type = "button",
                             onClick = "editCandidate();",
                         });
-                    x.Custom().Name("x").HtmlAttributes(
+                    x.Custom().Name(" ").IconClass("k-icon k-i-close k-i-x").HtmlAttributes(
                         new
                         {
                             id = "btnDelete",
@@ -128,8 +118,7 @@
                     .Or("O")
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
-            //.Height(550)
-            .Scrollable(x=>x.Height(450))
+            .Scrollable(x => x.Height(450))
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)

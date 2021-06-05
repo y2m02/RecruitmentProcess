@@ -1,15 +1,14 @@
-﻿$("#Recruitments").delegate(".editButton",
-    "click",
-    function(e) {
-        e.preventDefault();
+﻿$(function () {
+    $("#btnEdit").removeClass("k-button k-button-icontext");
 
-        var grid = window.$("#Recruitments").data("kendoGrid");
-        var rowData = grid.dataItem(window.$(this).closest("tr"));
+    $("#btnEdit").removeAttr("href");
 
-        fillFields(rowData);
+    $("#btnEdit").prop("hidden", true);
 
-        window.$("#myModalRecruitment").modal();
-    });
+    var grid = $("#Recruitments").data("kendoGrid");
+
+    grid.tbody.on("click", ".k-checkbox", onChange);
+});
 
 function fillFields(rowData) {
     window.$("#txtId").val(rowData.Id);
@@ -62,7 +61,11 @@ function updateRecruitment() {
         dataType: "json",
         success: function (result) {
             window.$('#myModalRecruitment').modal('toggle');
+
             RefreshGrid('Recruitments');
+            
+            $("#btnEdit").prop("hidden", true);
+
             document.body.style.cursor = 'default';
         },
         error: function (errorMessage) {
@@ -74,7 +77,51 @@ function updateRecruitment() {
     return true;
 }
 
+function editRecruitment() {
+    var allSelected = $("#Recruitments tr.k-state-selected");
+
+    if (allSelected.length <= 0) {
+        return;
+    }
+
+    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+
+    fillFields(dataItem);
+
+    window.$("#myModalRecruitment").modal();
+}
+
+function onChange(e) {
+    var row = $(e.target).closest("tr");
+
+    if (row.hasClass("k-state-selected")) {
+        setTimeout(function (e) {
+            $("#btnEdit").prop("hidden", true);
+
+            $("#Recruitments").data("kendoGrid").clearSelection();
+        });
+    } else {
+        $("#btnEdit").prop("hidden", false);
+
+        $("#Recruitments").data("kendoGrid").clearSelection();
+    };
+}
+
 window.$("#cbxStatus").on("change",
     function() {
         removeErrorMessage("cbxStatus","lblStatusError");
     });
+
+
+//$("#Recruitments").delegate(".editButton",
+//    "click",
+//    function(e) {
+//        e.preventDefault();
+
+//        var grid = window.$("#Recruitments").data("kendoGrid");
+//        var rowData = grid.dataItem(window.$(this).closest("tr"));
+
+//        fillFields(rowData);
+
+//        window.$("#myModalRecruitment").modal();
+//    });
