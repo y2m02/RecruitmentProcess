@@ -1,6 +1,22 @@
-﻿$("#Candidates").delegate(".editButton",
+﻿
+$(function () {
+    $("#btnOpenModal, #btnEdit, #btnDelete").removeClass("k-button k-button-icontext");
+
+    $('#btnOpenModal').attr('data-toggle', 'modal');
+    $('#btnOpenModal').attr('data-target', '#myModalCandidate');
+
+    $("#btnEdit, #btnDelete").removeAttr("href");
+
+    $("#btnEdit, #btnDelete").prop("hidden", true);
+
+    var grid = $("#Candidates").data("kendoGrid");
+
+    grid.tbody.on("click", ".k-checkbox", onChange);
+});
+
+$("#Candidates").delegate(".editButton",
     "click",
-    function(e) {
+    function (e) {
         e.preventDefault();
 
         var grid = window.$("#Candidates").data("kendoGrid");
@@ -19,7 +35,7 @@ function fillFields(rowData) {
 }
 
 $("#myModalCandidate").on("hidden.bs.modal",
-    function() {
+    function () {
         window.$("#txtId").val("");
         window.$("#txtName").val("");
         window.$("#txtCurriculum").val("");
@@ -78,7 +94,98 @@ function upsertCandidate() {
     return true;
 }
 
-window.$("#txtName").on("input",
-    function() {
+function onChange(e) {
+    var row = $(e.target).closest("tr");
+
+    if (row.hasClass("k-state-selected")) {
+        setTimeout(function (e) {
+            $("#btnEdit, #btnDelete").prop("hidden", true);
+
+            $("#Candidates").data("kendoGrid").clearSelection();
+        });
+    } else {
+        $("#btnEdit, #btnDelete").prop("hidden", false);
+
+        $("#Candidates").data("kendoGrid").clearSelection();
+    };
+}
+
+function editCandidate() {
+    var allSelected = $("#Candidates tr.k-state-selected");
+
+    if (allSelected.length <= 0) {
+        return;
+    }
+
+    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+
+    fillFields(dataItem);
+
+    window.$("#myModalCandidate").modal();
+
+    //$.each(allSelected, function (e) {
+    //    var row = $(this);
+
+    //    var grid = row.closest(".k-grid").data("kendoGrid");
+
+    //    var dataItem = grid.dataItem(row);
+
+    //    fillFields(dataItem);
+
+    //    window.$("#myModalCandidate").modal();
+    //});
+}
+
+function deleteCandidate() {
+    var allSelected = $("#Candidates tr.k-state-selected");
+
+    if (allSelected.length <= 0) {
+        return;
+    }
+
+    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+
+    window.$("#lblCandidateId").html(dataItem.Id);
+    window.$("#txtDeleteName").val(dataItem.Name);
+    window.$("#txtDeleteCurriculum").val(dataItem.Curriculum);
+    window.$("#txtDeleteGitHub").val(dataItem.GitHub);
+
+    window.$("#myModalDelete").modal();
+}
+
+$("#btnDeleteCandidate").on("click",
+    function () {
+        document.body.style.cursor = 'wait';
+
+        var id = window.$("#lblCandidateId").html();
+
+        window.$.ajax({
+            url: "Candidate/Delete",
+            data: { id: id },
+            type: "DELETE",
+            content: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                window.$('#myModalDelete').modal('toggle');
+
+                RefreshGrid('Candidates');
+
+                document.body.style.cursor = 'default';
+            },
+            error: function (errorMessage) {
+                document.body.style.cursor = 'default';
+
+                alert(errorMessage.responseText);
+            }
+        });
+    });
+
+$("#myModalDelete").on("hidden.bs.modal",
+    function () {
+        window.$("#lblCandidateId").html("");
+    });
+
+$("#txtName").on("input",
+    function () {
         removeErrorMessage("txtName", "lblNameError");
     });
