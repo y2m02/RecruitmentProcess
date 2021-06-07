@@ -7,11 +7,11 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface IRecruitmentUpdateHistoryRepository
+    public interface IRecruitmentUpdateHistoryRepository :
+        IBaseRepository<RecruitmentUpdateHistory>
     {
         Task<List<RecruitmentUpdateHistory>> GetByRecruitmentId(int recruitmentId);
         Task<List<RecruitmentUpdateHistory>> GetAllByRecruitmentId(int recruitmentId);
-        Task Create(RecruitmentUpdateHistory entity);
         Task UpdateLastHistoryNote(int recruitmentId, string note);
         Task BatchDelete(IEnumerable<RecruitmentUpdateHistory> entities);
     }
@@ -23,6 +23,13 @@ namespace RecruitmentManagementApi.Repositories
         public RecruitmentUpdateHistoryRepository(
             RecruitmentManagementContext context
         ) : base(context) { }
+
+        public Task<List<RecruitmentUpdateHistory>> GetAll()
+        {
+            return Context.RecruitmentUpdateHistories
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
         public Task<List<RecruitmentUpdateHistory>> GetByRecruitmentId(int recruitmentId)
         {

@@ -4,10 +4,8 @@ using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public interface IBaseService
+    public interface IDeletableService
     {
-        Task<Result> GetAll();
-        Task<Result> Create(IRequest entity);
-        Task<Result> Update(IRequest entity);
+        Task<Result> Delete(IRequest entity);
     }
 }

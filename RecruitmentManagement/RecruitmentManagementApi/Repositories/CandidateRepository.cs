@@ -6,7 +6,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface ICandidateRepository : IBaseRepository<Candidate> { }
+    public interface ICandidateRepository :
+        IUpdatableRepository<Candidate>,
+        IDeletableRepository<Candidate> { }
 
     public class CandidateRepository :
         BaseRepository<Candidate>,
@@ -37,8 +39,8 @@ namespace RecruitmentManagementApi.Repositories
                 entity,
                 new()
                 {
-                    nameof(entity.Name), 
-                    nameof(entity.Curriculum), 
+                    nameof(entity.Name),
+                    nameof(entity.Curriculum),
                     nameof(entity.GitHub),
                 }
             );

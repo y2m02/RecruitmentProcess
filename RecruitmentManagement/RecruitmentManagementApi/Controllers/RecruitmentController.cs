@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Recruitments;
-using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -27,7 +26,7 @@ namespace RecruitmentManagementApi.Controllers
                 apiKey,
                 Permission.Read,
                 async () => ValidateResult(
-                    await recruitmentService.GetAll<RecruitmentResponse>().ConfigureAwait(false)
+                    await recruitmentService.GetAll().ConfigureAwait(false)
                 )
             ).ConfigureAwait(false);
         }

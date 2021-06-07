@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
+using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
@@ -18,17 +20,24 @@ namespace RecruitmentManagementApi.Services
         BaseService<AuthorizationKey>,
         IAuthorizationKeyService
     {
+        private readonly IAuthorizationKeyRepository repository;
+
         public AuthorizationKeyService(
             IMapper mapper,
             IAuthorizationKeyRepository repository
-        ) : base(
-            mapper,
-            repository
-        ) { }
+        ) : base(mapper)
+        {
+            this.repository = repository;
+        }
+
+        public Task<Result> GetAll()
+        {
+            return GetAll<AuthorizationKeyResponse>(repository);
+        }
 
         public Task<bool> Exists(string key)
         {
-            return ((IAuthorizationKeyRepository)Repository).Exists(key);
+            return repository.Exists(key);
         }
 
         public Task<Result> Get(string key)
@@ -38,11 +47,26 @@ namespace RecruitmentManagementApi.Services
                 {
                     return new Result(
                         response: Mapper.Map<AuthorizationKeyResponse>(
-                            await ((IAuthorizationKeyRepository)Repository).Get(key).ConfigureAwait(false)
+                            await repository.Get(key).ConfigureAwait(false)
                         )
                     );
                 }
             );
+        }
+
+        public Task<Result> Create(IRequest entity)
+        {
+            return Upsert(repository, entity, UpsertActionType.Create);
+        }
+
+        public Task<Result> Update(IRequest entity)
+        {
+            return Upsert(repository, entity, UpsertActionType.Update);
+        }
+
+        public Task<Result> Delete(IRequest entity)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

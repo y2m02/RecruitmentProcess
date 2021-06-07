@@ -8,7 +8,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface IRecruitmentRepository : IBaseRepository<Recruitment>
+    public interface IRecruitmentRepository : 
+        IUpdatableRepository<Recruitment>,
+        IDeletableRepository<Recruitment>
     {
         Task<Recruitment> GetById(int id);
         Task<RecruitmentStatus> GetStatus(int id);

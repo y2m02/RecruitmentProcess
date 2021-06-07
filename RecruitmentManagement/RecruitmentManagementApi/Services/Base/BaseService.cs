@@ -15,42 +15,31 @@ namespace RecruitmentManagementApi.Services.Base
     public abstract class BaseService<TModel>
     {
         protected readonly IMapper Mapper;
-        protected readonly IBaseRepository<TModel> Repository;
 
-        protected BaseService(
-            IMapper mapper,
-            IBaseRepository<TModel> repository
-        )
+        protected BaseService(IMapper mapper)
         {
             Mapper = mapper;
-            Repository = repository;
         }
 
-        public Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
+        protected Task<Result> GetAll<TResponse>(IBaseRepository<TModel> repository)
+            where TResponse : BaseResponse
         {
             return HandleErrors(
                 async () =>
                 {
                     return new Result(
                         response: Mapper.Map<List<TResponse>>(
-                            await Repository.GetAll().ConfigureAwait(false)
+                            await repository.GetAll().ConfigureAwait(false)
                         )
                     );
                 }
             );
         }
 
-        public Task<Result> Create(IRequest entity)
-        {
-            return Upsert(entity, UpsertActionType.Create);
-        }
-
-        public Task<Result> Update(IRequest entity)
-        {
-            return Upsert(entity, UpsertActionType.Update);
-        }
-
-        public virtual Task<Result> Delete(IRequest entity)
+        protected Task<Result> Delete(
+            IDeletableRepository<TModel> repository,
+            IRequest entity
+        )
         {
             return HandleErrors(
                 async () =>
@@ -62,7 +51,7 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+                    await repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
@@ -98,21 +87,11 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected virtual async Task<string> CreateEntity(IRequest entity)
-        {
-            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Created;
-        }
-
-        protected virtual async Task<string> UpdateEntity(IRequest entity)
-        {
-            await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Updated;
-        }
-
-        private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)
+        protected Task<Result> Upsert(
+            IBaseRepository<TModel> repository,
+            IRequest entity,
+            UpsertActionType actionType
+        )
         {
             return HandleErrors(
                 async () =>
@@ -125,14 +104,34 @@ namespace RecruitmentManagementApi.Services.Base
                     }
 
                     var action = actionType == UpsertActionType.Create
-                        ? await CreateEntity(entity).ConfigureAwait(false)
-                        : await UpdateEntity(entity).ConfigureAwait(false);
+                        ? await CreateEntity(repository, entity).ConfigureAwait(false)
+                        : await UpdateEntity((IUpdatableRepository<TModel>)repository, entity).ConfigureAwait(false);
 
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
                     );
                 }
             );
+        }
+
+        protected virtual async Task<string> CreateEntity(
+            IBaseRepository<TModel> repository,
+            IRequest entity
+        )
+        {
+            await repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Created;
+        }
+
+        protected virtual async Task<string> UpdateEntity(
+            IUpdatableRepository<TModel> repository,
+            IRequest entity
+        )
+        {
+            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Updated;
         }
     }
 }
