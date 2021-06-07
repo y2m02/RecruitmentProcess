@@ -1,8 +1,5 @@
-﻿using System;
+﻿using HelpersLibrary.Extensions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RecruitmentManagementApi.Models.Extensions;
 
 namespace RecruitmentManagementApi.Models.Request.Candidates
 {
