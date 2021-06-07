@@ -13,6 +13,8 @@ namespace RecruitmentManagementApi.Models.Entities
         [StringLength(40)]
         public string Key { get; set; }
 
+        public string Permissions { get; set; }
+
         [Required]
         public bool IsActive { get; set; }
     }
