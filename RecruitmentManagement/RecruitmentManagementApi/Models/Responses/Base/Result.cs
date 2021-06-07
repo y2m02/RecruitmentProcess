@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RecruitmentManagementApi.Models.Extensions;
+using HelpersLibrary.Extensions;
 
 namespace RecruitmentManagementApi.Models.Responses.Base
 {

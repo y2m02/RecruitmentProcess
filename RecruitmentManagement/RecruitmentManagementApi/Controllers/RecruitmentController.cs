@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
@@ -24,14 +25,10 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
-                async () =>
-                {
-                    var response = await recruitmentService.GetAll<RecruitmentResponse>().ConfigureAwait(false);
-
-                    return response.Succeeded()
-                        ? Ok(response)
-                        : InternalServerError(response);
-                }
+                Permission.Read,
+                async () => ValidateResult(
+                    await recruitmentService.GetAll<RecruitmentResponse>().ConfigureAwait(false)
+                )
             ).ConfigureAwait(false);
         }
 
@@ -41,14 +38,8 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
-                async () =>
-                {
-                    var response = await recruitmentService.GetHistoryById(id).ConfigureAwait(false);
-
-                    return response.Succeeded()
-                        ? Ok(response)
-                        : InternalServerError(response);
-                }
+                Permission.Read,
+                async () => ValidateResult(await recruitmentService.GetHistoryById(id).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -61,8 +52,9 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
+                Permission.Write,
                 async () => ValidateResult(await recruitmentService.Update(request).ConfigureAwait(false))
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

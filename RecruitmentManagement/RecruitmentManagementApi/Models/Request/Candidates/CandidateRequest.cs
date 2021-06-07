@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RecruitmentManagementApi.Models.Extensions;
+using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.Candidates

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Enums;
-using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.Recruitments
@@ -11,7 +11,7 @@ namespace RecruitmentManagementApi.Models.Request.Recruitments
     {
         public int Id { get; set; }
 
-        public RecruitmentStatus? Status { get; set; }
+        public RecruitmentStatus ? Status { get; set; }
 
         public string Note { get; set; }
 

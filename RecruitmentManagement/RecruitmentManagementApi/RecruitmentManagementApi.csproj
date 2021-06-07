@@ -21,5 +21,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="HelpersLibrary.Extensions">
+      <HintPath>..\HelpersLibrary.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 
 </Project>
