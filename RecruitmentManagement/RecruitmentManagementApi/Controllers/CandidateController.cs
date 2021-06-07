@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
@@ -24,14 +25,8 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
-                async () =>
-                {
-                    var response = await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false);
-
-                    return response.Succeeded()
-                        ? Ok(response)
-                        : InternalServerError(response);
-                }
+                Permission.Read,
+                async () => ValidateResult(await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -44,6 +39,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
+                Permission.Write,
                 async () => ValidateResult(await candidateService.Create(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
@@ -57,6 +53,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
+                Permission.Write,
                 async () => ValidateResult(await candidateService.Update(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
@@ -70,6 +67,7 @@ namespace RecruitmentManagementApi.Controllers
         {
             return await ValidateApiKey(
                 apiKey,
+                Permission.Delete,
                 async () => ValidateResult(await candidateService.Delete(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Models.Extensions;
 using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Models.Responses;
@@ -51,7 +51,6 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.Id)
                 );
 
-            
             CreateMap<Recruitment, RecruitmentResponse>()
                 .ForMember(
                     destination => destination.Id,
@@ -70,7 +69,9 @@ namespace RecruitmentManagementApi.Mappings
                 )
                 .ForMember(
                     destination => destination.RecruitmentUpdateHistories,
-                    member => member.MapFrom(field => field.RecruitmentUpdateHistories.OrderByDescending(r => r.Date).Skip(1))
+                    member => member.MapFrom(
+                        field => field.RecruitmentUpdateHistories.OrderByDescending(r => r.Date).Skip(1)
+                    )
                 );
 
             CreateMap<UpdateRecruitmentRequest, Recruitment>()
@@ -78,7 +79,7 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.RecruitmentId,
                     member => member.MapFrom(field => field.Id)
                 );
-            
+
             CreateMap<RecruitmentUpdateHistory, RecruitmentUpdateHistoryResponse>()
                 .ForMember(
                     destination => destination.Id,
@@ -95,6 +96,16 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.CandidateName,
                     member => member.MapFrom(field => field.Recruitment.Candidate.Name)
+                );
+
+            CreateMap<AuthorizationKey, AuthorizationKeyResponse>()
+                .ForMember(
+                    destination => destination.Id,
+                    member => member.MapFrom(field => field.AuthorizationKeyId)
+                )
+                .ForMember(
+                    destination => destination.InUse,
+                    member => member.MapFrom(field => field.IsActive)
                 );
         }
     }

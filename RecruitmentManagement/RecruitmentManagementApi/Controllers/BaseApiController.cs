@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using HelpersLibrary.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models;
-using RecruitmentManagementApi.Models.Extensions;
+using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Services;
 
@@ -13,11 +15,11 @@ namespace RecruitmentManagementApi.Controllers
     [ApiController]
     public class BaseApiController : Controller
     {
-        private readonly IAuthorizationKeyService authorizationKeyService;
+        protected readonly IAuthorizationKeyService AuthorizationKeyService;
 
         public BaseApiController(IAuthorizationKeyService authorizationKeyService)
         {
-            this.authorizationKeyService = authorizationKeyService;
+            AuthorizationKeyService = authorizationKeyService;
         }
 
         protected ObjectResult InternalServerError(object value)
@@ -25,7 +27,7 @@ namespace RecruitmentManagementApi.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, value);
         }
 
-        protected ActionResult ValidateResult(Result result)
+        protected IActionResult ValidateResult(Result result)
         {
             if (result.Succeeded())
             {
@@ -37,11 +39,43 @@ namespace RecruitmentManagementApi.Controllers
                 : InternalServerError(result);
         }
 
-        protected async Task<IActionResult> ValidateApiKey(string apiKey, Func<Task<IActionResult>> executor)
+        protected async Task<IActionResult> ValidateApiKey(
+            string apiKey,
+            Permission permission,
+            Func<Task<IActionResult>> executor
+        )
         {
-            return await authorizationKeyService.Exists(apiKey).ConfigureAwait(false)
-                ? await executor().ConfigureAwait(false)
-                : Unauthorized(new { error = ConsumerMessages.InvalidApiKey.Format(apiKey) });
+            if (apiKey.IsEmpty())
+            {
+                return Unauthorized(new { error = ConsumerMessages.ApiKeyRequired });
+            }
+
+            var result = await AuthorizationKeyService.Get(apiKey).ConfigureAwait(false);
+
+            if (result.Failed())
+            {
+                return InternalServerError(result);
+            }
+
+            if (result.Response is not AuthorizationKeyResponse authorizationKey)
+            {
+                return Unauthorized(new { error = ConsumerMessages.InvalidApiKey.Format(apiKey) });
+            }
+
+            var isAuthorized = permission switch
+            {
+                Permission.FullAccess => authorizationKey.HasFullAccess(),
+                Permission.Read => authorizationKey.CanRead(),
+                Permission.Write => authorizationKey.CanWrite(),
+                Permission.Delete => authorizationKey.CanDelete(),
+            };
+
+            if (!isAuthorized)
+            {
+                return Unauthorized(new { error = ConsumerMessages.NotAllowedForApiKey.Format(apiKey) });
+            }
+
+            return await executor().ConfigureAwait(false);
         }
     }
 }
