@@ -6,6 +6,7 @@ using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories.Base;
@@ -21,25 +22,33 @@ namespace RecruitmentManagementApi.Services.Base
             Mapper = mapper;
         }
 
-        protected Task<Result> GetAll<TResponse>(IBaseRepository<TModel> repository)
-            where TResponse : BaseResponse
+        protected IBaseRepository<TModel> Repository { get; set; }
+
+        protected Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
         {
             return HandleErrors(
                 async () =>
                 {
                     return new Result(
                         response: Mapper.Map<List<TResponse>>(
-                            await repository.GetAll().ConfigureAwait(false)
+                            await Repository.GetAll().ConfigureAwait(false)
                         )
                     );
                 }
             );
         }
 
-        protected Task<Result> Delete(
-            ICanDeleteRepository<TModel> repository,
-            IRequest entity
-        )
+        public Task<Result> Create(IRequest entity)
+        {
+            return Upsert(entity, UpsertActionType.Create);
+        }
+
+        public Task<Result> Update(IRequest entity)
+        {
+            return Upsert(entity, UpsertActionType.Update);
+        }
+
+        public Task<Result> Delete(DeleteRequest entity)
         {
             return HandleErrors(
                 async () =>
@@ -51,13 +60,34 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    await repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
+                    await DeleteEntity(entity.Id).ConfigureAwait(false);
+                    
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
                     );
                 }
             );
+        }
+
+        protected virtual async Task<string> CreateEntity(IRequest entity)
+        {
+            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Created;
+        }
+
+        protected virtual async Task<string> UpdateEntity(IRequest entity)
+        {
+            var repository = (ICanUpdateRepository<TModel>)Repository;
+
+            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Updated;
+        }
+
+        protected virtual Task DeleteEntity(int id)
+        {
+            return ((ICanDeleteRepository)Repository).Delete(id);
         }
 
         protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
@@ -72,10 +102,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected Result HandleErrors<T>(
-            Func<T, Result> executor,
-            T request
-        )
+        protected Result HandleErrors<T>(Func<T, Result> executor, T request)
         {
             try
             {
@@ -87,11 +114,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected Task<Result> Upsert(
-            IBaseRepository<TModel> repository,
-            IRequest entity,
-            UpsertActionType actionType
-        )
+        private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)
         {
             return HandleErrors(
                 async () =>
@@ -104,34 +127,14 @@ namespace RecruitmentManagementApi.Services.Base
                     }
 
                     var action = actionType == UpsertActionType.Create
-                        ? await CreateEntity(repository, entity).ConfigureAwait(false)
-                        : await UpdateEntity((ICanUpdateRepository<TModel>)repository, entity).ConfigureAwait(false);
+                        ? await CreateEntity(entity).ConfigureAwait(false)
+                        : await UpdateEntity(entity).ConfigureAwait(false);
 
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
                     );
                 }
             );
-        }
-
-        protected virtual async Task<string> CreateEntity(
-            IBaseRepository<TModel> repository,
-            IRequest entity
-        )
-        {
-            await repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Created;
-        }
-
-        protected virtual async Task<string> UpdateEntity(
-            ICanUpdateRepository<TModel> repository,
-            IRequest entity
-        )
-        {
-            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Updated;
         }
     }
 }

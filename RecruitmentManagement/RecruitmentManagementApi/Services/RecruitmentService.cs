@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
-using RecruitmentManagementApi.Repositories.Base;
 using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
@@ -27,7 +25,6 @@ namespace RecruitmentManagementApi.Services
 
     {
         private readonly IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository;
-        private readonly IRecruitmentRepository repository;
 
         public RecruitmentService(
             IMapper mapper,
@@ -35,13 +32,14 @@ namespace RecruitmentManagementApi.Services
             IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository
         ) : base(mapper)
         {
-            this.repository = repository;
+            Repository = repository;
+
             this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
         }
 
         public Task<Result> GetAll()
         {
-            return GetAll<RecruitmentResponse>(repository);
+            return GetAll<RecruitmentResponse>();
         }
 
         public Task<Result> GetHistoryById(int id)
@@ -58,24 +56,13 @@ namespace RecruitmentManagementApi.Services
             );
         }
 
-        public Task<Result> Create(IRequest entity)
+        protected override async Task<string> UpdateEntity(IRequest entity)
         {
-            return Upsert(repository, entity, UpsertActionType.Create);
-        }
+            var repository = (IRecruitmentRepository)Repository;
 
-        public Task<Result> Update(IRequest entity)
-        {
-            return Upsert(repository, entity, UpsertActionType.Update);
-        }
-
-        protected override async Task<string> UpdateEntity(
-            ICanUpdateRepository<Recruitment> repository,
-            IRequest entity
-        )
-        {
             var recruitmentToUpdate = Mapper.Map<Recruitment>(entity);
 
-            var currentStatus = await this.repository
+            var currentStatus = await repository
                 .GetStatus(recruitmentToUpdate.RecruitmentId)
                 .ConfigureAwait(false);
 

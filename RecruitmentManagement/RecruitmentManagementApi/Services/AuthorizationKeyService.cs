@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Models.Enums;
-using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
@@ -10,7 +8,9 @@ using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface IAuthorizationKeyService : IBaseService
+    public interface IAuthorizationKeyService : 
+        IBaseService,
+        ICanDeleteService
     {
         Task<bool> Exists(string key);
         Task<Result> Get(string key);
@@ -20,24 +20,22 @@ namespace RecruitmentManagementApi.Services
         BaseService<AuthorizationKey>,
         IAuthorizationKeyService
     {
-        private readonly IAuthorizationKeyRepository repository;
-
         public AuthorizationKeyService(
             IMapper mapper,
             IAuthorizationKeyRepository repository
         ) : base(mapper)
         {
-            this.repository = repository;
+            Repository = repository;
         }
 
         public Task<Result> GetAll()
         {
-            return GetAll<AuthorizationKeyResponse>(repository);
+            return GetAll<AuthorizationKeyResponse>();
         }
 
         public Task<bool> Exists(string key)
         {
-            return repository.Exists(key);
+            return ((IAuthorizationKeyRepository)Repository).Exists(key);
         }
 
         public Task<Result> Get(string key)
@@ -47,26 +45,11 @@ namespace RecruitmentManagementApi.Services
                 {
                     return new Result(
                         response: Mapper.Map<AuthorizationKeyResponse>(
-                            await repository.Get(key).ConfigureAwait(false)
+                            await ((IAuthorizationKeyRepository)Repository).Get(key).ConfigureAwait(false)
                         )
                     );
                 }
             );
-        }
-
-        public Task<Result> Create(IRequest entity)
-        {
-            return Upsert(repository, entity, UpsertActionType.Create);
-        }
-
-        public Task<Result> Update(IRequest entity)
-        {
-            return Upsert(repository, entity, UpsertActionType.Update);
-        }
-
-        public Task<Result> Delete(IRequest entity)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace RecruitmentManagementApi.Repositories.Base
 {
-    public interface ICanDeleteRepository<in TModel>
+    public interface ICanDeleteRepository
     {
-        Task Delete(TModel entity);
+        Task Delete(int id);
     }
 }

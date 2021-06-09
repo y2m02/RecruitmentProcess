@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Services;
 
@@ -61,7 +62,7 @@ namespace RecruitmentManagementApi.Controllers
         [Route("Delete")]
         public async Task<IActionResult> Delete(
             [FromHeader] string apiKey,
-            DeleteCandidateRequest request
+            DeleteRequest request
         )
         {
             return await ValidateApiKey(

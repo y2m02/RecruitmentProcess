@@ -6,12 +6,11 @@ using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Base;
-using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
-using RecruitmentManagementApi.Repositories.Base;
 using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
@@ -27,7 +26,6 @@ namespace RecruitmentManagementApi.Services
     {
         private readonly IRecruitmentRepository recruitmentRepository;
         private readonly IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository;
-        private readonly ICandidateRepository repository;
 
         public CandidateService(
             IMapper mapper,
@@ -36,67 +34,18 @@ namespace RecruitmentManagementApi.Services
             IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository
         ) : base(mapper)
         {
-            this.repository = repository;
+            Repository = repository;
+
             this.recruitmentRepository = recruitmentRepository;
             this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
         }
 
         public Task<Result> GetAll()
         {
-            return GetAll<CandidateResponse>(repository);
+            return GetAll<CandidateResponse>();
         }
 
-        public Task<Result> Create(IRequest entity)
-        {
-            return Upsert(repository, entity, UpsertActionType.Create);
-        }
-
-        public Task<Result> Update(IRequest entity)
-        {
-            return Upsert(repository, entity, UpsertActionType.Update);
-        }
-
-        public Task<Result> Delete(IRequest entity)
-        {
-            return HandleErrors(
-                async () =>
-                {
-                    var validations = entity.Validate().ToList();
-
-                    if (validations.Any())
-                    {
-                        return new Result(validationErrors: validations);
-                    }
-
-                    var candidate = entity as DeleteCandidateRequest;
-
-                    await recruitmentUpdateHistoryRepository.BatchDelete(
-                        await recruitmentUpdateHistoryRepository.GetAllByRecruitmentId(candidate.Id)
-                            .ConfigureAwait(false)
-                    );
-
-                    await recruitmentRepository
-                        .Delete(
-                            new Recruitment
-                            {
-                                RecruitmentId = candidate.Id,
-                            }
-                        )
-                        .ConfigureAwait(false);
-
-                    await repository.Delete(Mapper.Map<Candidate>(entity)).ConfigureAwait(false);
-
-                    return new Result(
-                        response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
-                    );
-                }
-            );
-        }
-
-        protected override async Task<string> CreateEntity(
-            IBaseRepository<Candidate> repository,
-            IRequest entity
-        )
+        protected override async Task<string> CreateEntity(IRequest entity)
         {
             var candidate = Mapper
                 .Map<Candidate>(entity)
@@ -115,9 +64,20 @@ namespace RecruitmentManagementApi.Services
                     }
                 );
 
-            await repository.Create(candidate).ConfigureAwait(false);
+            await Repository.Create(candidate).ConfigureAwait(false);
 
             return ConsumerMessages.Created;
+        }
+
+        protected override async Task DeleteEntity(int id)
+        {
+            await recruitmentUpdateHistoryRepository.BatchDelete(
+                await recruitmentUpdateHistoryRepository.GetAllByRecruitmentId(id).ConfigureAwait(false)
+            );
+
+            await recruitmentRepository.Delete(id).ConfigureAwait(false);
+
+            await base.DeleteEntity(id).ConfigureAwait(false);
         }
     }
 }

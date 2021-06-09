@@ -7,7 +7,8 @@ using RecruitmentManagementApi.Repositories.Base;
 namespace RecruitmentManagementApi.Repositories
 {
     public interface IAuthorizationKeyRepository :
-        IBaseRepository<AuthorizationKey>
+        IBaseRepository<AuthorizationKey>,
+        ICanDeleteRepository
     {
         Task<bool> Exists(string key);
         Task<AuthorizationKey> Get(string key);
@@ -41,5 +42,7 @@ namespace RecruitmentManagementApi.Repositories
         }
 
         public Task Create(AuthorizationKey entity) => Add(entity);
+
+        public Task Delete(int id) => Remove(new AuthorizationKey {AuthorizationKeyId = id});
     }
 }
