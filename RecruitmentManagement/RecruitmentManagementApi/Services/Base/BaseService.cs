@@ -60,7 +60,7 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    await DeleteEntity(entity.Id).ConfigureAwait(false);
+                    await ((ICanDeleteRepository)Repository).Delete(entity.Id).ConfigureAwait(false);
                     
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
@@ -83,11 +83,6 @@ namespace RecruitmentManagementApi.Services.Base
             await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
 
             return ConsumerMessages.Updated;
-        }
-
-        protected virtual Task DeleteEntity(int id)
-        {
-            return ((ICanDeleteRepository)Repository).Delete(id);
         }
 
         protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
