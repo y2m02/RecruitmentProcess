@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HelpersLibrary.Extensions;
@@ -7,62 +6,33 @@ using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.Base;
-using RecruitmentManagementApi.Models.Request.Candidates;
+using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories;
 using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface ICandidateService : IBaseService { }
+    public interface ICandidateService :
+        IBaseService,
+        ICanUpdateService,
+        ICanDeleteService { }
 
     public class CandidateService :
         BaseService<Candidate>,
         ICandidateService
     {
-        private readonly IRecruitmentRepository recruitmentRepository;
-        private readonly IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository;
-
         public CandidateService(
             IMapper mapper,
-            ICandidateRepository candidateRepository,
-            IRecruitmentRepository recruitmentRepository,
-            IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository
-        ) : base(mapper, candidateRepository)
+            ICandidateRepository repository
+        ) : base(mapper)
         {
-            this.recruitmentRepository = recruitmentRepository;
-            this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
+            Repository = repository;
         }
 
-        public override Task<Result> Delete(IRequest entity)
+        public Task<Result> GetAll()
         {
-            return HandleErrors(
-                async () =>
-                {
-                    var validations = entity.Validate().ToList();
-
-                    if (validations.Any())
-                    {
-                        return new Result(validationErrors: validations);
-                    }
-
-                    var candidate = entity as DeleteCandidateRequest;
-
-                    await recruitmentUpdateHistoryRepository.BatchDelete(
-                        await recruitmentUpdateHistoryRepository.GetAllByRecruitmentId(candidate.Id).ConfigureAwait(false)
-                    );
-
-                    await recruitmentRepository
-                        .Delete(new Recruitment { RecruitmentId = candidate.Id })
-                        .ConfigureAwait(false);
-
-                    await Repository.Delete(Mapper.Map<Candidate>(entity)).ConfigureAwait(false);
-
-                    return new Result(
-                        response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
-                    );
-                }
-            );
+            return GetAll<CandidateResponse>();
         }
 
         protected override async Task<string> CreateEntity(IRequest entity)
@@ -78,8 +48,7 @@ namespace RecruitmentManagementApi.Services
                         {
                             new()
                             {
-                                Date = x.Date, 
-                                Status = RecruitmentStatus.Pending,
+                                Date = x.Date, Status = RecruitmentStatus.Pending,
                             },
                         },
                     }

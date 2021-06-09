@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagementApi.Models.Entities;
@@ -7,7 +6,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface IAuthorizationKeyRepository:IBaseRepository<AuthorizationKey>
+    public interface IAuthorizationKeyRepository :
+        IBaseRepository<AuthorizationKey>,
+        ICanDeleteRepository
     {
         Task<bool> Exists(string key);
         Task<AuthorizationKey> Get(string key);
@@ -20,6 +21,11 @@ namespace RecruitmentManagementApi.Repositories
         public AuthorizationKeyRepository(
             RecruitmentManagementContext context
         ) : base(context) { }
+
+        public Task<List<AuthorizationKey>> GetAll()
+        {
+            return Context.AuthorizationKeys.AsNoTracking().ToListAsync();
+        }
 
         public Task<bool> Exists(string key)
         {
@@ -35,24 +41,8 @@ namespace RecruitmentManagementApi.Repositories
                 .SingleOrDefaultAsync(x => x.IsActive && x.Key == key);
         }
 
-        public Task<List<AuthorizationKey>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        public Task Create(AuthorizationKey entity) => Add(entity);
 
-        public Task Create(AuthorizationKey entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task Update(AuthorizationKey entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task Delete(AuthorizationKey entity)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Task Delete(int id) => Remove(new AuthorizationKey {AuthorizationKeyId = id});
     }
 }

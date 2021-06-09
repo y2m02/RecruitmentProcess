@@ -8,7 +8,9 @@ using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface IAuthorizationKeyService : IBaseService
+    public interface IAuthorizationKeyService : 
+        IBaseService,
+        ICanDeleteService
     {
         Task<bool> Exists(string key);
         Task<Result> Get(string key);
@@ -21,10 +23,15 @@ namespace RecruitmentManagementApi.Services
         public AuthorizationKeyService(
             IMapper mapper,
             IAuthorizationKeyRepository repository
-        ) : base(
-            mapper,
-            repository
-        ) { }
+        ) : base(mapper)
+        {
+            Repository = repository;
+        }
+
+        public Task<Result> GetAll()
+        {
+            return GetAll<AuthorizationKeyResponse>();
+        }
 
         public Task<bool> Exists(string key)
         {

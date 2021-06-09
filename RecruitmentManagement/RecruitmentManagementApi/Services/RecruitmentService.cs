@@ -12,7 +12,9 @@ using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface IRecruitmentService : IBaseService
+    public interface IRecruitmentService :
+        IBaseService,
+        ICanUpdateService
     {
         Task<Result> GetHistoryById(int id);
     }
@@ -26,11 +28,18 @@ namespace RecruitmentManagementApi.Services
 
         public RecruitmentService(
             IMapper mapper,
-            IRecruitmentRepository recruitmentRepository,
+            IRecruitmentRepository repository,
             IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository
-        ) : base(mapper, recruitmentRepository)
+        ) : base(mapper)
         {
+            Repository = repository;
+
             this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
+        }
+
+        public Task<Result> GetAll()
+        {
+            return GetAll<RecruitmentResponse>();
         }
 
         public Task<Result> GetHistoryById(int id)
@@ -49,13 +58,15 @@ namespace RecruitmentManagementApi.Services
 
         protected override async Task<string> UpdateEntity(IRequest entity)
         {
+            var repository = (IRecruitmentRepository)Repository;
+
             var recruitmentToUpdate = Mapper.Map<Recruitment>(entity);
 
-            var currentStatus = await ((IRecruitmentRepository)Repository)
+            var currentStatus = await repository
                 .GetStatus(recruitmentToUpdate.RecruitmentId)
                 .ConfigureAwait(false);
 
-            await Repository.Update(recruitmentToUpdate).ConfigureAwait(false);
+            await repository.Update(recruitmentToUpdate).ConfigureAwait(false);
 
             if (currentStatus != recruitmentToUpdate.Status)
             {

@@ -6,7 +6,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Repositories
 {
-    public interface ICandidateRepository : IBaseRepository<Candidate> { }
+    public interface ICandidateRepository :
+        ICanUpdateRepository<Candidate>,
+        ICanDeleteRepository { }
 
     public class CandidateRepository :
         BaseRepository<Candidate>,
@@ -37,8 +39,8 @@ namespace RecruitmentManagementApi.Repositories
                 entity,
                 new()
                 {
-                    nameof(entity.Name), 
-                    nameof(entity.Curriculum), 
+                    nameof(entity.Name),
+                    nameof(entity.Curriculum),
                     nameof(entity.GitHub),
                 }
             );
@@ -46,9 +48,6 @@ namespace RecruitmentManagementApi.Repositories
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
-        public Task Delete(Candidate entity)
-        {
-            return Remove(entity);
-        }
+        public Task Delete(int id) => Remove(new Candidate{ CandidateId = id });
     }
 }

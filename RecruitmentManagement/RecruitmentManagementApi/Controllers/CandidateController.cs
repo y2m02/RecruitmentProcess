@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Candidates;
-using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -26,7 +26,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () => ValidateResult(await candidateService.GetAll<CandidateResponse>().ConfigureAwait(false))
+                async () => ValidateResult(await candidateService.GetAll().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -62,7 +62,7 @@ namespace RecruitmentManagementApi.Controllers
         [Route("Delete")]
         public async Task<IActionResult> Delete(
             [FromHeader] string apiKey,
-            DeleteCandidateRequest request
+            DeleteRequest request
         )
         {
             return await ValidateApiKey(

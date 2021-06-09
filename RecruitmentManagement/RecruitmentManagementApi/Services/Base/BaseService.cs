@@ -6,6 +6,7 @@ using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Repositories.Base;
@@ -15,18 +16,15 @@ namespace RecruitmentManagementApi.Services.Base
     public abstract class BaseService<TModel>
     {
         protected readonly IMapper Mapper;
-        protected readonly IBaseRepository<TModel> Repository;
 
-        protected BaseService(
-            IMapper mapper,
-            IBaseRepository<TModel> repository
-        )
+        protected BaseService(IMapper mapper)
         {
             Mapper = mapper;
-            Repository = repository;
         }
 
-        public Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
+        protected IBaseRepository<TModel> Repository { get; set; }
+
+        protected Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
         {
             return HandleErrors(
                 async () =>
@@ -50,7 +48,7 @@ namespace RecruitmentManagementApi.Services.Base
             return Upsert(entity, UpsertActionType.Update);
         }
 
-        public virtual Task<Result> Delete(IRequest entity)
+        public Task<Result> Delete(DeleteRequest entity)
         {
             return HandleErrors(
                 async () =>
@@ -62,13 +60,29 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    await Repository.Delete(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
+                    await ((ICanDeleteRepository)Repository).Delete(entity.Id).ConfigureAwait(false);
+                    
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
                     );
                 }
             );
+        }
+
+        protected virtual async Task<string> CreateEntity(IRequest entity)
+        {
+            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Created;
+        }
+
+        protected virtual async Task<string> UpdateEntity(IRequest entity)
+        {
+            var repository = (ICanUpdateRepository<TModel>)Repository;
+
+            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+
+            return ConsumerMessages.Updated;
         }
 
         protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
@@ -83,10 +97,7 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected Result HandleErrors<T>(
-            Func<T, Result> executor,
-            T request
-        )
+        protected Result HandleErrors<T>(Func<T, Result> executor, T request)
         {
             try
             {
@@ -96,20 +107,6 @@ namespace RecruitmentManagementApi.Services.Base
             {
                 return new Result(errorMessage: ex.Message);
             }
-        }
-
-        protected virtual async Task<string> CreateEntity(IRequest entity)
-        {
-            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Created;
-        }
-
-        protected virtual async Task<string> UpdateEntity(IRequest entity)
-        {
-            await Repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Updated;
         }
 
         private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)

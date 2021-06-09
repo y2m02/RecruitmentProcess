@@ -2,9 +2,9 @@
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Request.Base;
 
-namespace RecruitmentManagementApi.Models.Request.Candidates
+namespace RecruitmentManagementApi.Models.Request
 {
-    public class DeleteCandidateRequest : IRequest
+    public class DeleteRequest : IRequest
     {
         public int Id { get; set; }
 

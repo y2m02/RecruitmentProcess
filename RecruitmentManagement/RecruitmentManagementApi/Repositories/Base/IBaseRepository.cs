@@ -7,7 +7,5 @@ namespace RecruitmentManagementApi.Repositories.Base
     {
         Task<List<TModel>> GetAll();
         Task Create(TModel entity);
-        Task Update(TModel entity);
-        Task Delete(TModel entity);
     }
 }

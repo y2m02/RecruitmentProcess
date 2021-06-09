@@ -11,5 +11,20 @@ namespace RecruitmentManagementApi.Models.Entities
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
         public DbSet<AuthorizationKey> AuthorizationKeys { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Recruitment>()
+                .HasMany(x => x.RecruitmentUpdateHistories)
+                .WithOne(x => x.Recruitment)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder
+                .Entity<Candidate>()
+                .HasOne(x => x.Recruitment)
+                .WithOne(x => x.Candidate)
+                .OnDelete(DeleteBehavior.ClientCascade);
+        }
     }
 }
