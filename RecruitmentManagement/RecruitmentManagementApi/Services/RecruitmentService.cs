@@ -14,7 +14,9 @@ using RecruitmentManagementApi.Services.Base;
 
 namespace RecruitmentManagementApi.Services
 {
-    public interface IRecruitmentService : IBaseService
+    public interface IRecruitmentService :
+        IBaseService,
+        ICanUpdateService
     {
         Task<Result> GetHistoryById(int id);
     }
@@ -24,8 +26,8 @@ namespace RecruitmentManagementApi.Services
         IRecruitmentService
 
     {
-        private readonly IRecruitmentRepository repository;
         private readonly IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository;
+        private readonly IRecruitmentRepository repository;
 
         public RecruitmentService(
             IMapper mapper,
@@ -67,7 +69,7 @@ namespace RecruitmentManagementApi.Services
         }
 
         protected override async Task<string> UpdateEntity(
-            IUpdatableRepository<Recruitment> repository,
+            ICanUpdateRepository<Recruitment> repository,
             IRequest entity
         )
         {

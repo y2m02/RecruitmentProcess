@@ -4,9 +4,8 @@ using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public interface IBaseService
+    public interface ICanUpdateService
     {
-        Task<Result> GetAll();
-        Task<Result> Create(IRequest entity);
+        Task<Result> Update(IRequest entity);
     }
 }

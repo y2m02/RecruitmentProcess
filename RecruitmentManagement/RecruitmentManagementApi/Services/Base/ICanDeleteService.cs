@@ -4,7 +4,7 @@ using RecruitmentManagementApi.Models.Responses.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public interface IDeletableService
+    public interface ICanDeleteService
     {
         Task<Result> Delete(IRequest entity);
     }

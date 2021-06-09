@@ -7,8 +7,8 @@ using RecruitmentManagementApi.Repositories.Base;
 namespace RecruitmentManagementApi.Repositories
 {
     public interface ICandidateRepository :
-        IUpdatableRepository<Candidate>,
-        IDeletableRepository<Candidate> { }
+        ICanUpdateRepository<Candidate>,
+        ICanDeleteRepository<Candidate> { }
 
     public class CandidateRepository :
         BaseRepository<Candidate>,

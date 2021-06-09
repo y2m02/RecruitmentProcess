@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentManagementApi.Models.Entities;
@@ -9,8 +8,8 @@ using RecruitmentManagementApi.Repositories.Base;
 namespace RecruitmentManagementApi.Repositories
 {
     public interface IRecruitmentRepository : 
-        IUpdatableRepository<Recruitment>,
-        IDeletableRepository<Recruitment>
+        ICanUpdateRepository<Recruitment>,
+        ICanDeleteRepository<Recruitment>
     {
         Task<Recruitment> GetById(int id);
         Task<RecruitmentStatus> GetStatus(int id);

@@ -18,7 +18,8 @@ namespace RecruitmentManagementApi.Services
 {
     public interface ICandidateService :
         IBaseService,
-        IDeletableService { }
+        ICanUpdateService,
+        ICanDeleteService { }
 
     public class CandidateService :
         BaseService<Candidate>,
@@ -75,7 +76,12 @@ namespace RecruitmentManagementApi.Services
                     );
 
                     await recruitmentRepository
-                        .Delete(new Recruitment { RecruitmentId = candidate.Id })
+                        .Delete(
+                            new Recruitment
+                            {
+                                RecruitmentId = candidate.Id,
+                            }
+                        )
                         .ConfigureAwait(false);
 
                     await repository.Delete(Mapper.Map<Candidate>(entity)).ConfigureAwait(false);
@@ -103,8 +109,7 @@ namespace RecruitmentManagementApi.Services
                         {
                             new()
                             {
-                                Date = x.Date,
-                                Status = RecruitmentStatus.Pending,
+                                Date = x.Date, Status = RecruitmentStatus.Pending,
                             },
                         },
                     }

@@ -37,7 +37,7 @@ namespace RecruitmentManagementApi.Services.Base
         }
 
         protected Task<Result> Delete(
-            IDeletableRepository<TModel> repository,
+            ICanDeleteRepository<TModel> repository,
             IRequest entity
         )
         {
@@ -105,7 +105,7 @@ namespace RecruitmentManagementApi.Services.Base
 
                     var action = actionType == UpsertActionType.Create
                         ? await CreateEntity(repository, entity).ConfigureAwait(false)
-                        : await UpdateEntity((IUpdatableRepository<TModel>)repository, entity).ConfigureAwait(false);
+                        : await UpdateEntity((ICanUpdateRepository<TModel>)repository, entity).ConfigureAwait(false);
 
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
@@ -125,7 +125,7 @@ namespace RecruitmentManagementApi.Services.Base
         }
 
         protected virtual async Task<string> UpdateEntity(
-            IUpdatableRepository<TModel> repository,
+            ICanUpdateRepository<TModel> repository,
             IRequest entity
         )
         {

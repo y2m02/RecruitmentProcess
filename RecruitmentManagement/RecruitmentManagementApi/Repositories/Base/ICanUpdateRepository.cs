@@ -2,7 +2,7 @@
 
 namespace RecruitmentManagementApi.Repositories.Base
 {
-    public interface IUpdatableRepository<TModel> : IBaseRepository<TModel>
+    public interface ICanUpdateRepository<TModel> : IBaseRepository<TModel>
     {
         Task Update(TModel entity);
     }
