@@ -42,13 +42,9 @@ namespace RecruitmentManagementApi.Repositories
             return (await GetById(id).ConfigureAwait(false)).Status;
         }
 
-        public Task Create(Recruitment entity) => Add(entity);
-
-        public async Task Update(Recruitment entity)
+        public Task Update(Recruitment entity)
         {
-            Context.Attach(entity);
-
-            AddPropertiesToModify(
+            return Modify(
                 entity,
                 new()
                 {
@@ -56,8 +52,6 @@ namespace RecruitmentManagementApi.Repositories
                     nameof(entity.Note),
                 }
             );
-
-            await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
         public Task Delete(int id) => Remove(new Recruitment { RecruitmentId = id });

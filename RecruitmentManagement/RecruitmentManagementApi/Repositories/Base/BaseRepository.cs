@@ -5,7 +5,7 @@ using RecruitmentManagementApi.Models.Entities;
 
 namespace RecruitmentManagementApi.Repositories.Base
 {
-    public abstract class BaseRepository<TModel>
+    public abstract class BaseRepository<TModel> where TModel : class
     {
         protected BaseRepository(RecruitmentManagementContext context)
         {
@@ -14,38 +14,44 @@ namespace RecruitmentManagementApi.Repositories.Base
 
         protected RecruitmentManagementContext Context { get; }
 
-        protected async Task Add(TModel entity)
+        public async Task Create(TModel entity)
         {
-            Context.Entry(entity).State = EntityState.Added;
+            await Context.Set<TModel>().AddAsync(entity).ConfigureAwait(false);
 
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
-        protected async Task Modify(TModel entity)
+        protected Task Modify(TModel entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
 
-            await SaveChangesAndDetach(entity).ConfigureAwait(false);
+            return SaveChangesAndDetach(entity);
         }
 
-        protected async Task Remove(TModel entity)
+        protected Task Modify(TModel entity, List<string> properties)
         {
-            Context.Entry(entity).State = EntityState.Deleted;
+            Context.Set<TModel>().Attach(entity);
 
-            await SaveChangesAndDetach(entity).ConfigureAwait(false);
+            AddPropertiesToModify(entity, properties);
+
+            return SaveChangesAndDetach(entity);
         }
 
-        protected async Task Remove(IEnumerable<TModel> entities)
+        protected Task Remove(TModel entity)
         {
-            foreach (var entity in entities)
-            {
-                Context.Entry(entity).State = EntityState.Deleted;
-            }
+            Context.Set<TModel>().Remove(entity);
 
-            await Save().ConfigureAwait(false);
+            return SaveChangesAndDetach(entity);
         }
 
-        protected void AddPropertiesToModify(TModel entity, List<string> properties)
+        protected Task Remove(IEnumerable<TModel> entities)
+        {
+            Context.Set<TModel>().RemoveRange(entities);
+
+            return Save();
+        }
+
+        private void AddPropertiesToModify(TModel entity, List<string> properties)
         {
             properties.ForEach(
                 propertyName =>
@@ -55,14 +61,14 @@ namespace RecruitmentManagementApi.Repositories.Base
             );
         }
 
-        protected async Task Save()
+        protected Task Save()
         {
-            await Context.SaveChangesAsync().ConfigureAwait(false);
+            return Context.SaveChangesAsync();
         }
 
-        protected async Task SaveChangesAndDetach(TModel entity)
+        private async Task SaveChangesAndDetach(TModel entity)
         {
-            await Save();
+            await Save().ConfigureAwait(false);
 
             Context.Entry(entity).State = EntityState.Detached;
         }
