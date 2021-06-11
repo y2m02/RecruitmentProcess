@@ -49,8 +49,6 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
-        public Task Create(RecruitmentUpdateHistory entity) => Add(entity);
-
         public async Task UpdateLastHistoryNote(int recruitmentId, string note)
         {
             var history = await Context

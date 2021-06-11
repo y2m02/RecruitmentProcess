@@ -41,8 +41,6 @@ namespace RecruitmentManagementApi.Repositories
                 .SingleOrDefaultAsync(x => x.IsActive && x.Key == key);
         }
 
-        public Task Create(AuthorizationKey entity) => Add(entity);
-
-        public Task Delete(int id) => Remove(new AuthorizationKey {AuthorizationKeyId = id});
+        public Task Delete(int id) => Remove(new AuthorizationKey { AuthorizationKeyId = id });
     }
 }

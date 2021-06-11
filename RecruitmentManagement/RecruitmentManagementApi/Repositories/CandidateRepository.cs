@@ -24,18 +24,9 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
-        public async Task Create(Candidate entity)
+        public Task Update(Candidate entity)
         {
-            await Context.Candidates.AddAsync(entity).ConfigureAwait(false);
-
-            await Save().ConfigureAwait(false);
-        }
-
-        public async Task Update(Candidate entity)
-        {
-            Context.Attach(entity);
-
-            AddPropertiesToModify(
+            return Modify(
                 entity,
                 new()
                 {
@@ -44,10 +35,8 @@ namespace RecruitmentManagementApi.Repositories
                     nameof(entity.GitHub),
                 }
             );
-
-            await SaveChangesAndDetach(entity).ConfigureAwait(false);
         }
 
-        public Task Delete(int id) => Remove(new Candidate{ CandidateId = id });
+        public Task Delete(int id) => Remove(new Candidate { CandidateId = id });
     }
 }
