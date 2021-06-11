@@ -27,14 +27,11 @@ namespace RecruitmentManagementApi.Services.Base
         protected Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
         {
             return HandleErrors(
-                async () =>
-                {
-                    return new Result(
-                        response: Mapper.Map<List<TResponse>>(
-                            await Repository.GetAll().ConfigureAwait(false)
-                        )
-                    );
-                }
+                async () => new Result(
+                    response: Mapper.Map<List<TResponse>>(
+                        await Repository.GetAll().ConfigureAwait(false)
+                    )
+                )
             );
         }
 
@@ -61,7 +58,7 @@ namespace RecruitmentManagementApi.Services.Base
                     }
 
                     await ((ICanDeleteRepository)Repository).Delete(entity.Id).ConfigureAwait(false);
-                    
+
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, ConsumerMessages.Deleted)
                     );
@@ -89,7 +86,7 @@ namespace RecruitmentManagementApi.Services.Base
         {
             try
             {
-                return await executor();
+                return await executor().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
