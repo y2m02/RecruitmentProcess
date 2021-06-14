@@ -19,5 +19,7 @@
         public const string InvalidApiKey = "The key '{0}' is invalid for accessing this API";
 
         public const string NotAllowedForApiKey = "The key '{0}' has no permissions for this action";
+
+        public const string InvalidKeyLength = "The provided key MUST contain 32 characteres";
     }
 }

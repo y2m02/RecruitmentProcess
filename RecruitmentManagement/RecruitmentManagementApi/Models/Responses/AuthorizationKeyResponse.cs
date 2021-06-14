@@ -11,7 +11,15 @@ namespace RecruitmentManagementApi.Models.Responses
 
         public string Permissions { get; set; }
 
-        public List<Permission> PermissionList => Permissions.Split("-").EagerSelect(x => x.ToEnum<Permission>());
+        public List<Permission> PermissionList
+        {
+            get
+            {
+                return Permissions.IsEmpty()
+                    ? new List<Permission>()
+                    : Permissions.Split("-").EagerSelect(x => x.ToEnum<Permission>());
+            }
+        }
 
         public bool IsActive { get; set; }
 
