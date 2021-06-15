@@ -15,30 +15,54 @@ $(function () {
 });
 
 function fillFields(rowData) {
-    window.$("#txtId").val(rowData.Id);
-    window.$("#txtName").val(rowData.Name);
-    window.$("#txtCurriculum").val(rowData.Curriculum);
-    window.$("#txtGitHub").val(rowData.GitHub);
+    $("#txtId").val(rowData.Id);
+    $("#txtName").val(rowData.Name);
+    $("#txtPhoneNumber").val(rowData.PhoneNumber == null ? null : rowData.PhoneNumber.replaceAll("-", ""));
+    $("#txtEmail").val(rowData.Email);
+    $("#txtCurriculum").val(rowData.Curriculum);
+    $("#txtGitHub").val(rowData.GitHub);
 }
 
 $("#myModalCandidate").on("hidden.bs.modal",
     function () {
-        window.$("#txtId").val("");
-        window.$("#txtName").val("");
-        window.$("#txtCurriculum").val("");
-        window.$("#txtGitHub").val("");
+        $("#txtId").val("");
+        $("#txtName").val("");
+        $("#txtPhoneNumber").val("");
+        $("#txtEmail").val("");
+        $("#txtCurriculum").val("");
+        $("#txtGitHub").val("");
 
         removeErrorMessage("txtName", "lblNameError");
+        removeErrorMessage("txtPhoneNumber", "lblPhoneNumberError");
+        removeErrorMessage("txtEmail", "lblEmailError");
     });
 
 function isValid() {
     document.body.style.cursor = "wait";
 
-    var name = buildError("txtName", "lblNameError");
+    var isValidPhoneNumber = true;
+    var isValidEmail = true;
+    var nameIsValid = buildError("txtName", "lblNameError");
+
+    if ($("#txtPhoneNumber").val() != "" && $("#txtPhoneNumber").val().length != 10) {
+        isValidPhoneNumber = false;
+
+        $("#txtPhoneNumber").css("border-color", "red", "important");
+
+        $("#lblPhoneNumberError").html("Campo debe tener 10 dígitos");
+    }
+
+    if ($("#txtEmail").val() != "" && $("#txtEmail").val().includes("@") == false) {
+        isValidEmail = false;
+
+        $("#txtEmail").css("border-color", "red", "important");
+
+        $("#lblEmailError").html("Campo es inválido");
+    }
 
     document.body.style.cursor = "default";
 
-    return name;
+    return nameIsValid && isValidPhoneNumber && isValidEmail;
 }
 
 function upsertCandidate() {
@@ -49,26 +73,30 @@ function upsertCandidate() {
         return false;
     }
 
-    var id = window.$("#txtId").val();
-    var name = window.$("#txtName").val();
-    var curriculum = window.$("#txtCurriculum").val();
-    var gitHub = window.$("#txtGitHub").val();
+    var id = $("#txtId").val();
+    var name = $("#txtName").val();
+    var phoneNumber = $("#txtPhoneNumber").val();
+    var email = $("#txtEmail").val();
+    var curriculum = $("#txtCurriculum").val();
+    var gitHub = $("#txtGitHub").val();
 
     var request = {
         "Id": id == '' ? 0 : parseInt(id),
         "Name": name,
+        "PhoneNumber": phoneNumber,
+        "Email": email,
         "Curriculum": curriculum,
         "GitHub": gitHub
     };
 
-    window.$.ajax({
+    $.ajax({
         url: "Candidate/Upsert",
         data: { request: request },
         type: "POST",
         content: "application/json;",
         dataType: "json",
         success: function (result) {
-            window.$('#myModalCandidate').modal('toggle');
+            $('#myModalCandidate').modal('toggle');
 
             RefreshGrid('Candidates');
             
@@ -112,7 +140,7 @@ function editCandidate() {
 
     fillFields(dataItem);
 
-    window.$("#myModalCandidate").modal();
+    $("#myModalCandidate").modal();
 }
 
 function deleteCandidate() {
@@ -124,28 +152,30 @@ function deleteCandidate() {
 
     var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
 
-    window.$("#lblCandidateId").html(dataItem.Id);
-    window.$("#txtDeleteName").val(dataItem.Name);
-    window.$("#txtDeleteCurriculum").val(dataItem.Curriculum);
-    window.$("#txtDeleteGitHub").val(dataItem.GitHub);
+    $("#lblCandidateId").html(dataItem.Id);
+    $("#txtDeleteName").val(dataItem.Name);   
+    $("#txtDeletePhoneNumber").val(dataItem.PhoneNumber == null ? null : dataItem.PhoneNumber.replaceAll("-", ""));
+    $("#txtDeleteEmail").val(dataItem.Email);
+    $("#txtDeleteCurriculum").val(dataItem.Curriculum);
+    $("#txtDeleteGitHub").val(dataItem.GitHub);
 
-    window.$("#myModalDelete").modal();
+    $("#myModalDelete").modal();
 }
 
 $("#btnDeleteCandidate").on("click",
     function () {
         document.body.style.cursor = 'wait';
 
-        var id = window.$("#lblCandidateId").html();
+        var id = $("#lblCandidateId").html();
 
-        window.$.ajax({
+        $.ajax({
             url: "Candidate/Delete",
             data: { id: id },
             type: "DELETE",
             content: "application/json;charset=utf-8",
             dataType: "json",
             success: function (result) {
-                window.$('#myModalDelete').modal('toggle');
+                $('#myModalDelete').modal('toggle');
 
                 RefreshGrid('Candidates');
 
@@ -163,10 +193,20 @@ $("#btnDeleteCandidate").on("click",
 
 $("#myModalDelete").on("hidden.bs.modal",
     function () {
-        window.$("#lblCandidateId").html("");
+        $("#lblCandidateId").html("");
     });
 
 $("#txtName").on("input",
     function () {
         removeErrorMessage("txtName", "lblNameError");
+    });
+
+$("#txtPhoneNumber").on("input",
+    function () {
+        removeErrorMessage("txtPhoneNumber", "lblPhoneNumberError");
+    });
+
+$("#txtEmail").on("input",
+    function () {
+        removeErrorMessage("txtEmail", "lblEmailError");
     });

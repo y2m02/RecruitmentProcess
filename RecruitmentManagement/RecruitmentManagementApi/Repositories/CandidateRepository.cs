@@ -31,6 +31,8 @@ namespace RecruitmentManagementApi.Repositories
                 new()
                 {
                     nameof(entity.Name),
+                    nameof(entity.PhoneNumber),
+                    nameof(entity.Email),
                     nameof(entity.Curriculum),
                     nameof(entity.GitHub),
                 }

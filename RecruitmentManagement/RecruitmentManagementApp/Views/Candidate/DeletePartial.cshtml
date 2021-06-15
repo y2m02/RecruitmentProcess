@@ -35,6 +35,54 @@
                             })
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="fieldNameAlign">
+                        @Html.LabelFor(model => model.PhoneNumber)
+                    </div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fas fa-phone-volume"
+                                   aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                        @Html.TextBoxFor(
+                            model => model.PhoneNumber,
+                            new
+                            {
+                                @class = "form-control",
+                                Id = "txtDeletePhoneNumber",
+                                style = "width: 80%; background-color: white;",
+                                @readonly = true,
+                            })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="fieldNameAlign">
+                        @Html.LabelFor(model => model.Email)
+                    </div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="far fa-envelope-open"
+                                   aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                        @Html.TextBoxFor(
+                            model => model.Email,
+                            new
+                            {
+                                @class = "form-control",
+                                Id = "txtDeleteEmail",
+                                style = "width: 80%; background-color: white;",
+                                @readonly = true,
+                            })
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="fieldNameAlign">
                         @Html.LabelFor(model => model.Curriculum)

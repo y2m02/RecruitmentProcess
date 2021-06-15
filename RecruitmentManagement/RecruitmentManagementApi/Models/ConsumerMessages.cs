@@ -21,5 +21,7 @@
         public const string NotAllowedForApiKey = "The key '{0}' has no permissions for this action";
 
         public const string InvalidKeyLength = "The provided key MUST contain 32 characteres";
+
+        public const string InvalidField = "The field {0} is invalid";
     }
 }
