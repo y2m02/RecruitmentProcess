@@ -15,11 +15,11 @@ namespace RecruitmentManagementApi.Controllers
     [ApiController]
     public class BaseApiController : Controller
     {
-        protected readonly IAuthorizationKeyService AuthorizationKeyService;
+        private readonly IAuthorizationKeyService authorizationKeyService;
 
         public BaseApiController(IAuthorizationKeyService authorizationKeyService)
         {
-            AuthorizationKeyService = authorizationKeyService;
+            this.authorizationKeyService = authorizationKeyService;
         }
 
         protected ObjectResult InternalServerError(object value)
@@ -50,7 +50,7 @@ namespace RecruitmentManagementApi.Controllers
                 return Unauthorized(new { error = ConsumerMessages.ApiKeyRequired });
             }
 
-            var result = await AuthorizationKeyService.Get(apiKey).ConfigureAwait(false);
+            var result = await authorizationKeyService.Get(apiKey).ConfigureAwait(false);
 
             if (result.Failed())
             {

@@ -3,9 +3,11 @@ using System.Linq;
 using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Entities;
+using RecruitmentManagementApi.Models.Request.AuthorizationKey;
 using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Models.Responses;
+using RecruitmentManagementApi.Repositories;
 
 namespace RecruitmentManagementApi.Mappings
 {
@@ -100,6 +102,12 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.InUse,
                     member => member.MapFrom(field => field.IsActive)
+                );
+
+            CreateMap<AuthorizationKeyRequest, AuthorizationKey>()
+                .ForMember(
+                    destination => destination.Permissions,
+                    member => member.MapFrom(field => field.Permissions.Join("-"))
                 );
         }
     }
