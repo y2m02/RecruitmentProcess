@@ -15,6 +15,12 @@ namespace RecruitmentManagementApp.Models.ViewModels
         [DisplayName("Fecha")]
         public DateTime CreatedDate => Date.Date;
 
+        [DisplayName("Teléfono")]
+        public string PhoneNumber { get; set; }
+
+        [DisplayName("Correo")]
+        public string Email { get; set; }
+
         [DisplayName("Currículo")]
         public string Curriculum { get; set; }
 

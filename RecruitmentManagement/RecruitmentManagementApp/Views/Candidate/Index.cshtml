@@ -60,14 +60,14 @@
                             type = "button",
                             onClick = "editCandidate();",
                         });
-                    x.Custom().Name(" ").IconClass("k-icon k-i-close k-i-x").HtmlAttributes(
-                        new
-                        {
-                            id = "btnDelete",
-                            @class = "btn btn-danger",
-                            type = "button",
-                            onClick = "deleteCandidate();",
-                        });
+                    //x.Custom().Name(" ").IconClass("k-icon k-i-close k-i-x").HtmlAttributes(
+                    //    new
+                    //    {
+                    //        id = "btnDelete",
+                    //        @class = "btn btn-danger",
+                    //        type = "button",
+                    //        onClick = "deleteCandidate();",
+                    //    });
                 }
             )
             .Resizable(c => c.Columns(true))
@@ -126,7 +126,7 @@
                 .Sort(s => s.Add("StatusDescription").Descending())
                 .Model(model => model.Id(p => p.Id))
                 .Read(read => read.Action("GetAll", "Candidate"))
-                .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Ascending))
+                .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Descending))
             ))
     </div>
 </div>

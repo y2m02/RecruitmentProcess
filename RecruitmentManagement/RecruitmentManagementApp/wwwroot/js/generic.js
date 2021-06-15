@@ -18,14 +18,13 @@
             event.keyCode == 9 ||
             event.keyCode == 37 ||
             event.keyCode == 39 ||
-            event.keyCode == 46 ||
-            event.keyCode == 190)) {
+            event.keyCode == 46)) {
 
             event.preventDefault();
         }
 
-        if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
-            event.preventDefault();
+        //if (window.$(this).val().indexOf(".") !== -1 && event.keyCode == 190)
+        //    event.preventDefault();
     });
 
     window.$(".numericField").focus(function () {
