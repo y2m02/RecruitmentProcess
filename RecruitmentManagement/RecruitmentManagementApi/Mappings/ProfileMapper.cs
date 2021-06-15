@@ -7,7 +7,6 @@ using RecruitmentManagementApi.Models.Request.AuthorizationKey;
 using RecruitmentManagementApi.Models.Request.Candidates;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Models.Responses;
-using RecruitmentManagementApi.Repositories;
 
 namespace RecruitmentManagementApi.Mappings
 {
@@ -33,6 +32,14 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.RecruitmentStatus,
                     member => member.MapFrom(field => field.Recruitment.Status)
+                )
+                .ForMember(
+                    destination => destination.PhoneNumber,
+                    member => member.MapFrom(
+                        field => field.PhoneNumber.IsEmpty()
+                            ? field.PhoneNumber
+                            : long.Parse(field.PhoneNumber).ToString("000-000-0000")
+                    )
                 );
 
             CreateMap<CandidateRequest, Candidate>()
