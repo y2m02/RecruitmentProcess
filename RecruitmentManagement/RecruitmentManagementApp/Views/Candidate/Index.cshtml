@@ -31,6 +31,8 @@
                 columns.Select().Width(50).ClientHeaderTemplate(" ");
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
+                columns.Bound(c => c.PhoneNumber).Groupable(false).Width(150);
+                columns.Bound(c => c.Email).Groupable(false).Width(200);
                 columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
@@ -39,8 +41,6 @@
                         .Messages(msg => msg.SelectedItemsFormat("{0} opciones seleccionadas"))
                     )
                     .Width(150);
-                columns.Bound(c => c.Curriculum).Groupable(false).Width(200);
-                columns.Bound(c => c.GitHub).Groupable(false).Width(200);
             })
             .ToolBar(
                 x =>
@@ -119,6 +119,7 @@
                     .Filter("Filtrar")
                     .Clear("Limpiar")))
             .Scrollable(x => x.Height(450))
+            .ClientDetailTemplateId("candidateDetails")
             .DataSource(dataSource => dataSource
                 .Ajax()
                 .PageSize(20)
@@ -132,5 +133,7 @@
 </div>
 
 @await Html.PartialAsync("DeletePartial")
+
+@await Html.PartialAsync("DetailsPartial")
 
 <script src="~/js/candidate.js"></script>

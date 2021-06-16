@@ -1,0 +1,42 @@
+﻿@using RecruitmentManagementApp.Models.ViewModels
+
+<style>
+    .k-detail-cell .k-tabstrip .k-content { padding: 0.2em; }
+
+    .candidate-details ul {
+        list-style: none;
+        margin: 15px;
+        padding: 0;
+    }
+
+    .candidate-details ul li {
+        line-height: 1.7em;
+        margin: 0;
+    }
+
+    .candidate-details label {
+        display: inline-block;
+        font-style: normal;
+        padding-right: 10px;
+        text-align: left;
+    }
+</style>
+
+<script id="candidateDetails" type="text/kendo-tmpl">
+        @(Html.Kendo().TabStrip()
+            .Name("tabStrip_#=Id#")
+            .SelectedIndex(0)
+            .Animation(animation => animation.Open(open => open.Fade(FadeDirection.In)))
+            .Items(items =>
+            {
+                items.Add().Text("Más info").Content(
+                    "<div class='candidate-details'>" +
+                        "<ul>" +
+                        "<li><label><b>Currículum:</b> #= Curriculum #</label></li>" +
+                        "<li><label><b>GitHub de la prueba:</b> #= GitHub #</label></li>" +
+                        "</ul>" +
+                        "</div>"
+                    );
+            }).ToClientTemplate())
+
+</script>
