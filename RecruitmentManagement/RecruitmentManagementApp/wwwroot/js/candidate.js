@@ -156,8 +156,6 @@ function deleteCandidate() {
     $("#txtDeleteName").val(dataItem.Name);   
     $("#txtDeletePhoneNumber").val(dataItem.PhoneNumber == null ? null : dataItem.PhoneNumber.replaceAll("-", ""));
     $("#txtDeleteEmail").val(dataItem.Email);
-    $("#txtDeleteCurriculum").val(dataItem.Curriculum);
-    $("#txtDeleteGitHub").val(dataItem.GitHub);
 
     $("#myModalDelete").modal();
 }
