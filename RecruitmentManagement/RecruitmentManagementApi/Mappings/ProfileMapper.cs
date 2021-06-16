@@ -37,8 +37,32 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.PhoneNumber,
                     member => member.MapFrom(
                         field => field.PhoneNumber.IsEmpty()
-                            ? field.PhoneNumber
+                            ? string.Empty
                             : long.Parse(field.PhoneNumber).ToString("000-000-0000")
+                    )
+                )
+                .ForMember(
+                    destination => destination.Email,
+                    member => member.MapFrom(
+                        field => field.Email.IsEmpty()
+                            ? string.Empty
+                            : field.Email
+                    )
+                )
+                .ForMember(
+                    destination => destination.Curriculum,
+                    member => member.MapFrom(
+                        field => field.Curriculum.IsEmpty()
+                            ? string.Empty
+                            : field.Curriculum
+                    )
+                )
+                .ForMember(
+                    destination => destination.GitHub,
+                    member => member.MapFrom(
+                        field => field.GitHub.IsEmpty()
+                            ? string.Empty
+                            : field.GitHub
                     )
                 );
 
