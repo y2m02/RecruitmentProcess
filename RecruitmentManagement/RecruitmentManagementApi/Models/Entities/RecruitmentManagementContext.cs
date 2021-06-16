@@ -18,13 +18,13 @@ namespace RecruitmentManagementApi.Models.Entities
                 .Entity<Recruitment>()
                 .HasMany(x => x.RecruitmentUpdateHistories)
                 .WithOne(x => x.Recruitment)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder
                 .Entity<Candidate>()
                 .HasOne(x => x.Recruitment)
                 .WithOne(x => x.Candidate)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
