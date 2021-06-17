@@ -11,6 +11,7 @@ namespace RecruitmentManagementApi.Models.Entities
         public DbSet<Recruitment> Recruitments { get; set; }
         public DbSet<RecruitmentUpdateHistory> RecruitmentUpdateHistories { get; set; }
         public DbSet<AuthorizationKey> AuthorizationKeys { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
