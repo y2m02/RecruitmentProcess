@@ -140,6 +140,17 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.Permissions,
                     member => member.MapFrom(field => field.Permissions.Join("-"))
                 );
+
+
+            CreateMap<Log, LogResponse>()
+                .ForMember(
+                    destination => destination.Id,
+                    member => member.MapFrom(field => field.LogId)
+                )
+                .ForMember(
+                    destination => destination.Api,
+                    member => member.MapFrom(field => field.Api.EnumToString())
+                );
         }
     }
 }
