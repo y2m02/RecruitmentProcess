@@ -5,6 +5,8 @@ using HelpersLibrary.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request.Base;
+using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
 using RecruitmentManagementApi.Services;
@@ -16,10 +18,15 @@ namespace RecruitmentManagementApi.Controllers
     public class BaseApiController : Controller
     {
         private readonly IAuthorizationKeyService authorizationKeyService;
+        protected readonly ILogService LogService;
 
-        public BaseApiController(IAuthorizationKeyService authorizationKeyService)
+        public BaseApiController(
+            IAuthorizationKeyService authorizationKeyService,
+            ILogService logService
+        )
         {
             this.authorizationKeyService = authorizationKeyService;
+            this.LogService = logService;
         }
 
         protected ObjectResult InternalServerError(object value)
@@ -27,10 +34,18 @@ namespace RecruitmentManagementApi.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, value);
         }
 
-        protected IActionResult ValidateResult(Result result)
+        protected async Task<IActionResult> ValidateResult(
+            Result result,
+            Func<Task<Result>> executor = null
+        )
         {
             if (result.Succeeded())
             {
+                if (executor is not null)
+                {
+                    await executor().ConfigureAwait(false);
+                }
+
                 return Ok(result);
             }
 

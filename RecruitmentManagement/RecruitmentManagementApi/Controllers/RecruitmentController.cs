@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
+using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Services;
 
@@ -12,8 +14,9 @@ namespace RecruitmentManagementApi.Controllers
 
         public RecruitmentController(
             IAuthorizationKeyService authorizationKeyService,
-            IRecruitmentService recruitmentService
-        ) : base(authorizationKeyService)
+            IRecruitmentService recruitmentService,
+            ILogService logService
+        ) : base(authorizationKeyService, logService)
         {
             this.recruitmentService = recruitmentService;
         }
@@ -25,9 +28,21 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () => ValidateResult(
-                    await recruitmentService.GetAll().ConfigureAwait(false)
-                )
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Recruitment,
+                        Endpoint = nameof(GetAll),
+                        ApiKey = apiKey,
+                    };
+
+                    return await ValidateResult(
+                        await recruitmentService.GetAll().ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
 
@@ -38,7 +53,22 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () => ValidateResult(await recruitmentService.GetHistoryById(id).ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Recruitment,
+                        Endpoint = nameof(GetHistoryById),
+                        ApiKey = apiKey,
+                        AffectedEntity = id,
+                    };
+
+                    return await ValidateResult(
+                        await recruitmentService.GetHistoryById(id).ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
 
@@ -52,7 +82,22 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Write,
-                async () => ValidateResult(await recruitmentService.Update(request).ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Recruitment,
+                        Endpoint = nameof(Update),
+                        ApiKey = apiKey,
+                        AffectedEntity = request.Id,
+                    };
+
+                    return await ValidateResult(
+                        await recruitmentService.Update(request).ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             );
         }
     }

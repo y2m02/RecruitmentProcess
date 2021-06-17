@@ -5,6 +5,7 @@ using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Request.AuthorizationKey;
 using RecruitmentManagementApi.Models.Request.Candidates;
+using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Models.Responses;
 
@@ -151,6 +152,8 @@ namespace RecruitmentManagementApi.Mappings
                     destination => destination.Api,
                     member => member.MapFrom(field => field.Api.EnumToString())
                 );
+
+            CreateMap<LogRequest, Log>();
         }
     }
 }

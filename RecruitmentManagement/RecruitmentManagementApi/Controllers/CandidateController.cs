@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Candidates;
+using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -13,8 +15,9 @@ namespace RecruitmentManagementApi.Controllers
 
         public CandidateController(
             IAuthorizationKeyService authorizationKeyService,
-            ICandidateService candidateService
-        ) : base(authorizationKeyService)
+            ICandidateService candidateService,
+            ILogService logService
+        ) : base(authorizationKeyService, logService)
         {
             this.candidateService = candidateService;
         }
@@ -26,7 +29,21 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () => ValidateResult(await candidateService.GetAll().ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Candidate,
+                        Endpoint = nameof(GetAll),
+                        ApiKey = apiKey,
+                    };
+
+                    return await ValidateResult(
+                        await candidateService.GetAll().ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
 
@@ -40,7 +57,21 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Write,
-                async () => ValidateResult(await candidateService.Create(request).ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Candidate,
+                        Endpoint = nameof(Create),
+                        ApiKey = apiKey,
+                    };
+
+                    return await ValidateResult(
+                        await candidateService.Create(request).ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
 
@@ -54,7 +85,22 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Write,
-                async () => ValidateResult(await candidateService.Update(request).ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Candidate,
+                        Endpoint = nameof(Update),
+                        ApiKey = apiKey,
+                        AffectedEntity = request.Id,
+                    };
+
+                    return await ValidateResult(
+                        await candidateService.Update(request).ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
 
@@ -68,7 +114,22 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Delete,
-                async () => ValidateResult(await candidateService.Delete(request).ConfigureAwait(false))
+                async () =>
+                {
+                    var logRequest = new LogRequest
+                    {
+                        RunAt = DateTime.Now,
+                        Api = Api.Candidate,
+                        Endpoint = nameof(Delete),
+                        ApiKey = apiKey,
+                        AffectedEntity = request.Id,
+                    };
+
+                    return await ValidateResult(
+                        await candidateService.Delete(request).ConfigureAwait(false),
+                        () => LogService.Create(logRequest)
+                    ).ConfigureAwait(false);
+                }
             ).ConfigureAwait(false);
         }
     }
