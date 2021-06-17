@@ -30,17 +30,8 @@ namespace RecruitmentManagementApi.Controllers
                 Permission.Read,
                 async () =>
                 {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Recruitment,
-                        Endpoint = nameof(GetAll),
-                        ApiKey = apiKey,
-                    };
-
                     return await ValidateResult(
-                        await recruitmentService.GetAll().ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
+                        await recruitmentService.GetAll().ConfigureAwait(false)
                     ).ConfigureAwait(false);
                 }
             ).ConfigureAwait(false);
@@ -55,18 +46,8 @@ namespace RecruitmentManagementApi.Controllers
                 Permission.Read,
                 async () =>
                 {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Recruitment,
-                        Endpoint = nameof(GetHistoryById),
-                        ApiKey = apiKey,
-                        AffectedEntity = id,
-                    };
-
                     return await ValidateResult(
-                        await recruitmentService.GetHistoryById(id).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
+                        await recruitmentService.GetHistoryById(id).ConfigureAwait(false)
                     ).ConfigureAwait(false);
                 }
             ).ConfigureAwait(false);

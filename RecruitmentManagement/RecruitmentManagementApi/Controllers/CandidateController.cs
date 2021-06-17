@@ -31,17 +31,8 @@ namespace RecruitmentManagementApi.Controllers
                 Permission.Read,
                 async () =>
                 {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Candidate,
-                        Endpoint = nameof(GetAll),
-                        ApiKey = apiKey,
-                    };
-
                     return await ValidateResult(
-                        await candidateService.GetAll().ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
+                        await candidateService.GetAll().ConfigureAwait(false)
                     ).ConfigureAwait(false);
                 }
             ).ConfigureAwait(false);
