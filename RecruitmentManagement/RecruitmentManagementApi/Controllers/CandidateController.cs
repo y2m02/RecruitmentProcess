@@ -15,9 +15,8 @@ namespace RecruitmentManagementApi.Controllers
 
         public CandidateController(
             IAuthorizationKeyService authorizationKeyService,
-            ICandidateService candidateService,
-            ILogService logService
-        ) : base(authorizationKeyService, logService)
+            ICandidateService candidateService
+        ) : base(authorizationKeyService)
         {
             this.candidateService = candidateService;
         }
@@ -29,12 +28,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await candidateService.GetAll().ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await candidateService.GetAll().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -48,21 +42,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Write,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Candidate,
-                        Endpoint = nameof(Create),
-                        ApiKey = apiKey,
-                    };
-
-                    return await ValidateResult(
-                        await candidateService.Create(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await candidateService.Create(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -87,10 +67,7 @@ namespace RecruitmentManagementApi.Controllers
                         AffectedEntity = request.Id,
                     };
 
-                    return await ValidateResult(
-                        await candidateService.Update(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
+                    return ValidateResult(await candidateService.Update(request).ConfigureAwait(false));
                 }
             ).ConfigureAwait(false);
         }
@@ -105,22 +82,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Delete,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Candidate,
-                        Endpoint = nameof(Delete),
-                        ApiKey = apiKey,
-                        AffectedEntity = request.Id,
-                    };
-
-                    return await ValidateResult(
-                        await candidateService.Delete(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await candidateService.Delete(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
     }

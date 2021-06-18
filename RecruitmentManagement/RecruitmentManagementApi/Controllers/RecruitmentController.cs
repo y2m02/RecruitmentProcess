@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
-using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Models.Request.Recruitments;
 using RecruitmentManagementApi.Services;
 
@@ -14,9 +12,8 @@ namespace RecruitmentManagementApi.Controllers
 
         public RecruitmentController(
             IAuthorizationKeyService authorizationKeyService,
-            IRecruitmentService recruitmentService,
-            ILogService logService
-        ) : base(authorizationKeyService, logService)
+            IRecruitmentService recruitmentService
+        ) : base(authorizationKeyService)
         {
             this.recruitmentService = recruitmentService;
         }
@@ -28,12 +25,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await recruitmentService.GetAll().ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await recruitmentService.GetAll().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -44,12 +36,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Read,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await recruitmentService.GetHistoryById(id).ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await recruitmentService.GetHistoryById(id).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -63,22 +50,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.Write,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.Recruitment,
-                        Endpoint = nameof(Update),
-                        ApiKey = apiKey,
-                        AffectedEntity = request.Id,
-                    };
-
-                    return await ValidateResult(
-                        await recruitmentService.Update(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await recruitmentService.Update(request).ConfigureAwait(false))
             );
         }
     }

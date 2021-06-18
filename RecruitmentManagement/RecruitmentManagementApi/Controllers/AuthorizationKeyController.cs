@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.AuthorizationKey;
-using RecruitmentManagementApi.Models.Request.Logs;
 using RecruitmentManagementApi.Services;
 
 namespace RecruitmentManagementApi.Controllers
@@ -13,9 +11,8 @@ namespace RecruitmentManagementApi.Controllers
         private readonly IAuthorizationKeyService authorizationKeyService;
 
         public AuthorizationKeyController(
-            IAuthorizationKeyService authorizationKeyService,
-            ILogService logService
-        ) : base(authorizationKeyService, logService)
+            IAuthorizationKeyService authorizationKeyService
+        ) : base(authorizationKeyService)
         {
             this.authorizationKeyService = authorizationKeyService;
         }
@@ -27,12 +24,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await authorizationKeyService.GetAll().ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await authorizationKeyService.GetAll().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -46,21 +38,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.AuthorizationKey,
-                        Endpoint = nameof(Create),
-                        ApiKey = apiKey,
-                    };
-
-                    return await ValidateResult(
-                        await authorizationKeyService.Create(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await authorizationKeyService.Create(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -74,22 +52,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.AuthorizationKey,
-                        Endpoint = nameof(Activate),
-                        ApiKey = apiKey,
-                        AffectedEntity = request.Id,
-                    };
-
-                    return await ValidateResult(
-                        await authorizationKeyService.Activate(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await authorizationKeyService.Activate(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -103,22 +66,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.AuthorizationKey,
-                        Endpoint = nameof(Deactivate),
-                        ApiKey = apiKey,
-                        AffectedEntity = request.Id,
-                    };
-
-                    return await ValidateResult(
-                        await authorizationKeyService.Deactivate(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await authorizationKeyService.Deactivate(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -132,22 +80,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    var logRequest = new LogRequest
-                    {
-                        RunAt = DateTime.Now,
-                        Api = Api.AuthorizationKey,
-                        Endpoint = nameof(UpdatePermissions),
-                        ApiKey = apiKey,
-                        AffectedEntity = request.Id,
-                    };
-
-                    return await ValidateResult(
-                        await authorizationKeyService.UpdatePermissions(request).ConfigureAwait(false),
-                        () => LogService.Create(logRequest)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await authorizationKeyService.UpdatePermissions(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
     }

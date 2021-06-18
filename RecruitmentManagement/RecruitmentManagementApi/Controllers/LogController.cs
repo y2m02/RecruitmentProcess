@@ -8,10 +8,15 @@ namespace RecruitmentManagementApi.Controllers
 {
     public class LogController : BaseApiController
     {
+        private readonly ILogService logService;
+
         public LogController(
             IAuthorizationKeyService authorizationKeyService,
             ILogService logService
-        ) : base(authorizationKeyService, logService) { }
+        ) : base(authorizationKeyService)
+        {
+            this.logService = logService;
+        }
 
         [HttpGet]
         [Route("Get")]
@@ -20,12 +25,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await LogService.GetAll().ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await logService.GetAll().ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
 
@@ -39,12 +39,7 @@ namespace RecruitmentManagementApi.Controllers
             return await ValidateApiKey(
                 apiKey,
                 Permission.FullAccess,
-                async () =>
-                {
-                    return await ValidateResult(
-                        await LogService.Create(request).ConfigureAwait(false)
-                    ).ConfigureAwait(false);
-                }
+                async () => ValidateResult(await logService.Create(request).ConfigureAwait(false))
             ).ConfigureAwait(false);
         }
     }
