@@ -5,21 +5,28 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models;
+using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses.Base;
+using RecruitmentManagementApi.Repositories;
 using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
     public abstract class BaseService<TModel>
     {
+        private readonly ILogRepository logRepository;
         protected readonly IMapper Mapper;
 
-        protected BaseService(IMapper mapper)
+        protected BaseService(
+            IMapper mapper,
+            ILogRepository logRepository
+        )
         {
             Mapper = mapper;
+            this.logRepository = logRepository;
         }
 
         protected IBaseRepository<TModel> Repository { get; set; }
@@ -40,7 +47,7 @@ namespace RecruitmentManagementApi.Services.Base
             return Upsert(entity, UpsertActionType.Create);
         }
 
-        public Task<Result> Update(IRequest entity)
+        public Task<Result> Update(IUpdateableRequest entity)
         {
             return Upsert(entity, UpsertActionType.Update);
         }
@@ -122,11 +129,56 @@ namespace RecruitmentManagementApi.Services.Base
                         ? await CreateEntity(entity).ConfigureAwait(false)
                         : await UpdateEntity(entity).ConfigureAwait(false);
 
+                    var endpoint = string.Empty;
+                    var affectedEntity = 0;
+
+                    switch (actionType)
+                    {
+                        case UpsertActionType.Create:
+                            await CreateEntity(entity).ConfigureAwait(false);
+
+                            endpoint = nameof(Create);
+                            break;
+
+                        case UpsertActionType.Update:
+                            await UpdateEntity(entity).ConfigureAwait(false);
+
+                            affectedEntity = ((IUpdateableRequest)entity).Id;
+                            endpoint = nameof(Update);
+                            break;
+                    }
+
+                    await logRepository.Create(
+                        CreateLog("Test", entity.GetType().Name, endpoint, affectedEntity)
+                    ).ConfigureAwait(false);
+
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
                     );
                 }
             );
+        }
+
+        private static Log CreateLog(
+            string apiKey,
+            string entityType,
+            string endPoint,
+            int affectedEntity
+        )
+        {
+            return new()
+            {
+                RunAt = DateTime.Now,
+                ApiKey = apiKey,
+                Endpoint = endPoint,
+                Api = entityType switch
+                {
+                    _ when entityType.Contains("AuthorizationKey") => Api.AuthorizationKey,
+                    _ when entityType.Contains("Candidate") => Api.Candidate,
+                    _ when entityType.Contains("Recruitment") => Api.Recruitment,
+                },
+                AffectedEntity = affectedEntity,
+            };
         }
     }
 }

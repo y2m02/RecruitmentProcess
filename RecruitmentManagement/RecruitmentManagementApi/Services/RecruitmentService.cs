@@ -29,8 +29,9 @@ namespace RecruitmentManagementApi.Services
         public RecruitmentService(
             IMapper mapper,
             IRecruitmentRepository repository,
-            IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository
-        ) : base(mapper)
+            IRecruitmentUpdateHistoryRepository recruitmentUpdateHistoryRepository,
+            ILogRepository logRepository
+        ) : base(mapper, logRepository)
         {
             Repository = repository;
 

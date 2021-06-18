@@ -5,7 +5,6 @@ using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
-using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Request.AuthorizationKey;
 using RecruitmentManagementApi.Models.Responses;
 using RecruitmentManagementApi.Models.Responses.Base;
@@ -31,8 +30,9 @@ namespace RecruitmentManagementApi.Services
     {
         public AuthorizationKeyService(
             IMapper mapper,
-            IAuthorizationKeyRepository repository
-        ) : base(mapper)
+            IAuthorizationKeyRepository repository,
+            ILogRepository logRepository
+        ) : base(mapper, logRepository)
         {
             Repository = repository;
         }

@@ -16,8 +16,9 @@ namespace RecruitmentManagementApi.Services
     {
         public LogService(
             IMapper mapper,
-            ILogRepository repository
-        ) : base(mapper)
+            ILogRepository repository,
+            ILogRepository logRepository
+        ) : base(mapper, logRepository)
         {
             Repository = repository;
         }
