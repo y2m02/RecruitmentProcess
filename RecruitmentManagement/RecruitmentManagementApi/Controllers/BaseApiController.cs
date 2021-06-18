@@ -36,14 +36,14 @@ namespace RecruitmentManagementApi.Controllers
 
         protected async Task<IActionResult> ValidateResult(
             Result result,
-            Func<Task<Result>> executor = null
+            Func<Task<Result>> logExecutor = null
         )
         {
             if (result.Succeeded())
             {
-                if (executor is not null)
+                if (logExecutor is not null)
                 {
-                    await executor().ConfigureAwait(false);
+                    await logExecutor().ConfigureAwait(false);
                 }
 
                 return Ok(result);
