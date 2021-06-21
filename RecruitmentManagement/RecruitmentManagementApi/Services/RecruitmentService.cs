@@ -20,7 +20,7 @@ namespace RecruitmentManagementApi.Services
     }
 
     public class RecruitmentService :
-        BaseService<Recruitment>,
+        BaseService<Recruitment, RecruitmentResponse>,
         IRecruitmentService
 
     {
@@ -35,11 +35,6 @@ namespace RecruitmentManagementApi.Services
             Repository = repository;
 
             this.recruitmentUpdateHistoryRepository = recruitmentUpdateHistoryRepository;
-        }
-
-        public Task<Result> GetAll()
-        {
-            return GetAll<RecruitmentResponse>();
         }
 
         public Task<Result> GetHistoryById(int id)

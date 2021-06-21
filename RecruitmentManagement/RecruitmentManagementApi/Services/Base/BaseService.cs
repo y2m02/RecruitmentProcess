@@ -13,7 +13,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public abstract class BaseService<TModel>
+    public abstract class BaseService<TModel, TResponse>
+        where TModel : class
+        where TResponse : BaseResponse
     {
         protected readonly IMapper Mapper;
 
@@ -24,7 +26,7 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected IBaseRepository<TModel> Repository { get; set; }
 
-        protected Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
+        public Task<Result> GetAll()
         {
             return HandleErrors(
                 async () => new Result(
@@ -66,11 +68,13 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        protected virtual async Task<string> CreateEntity(IRequest entity)
+        protected virtual async Task<TModel> CreateEntity(IRequest entity)
         {
-            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
+            var model = Mapper.Map<TModel>(entity);
 
-            return ConsumerMessages.Created;
+            var a  = await Repository.Create(model).ConfigureAwait(false);
+
+            return a;
         }
 
         protected virtual async Task<string> UpdateEntity(IUpdateableRequest entity)
@@ -94,18 +98,6 @@ namespace RecruitmentManagementApi.Services.Base
             }
         }
 
-        protected Result HandleErrors<T>(Func<T, Result> executor, T request)
-        {
-            try
-            {
-                return executor(request);
-            }
-            catch (Exception ex)
-            {
-                return new Result(errorMessage: ex.Message);
-            }
-        }
-
         private Task<Result> Upsert(IRequest entity, UpsertActionType actionType)
         {
             return HandleErrors(
@@ -118,13 +110,16 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    var action = actionType == UpsertActionType.Create
-                        ? await CreateEntity(entity).ConfigureAwait(false)
-                        : await UpdateEntity((IUpdateableRequest)entity).ConfigureAwait(false);
+                    var a = await CreateEntity(entity).ConfigureAwait(false);
 
-                    return new Result(
-                        response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
+                    var response = Mapper.Map<TResponse>(
+                        a
                     );
+                    //var action = actionType == UpsertActionType.Create
+                    //    ? await CreateEntity(entity).ConfigureAwait(false)
+                    //    : await UpdateEntity(entity).ConfigureAwait(false);
+
+                    return new Result(response);
                 }
             );
         }

@@ -14,11 +14,13 @@ namespace RecruitmentManagementApi.Repositories.Base
 
         protected RecruitmentManagementContext Context { get; }
 
-        public async Task Create(TModel entity)
+        public async Task<TModel> Create(TModel entity)
         {
             await Context.Set<TModel>().AddAsync(entity).ConfigureAwait(false);
 
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
+
+            return entity;
         }
 
         protected Task Modify(TModel entity)
@@ -51,6 +53,8 @@ namespace RecruitmentManagementApi.Repositories.Base
             return Save();
         }
 
+        protected Task Save() => Context.SaveChangesAsync();
+
         private void AddPropertiesToModify(TModel entity, List<string> properties)
         {
             properties.ForEach(
@@ -59,11 +63,6 @@ namespace RecruitmentManagementApi.Repositories.Base
                     Context.Entry(entity).Property(propertyName).IsModified = true;
                 }
             );
-        }
-
-        protected Task Save()
-        {
-            return Context.SaveChangesAsync();
         }
 
         private async Task SaveChangesAndDetach(TModel entity)
