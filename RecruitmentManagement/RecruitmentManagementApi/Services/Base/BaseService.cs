@@ -68,22 +68,16 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        protected virtual async Task<TModel> CreateEntity(IRequest entity)
+        protected virtual Task<TModel> CreateEntity(IRequest entity)
         {
-            var model = Mapper.Map<TModel>(entity);
-
-            var a  = await Repository.Create(model).ConfigureAwait(false);
-
-            return a;
+            return Repository.Create(Mapper.Map<TModel>(entity));
         }
 
-        protected virtual async Task<string> UpdateEntity(IUpdateableRequest entity)
+        protected virtual Task<TModel> UpdateEntity(IUpdateableRequest entity)
         {
             var repository = (ICanUpdateRepository<TModel>)Repository;
 
-            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Updated;
+            return repository.Update(Mapper.Map<TModel>(entity));
         }
 
         protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
@@ -110,14 +104,11 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    var a = await CreateEntity(entity).ConfigureAwait(false);
+                    var model = actionType == UpsertActionType.Create
+                        ? await CreateEntity(entity).ConfigureAwait(false)
+                        : await UpdateEntity((IUpdateableRequest)entity).ConfigureAwait(false);
 
-                    var response = Mapper.Map<TResponse>(
-                        a
-                    );
-                    //var action = actionType == UpsertActionType.Create
-                    //    ? await CreateEntity(entity).ConfigureAwait(false)
-                    //    : await UpdateEntity(entity).ConfigureAwait(false);
+                    var response = Mapper.Map<TResponse>(model);
 
                     return new Result(response);
                 }

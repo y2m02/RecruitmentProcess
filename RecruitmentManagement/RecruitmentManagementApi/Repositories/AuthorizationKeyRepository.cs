@@ -59,6 +59,7 @@ namespace RecruitmentManagementApi.Repositories
             };
 
             return Modify(
+                authorizationKey.AuthorizationKeyId,
                 authorizationKey,
                 new() { nameof(authorizationKey.Permissions) }
             );
@@ -75,6 +76,7 @@ namespace RecruitmentManagementApi.Repositories
             };
 
             return Modify(
+                authorizationKey.AuthorizationKeyId,
                 authorizationKey,
                 new() { nameof(authorizationKey.IsActive) }
             );

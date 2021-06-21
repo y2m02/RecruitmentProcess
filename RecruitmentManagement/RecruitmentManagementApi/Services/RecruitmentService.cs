@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using RecruitmentManagementApi.Models;
 using RecruitmentManagementApi.Models.Entities;
 using RecruitmentManagementApi.Models.Request.Base;
 using RecruitmentManagementApi.Models.Responses;
@@ -51,39 +50,37 @@ namespace RecruitmentManagementApi.Services
             );
         }
 
-        protected override async Task<string> UpdateEntity(IUpdateableRequest entity)
+        protected override async Task<Recruitment> UpdateEntity(IUpdateableRequest entity)
         {
             var repository = (IRecruitmentRepository)Repository;
 
-            var recruitmentToUpdate = Mapper.Map<Recruitment>(entity);
-
             var currentStatus = await repository
-                .GetStatus(recruitmentToUpdate.RecruitmentId)
+                .GetStatus(entity.Id)
                 .ConfigureAwait(false);
 
-            await repository.Update(recruitmentToUpdate).ConfigureAwait(false);
+           var updatedRecruitment = await repository.Update(Mapper.Map<Recruitment>(entity)).ConfigureAwait(false);
 
-            if (currentStatus != recruitmentToUpdate.Status)
+            if (currentStatus != updatedRecruitment.Status)
             {
                 await recruitmentUpdateHistoryRepository.Create(
                     new()
                     {
-                        RecruitmentId = recruitmentToUpdate.RecruitmentId,
+                        RecruitmentId = updatedRecruitment.RecruitmentId,
                         Date = DateTime.Now,
-                        Status = recruitmentToUpdate.Status,
-                        Note = recruitmentToUpdate.Note,
+                        Status = updatedRecruitment.Status,
+                        Note = updatedRecruitment.Note,
                     }
                 ).ConfigureAwait(false);
             }
             else
             {
                 await recruitmentUpdateHistoryRepository.UpdateLastHistoryNote(
-                    recruitmentToUpdate.RecruitmentId,
-                    recruitmentToUpdate.Note
+                    updatedRecruitment.RecruitmentId,
+                    updatedRecruitment.Note
                 ).ConfigureAwait(false);
             }
 
-            return ConsumerMessages.Updated;
+            return updatedRecruitment;
         }
     }
 }

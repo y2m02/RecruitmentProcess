@@ -24,9 +24,10 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
-        public Task Update(Candidate entity)
+        public Task<Candidate> Update(Candidate entity)
         {
             return Modify(
+                entity.CandidateId,
                 entity,
                 new()
                 {
@@ -40,5 +41,13 @@ namespace RecruitmentManagementApi.Repositories
         }
 
         public Task Delete(int id) => Remove(new Candidate { CandidateId = id });
+
+        protected override Task<Candidate> GetById(int id)
+        {
+            return Context.Candidates
+                .Include(x => x.Recruitment)
+                .AsNoTracking()
+                .SingleAsync(x=>x.CandidateId == id);
+        }
     }
 }
