@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Entities;

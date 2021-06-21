@@ -47,7 +47,7 @@ namespace RecruitmentManagementApi.Repositories
             return Context.Candidates
                 .Include(x => x.Recruitment)
                 .AsNoTracking()
-                .SingleAsync(x=>x.CandidateId == id);
+                .SingleAsync(x => x.CandidateId == id);
         }
     }
 }
