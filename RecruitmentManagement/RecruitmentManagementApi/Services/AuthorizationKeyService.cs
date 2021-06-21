@@ -26,7 +26,7 @@ namespace RecruitmentManagementApi.Services
     }
 
     public class AuthorizationKeyService :
-        BaseService<AuthorizationKey>,
+        BaseService<AuthorizationKey, AuthorizationKeyResponse>,
         IAuthorizationKeyService
     {
         public AuthorizationKeyService(
@@ -35,11 +35,6 @@ namespace RecruitmentManagementApi.Services
         ) : base(mapper)
         {
             Repository = repository;
-        }
-
-        public Task<Result> GetAll()
-        {
-            return GetAll<AuthorizationKeyResponse>();
         }
 
         public Task<bool> Exists(string key)

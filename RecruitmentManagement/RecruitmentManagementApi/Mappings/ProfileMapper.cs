@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using AutoMapper;
 using HelpersLibrary.Extensions;
 using RecruitmentManagementApi.Models.Entities;
@@ -80,12 +79,6 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.CandidateName,
                     member => member.MapFrom(field => field.Candidate.Name)
-                )
-                .ForMember(
-                    destination => destination.RecruitmentUpdateHistories,
-                    member => member.MapFrom(
-                        field => field.RecruitmentUpdateHistories.OrderByDescending(r => r.Date).Skip(1)
-                    )
                 );
 
             CreateMap<UpdateRecruitmentRequest, Recruitment>()

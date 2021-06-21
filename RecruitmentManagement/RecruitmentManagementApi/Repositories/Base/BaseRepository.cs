@@ -14,11 +14,13 @@ namespace RecruitmentManagementApi.Repositories.Base
 
         protected RecruitmentManagementContext Context { get; }
 
-        public async Task Create(TModel entity)
+        public async Task<TModel> Create(TModel entity)
         {
             await Context.Set<TModel>().AddAsync(entity).ConfigureAwait(false);
 
             await SaveChangesAndDetach(entity).ConfigureAwait(false);
+
+            return entity;
         }
 
         protected Task Modify(TModel entity)
@@ -28,13 +30,15 @@ namespace RecruitmentManagementApi.Repositories.Base
             return SaveChangesAndDetach(entity);
         }
 
-        protected Task Modify(TModel entity, List<string> properties)
+        protected async Task<TModel> Modify(int id, TModel entity, List<string> properties)
         {
             Context.Set<TModel>().Attach(entity);
 
             AddPropertiesToModify(entity, properties);
 
-            return SaveChangesAndDetach(entity);
+            await SaveChangesAndDetach(entity).ConfigureAwait(false);
+
+            return await GetById(id).ConfigureAwait(false);
         }
 
         protected Task Remove(TModel entity)
@@ -51,6 +55,13 @@ namespace RecruitmentManagementApi.Repositories.Base
             return Save();
         }
 
+        protected Task Save() => Context.SaveChangesAsync();
+
+        protected virtual Task<TModel> GetById(int id)
+        {
+            return Context.Set<TModel>().FindAsync(id).AsTask();
+        }
+
         private void AddPropertiesToModify(TModel entity, List<string> properties)
         {
             properties.ForEach(
@@ -59,11 +70,6 @@ namespace RecruitmentManagementApi.Repositories.Base
                     Context.Entry(entity).Property(propertyName).IsModified = true;
                 }
             );
-        }
-
-        protected Task Save()
-        {
-            return Context.SaveChangesAsync();
         }
 
         private async Task SaveChangesAndDetach(TModel entity)

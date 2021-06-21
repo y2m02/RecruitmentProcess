@@ -11,7 +11,6 @@ namespace RecruitmentManagementApi.Repositories
         ICanUpdateRepository<Recruitment>,
         ICanDeleteRepository
     {
-        Task<Recruitment> GetById(int id);
         Task<RecruitmentStatus> GetStatus(int id);
     }
 
@@ -30,21 +29,15 @@ namespace RecruitmentManagementApi.Repositories
                 .ToListAsync();
         }
 
-        public Task<Recruitment> GetById(int id)
-        {
-            return Context.Recruitments
-                .AsNoTracking()
-                .SingleAsync(x => x.RecruitmentId == id);
-        }
-
         public async Task<RecruitmentStatus> GetStatus(int id)
         {
             return (await GetById(id).ConfigureAwait(false)).Status;
         }
 
-        public Task Update(Recruitment entity)
+        public Task<Recruitment> Update(Recruitment entity)
         {
             return Modify(
+                entity.RecruitmentId,
                 entity,
                 new()
                 {
@@ -55,5 +48,13 @@ namespace RecruitmentManagementApi.Repositories
         }
 
         public Task Delete(int id) => Remove(new Recruitment { RecruitmentId = id });
+
+        protected override Task<Recruitment> GetById(int id)
+        {
+            return Context.Recruitments
+                .Include(x => x.Candidate)
+                .AsNoTracking()
+                .SingleAsync(x => x.RecruitmentId == id);
+        }
     }
 }

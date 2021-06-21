@@ -13,7 +13,9 @@ using RecruitmentManagementApi.Repositories.Base;
 
 namespace RecruitmentManagementApi.Services.Base
 {
-    public abstract class BaseService<TModel>
+    public abstract class BaseService<TModel, TResponse>
+        where TModel : class
+        where TResponse : BaseResponse
     {
         protected readonly IMapper Mapper;
 
@@ -24,7 +26,7 @@ namespace RecruitmentManagementApi.Services.Base
 
         protected IBaseRepository<TModel> Repository { get; set; }
 
-        protected Task<Result> GetAll<TResponse>() where TResponse : BaseResponse
+        public Task<Result> GetAll()
         {
             return HandleErrors(
                 async () => new Result(
@@ -66,20 +68,16 @@ namespace RecruitmentManagementApi.Services.Base
             );
         }
 
-        protected virtual async Task<string> CreateEntity(IRequest entity)
+        protected virtual Task<TModel> CreateEntity(IRequest entity)
         {
-            await Repository.Create(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Created;
+            return Repository.Create(Mapper.Map<TModel>(entity));
         }
 
-        protected virtual async Task<string> UpdateEntity(IUpdateableRequest entity)
+        protected virtual Task<TModel> UpdateEntity(IUpdateableRequest entity)
         {
             var repository = (ICanUpdateRepository<TModel>)Repository;
 
-            await repository.Update(Mapper.Map<TModel>(entity)).ConfigureAwait(false);
-
-            return ConsumerMessages.Updated;
+            return repository.Update(Mapper.Map<TModel>(entity));
         }
 
         protected async Task<Result> HandleErrors(Func<Task<Result>> executor)
@@ -87,18 +85,6 @@ namespace RecruitmentManagementApi.Services.Base
             try
             {
                 return await executor().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                return new Result(errorMessage: ex.Message);
-            }
-        }
-
-        protected Result HandleErrors<T>(Func<T, Result> executor, T request)
-        {
-            try
-            {
-                return executor(request);
             }
             catch (Exception ex)
             {
@@ -118,13 +104,13 @@ namespace RecruitmentManagementApi.Services.Base
                         return new Result(validationErrors: validations);
                     }
 
-                    var action = actionType == UpsertActionType.Create
+                    var model = actionType == UpsertActionType.Create
                         ? await CreateEntity(entity).ConfigureAwait(false)
                         : await UpdateEntity((IUpdateableRequest)entity).ConfigureAwait(false);
 
-                    return new Result(
-                        response: ConsumerMessages.SuccessResponse.Format(1, 1, action)
-                    );
+                    var response = Mapper.Map<TResponse>(model);
+
+                    return new Result(response);
                 }
             );
         }

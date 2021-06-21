@@ -19,7 +19,7 @@ namespace RecruitmentManagementApi.Services
         ICanDeleteService { }
 
     public class CandidateService :
-        BaseService<Candidate>,
+        BaseService<Candidate, CandidateResponse>,
         ICandidateService
     {
         public CandidateService(
@@ -30,12 +30,7 @@ namespace RecruitmentManagementApi.Services
             Repository = repository;
         }
 
-        public Task<Result> GetAll()
-        {
-            return GetAll<CandidateResponse>();
-        }
-
-        protected override async Task<string> CreateEntity(IRequest entity)
+        protected override async Task<Candidate> CreateEntity(IRequest entity)
         {
             var candidate = Mapper
                 .Map<Candidate>(entity)
@@ -54,9 +49,7 @@ namespace RecruitmentManagementApi.Services
                     }
                 );
 
-            await Repository.Create(candidate).ConfigureAwait(false);
-
-            return ConsumerMessages.Created;
+            return await Repository.Create(candidate).ConfigureAwait(false);
         }
     }
 }

@@ -6,6 +6,6 @@ namespace RecruitmentManagementApi.Repositories.Base
     public interface IBaseRepository<TModel>
     {
         Task<List<TModel>> GetAll();
-        Task Create(TModel entity);
+        Task<TModel> Create(TModel entity);
     }
 }

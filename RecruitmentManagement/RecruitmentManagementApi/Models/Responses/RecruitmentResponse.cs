@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using RecruitmentManagementApi.Models.Enums;
 using RecruitmentManagementApi.Models.Responses.Base;
 
@@ -16,7 +15,5 @@ namespace RecruitmentManagementApi.Models.Responses
         public string CandidateName { get; set; }
 
         public RecruitmentStatus Status { get; set; }
-
-        public List<RecruitmentUpdateHistoryResponse> RecruitmentUpdateHistories { get; set; }
     }
 }
