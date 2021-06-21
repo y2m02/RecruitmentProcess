@@ -56,7 +56,7 @@ namespace RecruitmentManagementApi.Services
             );
         }
 
-        protected override async Task<string> UpdateEntity(IRequest entity)
+        protected override async Task<string> UpdateEntity(IUpdateableRequest entity)
         {
             var repository = (IRecruitmentRepository)Repository;
 

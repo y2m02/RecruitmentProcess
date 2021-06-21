@@ -20,12 +20,6 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.CandidateId)
                 )
                 .ForMember(
-                    destination => destination.InUse,
-                    member => member.MapFrom(
-                        field => field.Recruitment.HasValue()
-                    )
-                )
-                .ForMember(
                     destination => destination.RecruitmentId,
                     member => member.MapFrom(field => field.Recruitment.RecruitmentId)
                 )
@@ -84,13 +78,6 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.RecruitmentId)
                 )
                 .ForMember(
-                    destination => destination.InUse,
-                    member => member.MapFrom(
-                        field => field.Candidate.HasValue() ||
-                                 field.RecruitmentUpdateHistories.Any()
-                    )
-                )
-                .ForMember(
                     destination => destination.CandidateName,
                     member => member.MapFrom(field => field.Candidate.Name)
                 )
@@ -113,10 +100,6 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.RecruitmentUpdateHistoryId)
                 )
                 .ForMember(
-                    destination => destination.InUse,
-                    member => member.MapFrom(field => field.Recruitment.HasValue())
-                )
-                .ForMember(
                     destination => destination.CandidateId,
                     member => member.MapFrom(field => field.Recruitment.Candidate.CandidateId)
                 )
@@ -129,10 +112,6 @@ namespace RecruitmentManagementApi.Mappings
                 .ForMember(
                     destination => destination.Id,
                     member => member.MapFrom(field => field.AuthorizationKeyId)
-                )
-                .ForMember(
-                    destination => destination.InUse,
-                    member => member.MapFrom(field => field.IsActive)
                 );
 
             CreateMap<AuthorizationKeyRequest, AuthorizationKey>()

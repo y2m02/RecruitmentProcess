@@ -40,7 +40,7 @@ namespace RecruitmentManagementApi.Services.Base
             return Upsert(entity, UpsertActionType.Create);
         }
 
-        public Task<Result> Update(IRequest entity)
+        public Task<Result> Update(IUpdateableRequest entity)
         {
             return Upsert(entity, UpsertActionType.Update);
         }
@@ -73,7 +73,7 @@ namespace RecruitmentManagementApi.Services.Base
             return ConsumerMessages.Created;
         }
 
-        protected virtual async Task<string> UpdateEntity(IRequest entity)
+        protected virtual async Task<string> UpdateEntity(IUpdateableRequest entity)
         {
             var repository = (ICanUpdateRepository<TModel>)Repository;
 
@@ -120,7 +120,7 @@ namespace RecruitmentManagementApi.Services.Base
 
                     var action = actionType == UpsertActionType.Create
                         ? await CreateEntity(entity).ConfigureAwait(false)
-                        : await UpdateEntity(entity).ConfigureAwait(false);
+                        : await UpdateEntity((IUpdateableRequest)entity).ConfigureAwait(false);
 
                     return new Result(
                         response: ConsumerMessages.SuccessResponse.Format(1, 1, action)

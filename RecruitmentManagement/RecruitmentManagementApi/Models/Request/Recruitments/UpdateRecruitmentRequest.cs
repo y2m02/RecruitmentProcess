@@ -7,7 +7,7 @@ using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.Recruitments
 {
-    public class UpdateRecruitmentRequest : IRequest
+    public class UpdateRecruitmentRequest : IUpdateableRequest
     {
         public int Id { get; set; }
 

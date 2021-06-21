@@ -4,7 +4,7 @@ using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.AuthorizationKey
 {
-    public class UpdateAuthorizationKeyStatusRequest : IRequest
+    public class UpdateAuthorizationKeyStatusRequest : IUpdateableRequest
     {
         public int Id { get; set; }
 

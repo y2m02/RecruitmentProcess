@@ -1,9 +1,12 @@
 ﻿using HelpersLibrary.Extensions;
 using System.Collections.Generic;
+using RecruitmentManagementApi.Models.Request.Base;
 
 namespace RecruitmentManagementApi.Models.Request.Candidates
 {
-    public class UpdateCandidateRequest : CandidateRequest
+    public class UpdateCandidateRequest : 
+        CandidateRequest, 
+        IUpdateableRequest
     {
         public int Id { get; set; }
 

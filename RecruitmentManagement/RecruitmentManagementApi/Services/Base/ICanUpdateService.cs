@@ -6,6 +6,6 @@ namespace RecruitmentManagementApi.Services.Base
 {
     public interface ICanUpdateService
     {
-        Task<Result> Update(IRequest entity);
+        Task<Result> Update(IUpdateableRequest entity);
     }
 }
