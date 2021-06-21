@@ -6,4 +6,9 @@ namespace RecruitmentManagementApi.Models.Request.Base
     {
         public IEnumerable<string> Validate();
     }
+
+    public interface IUpdateableRequest : IRequest
+    {
+        public int Id { get; set; }
+    }
 }
