@@ -58,47 +58,6 @@ function buildError(field, label) {
     return true;
 }
 
-function GetDropDownListData(elementId, id, controllerName) {
-    window.$.ajax({
-        url: "/" + controllerName + "/GetAllForDropDownList",
-        data: { id: id },
-        type: "GET",
-        content: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            fillDropDownList(elementId, result);
-
-            if (id > 0) {
-                window.$("#" + elementId).val(id);
-            }
-        },
-        error: function (errorMessage) {
-            alert(errorMessage.responseText);
-        }
-    });
-}
-
-function fillDropDownList(elementId, result) {
-    window.$("#" + elementId).children("option:not(:first)").remove();
-
-    window.$.each(result,
-        function (key, data) {
-            var option = new Option();
-
-            window.$(option).val(data.ItemId);
-            window.$(option).html(data.Description);
-            window.$("#" + elementId).append(option);
-        });
-}
-
-function appendNewOption(elementId, id, description) {
-    var option = new Option();
-
-    window.$(option).val(id);
-    window.$(option).html(description);
-    window.$("#" + elementId).append(option);
-}
-
 function redirectToIndex(e, gridName) {
     if ((e.type == "create" || e.type == "update" || e.type == "destroy") && !e.response.modelState) {
         RefreshGrid(gridName);
@@ -112,32 +71,8 @@ function RefreshGrid(gridName) {
     grid.refresh();
 }
 
-function deleteRecord(controllerName, griName) {
-    document.body.style.cursor = 'wait';
+function formatDate(date) {
+    var splitDate = (date.split("T")[0]).split("-");
 
-    var id = window.$("#lblRecordId").html();
-
-    window.$.ajax({
-        url: "/" + controllerName + "/Delete",
-        data: { id: id },
-        type: "DELETE",
-        content: "application/json;charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-            window.$('#myModalDelete').modal('toggle');
-
-            RefreshGrid(griName);
-
-            document.body.style.cursor = 'default';
-        },
-        error: function (errorMessage) {
-            document.body.style.cursor = 'default';
-
-            alert(errorMessage.responseText);
-        }
-    });
-}
-
-function deleteVisible(dataItem) {
-    return dataItem.Used == false;
+    return  splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
 }

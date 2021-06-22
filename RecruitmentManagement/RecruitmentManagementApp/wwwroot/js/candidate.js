@@ -1,4 +1,6 @@
 ﻿
+var dataItem;
+
 $(function () {
     $("#btnOpenModal, #btnEdit, #btnDelete").removeClass("k-button k-button-icontext");
 
@@ -98,8 +100,20 @@ function upsertCandidate() {
         success: function (result) {
             $('#myModalCandidate').modal('toggle');
 
-            RefreshGrid('Candidates');
-            
+            var candidate = result.data;
+
+            candidate.CreatedDate = formatDate(candidate.Date);
+
+            if (result.isUpdate) {
+                dataItem.set("Name", candidate.Name);
+                dataItem.set("PhoneNumber", candidate.PhoneNumber);
+                dataItem.set("Email", candidate.Email);
+                dataItem.set("Curriculum", candidate.Curriculum);
+                dataItem.set("GitHub", candidate.GitHub);
+            } else {
+                $("#Candidates").data("kendoGrid").dataSource.add(candidate);
+            }
+
             $("#btnEdit, #btnDelete").prop("hidden", true);
 
             document.body.style.cursor = 'default';
@@ -136,7 +150,7 @@ function editCandidate() {
         return;
     }
 
-    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+    dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
 
     fillFields(dataItem);
 
@@ -150,7 +164,7 @@ function deleteCandidate() {
         return;
     }
 
-    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+    dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
 
     $("#lblCandidateId").html(dataItem.Id);
     $("#txtDeleteName").val(dataItem.Name);   
@@ -175,7 +189,7 @@ $("#btnDeleteCandidate").on("click",
             success: function (result) {
                 $('#myModalDelete').modal('toggle');
 
-                RefreshGrid('Candidates');
+                $("#Candidates").data("kendoGrid").dataSource.remove(dataItem);
 
                 $("#btnEdit, #btnDelete").prop("hidden", true);
 
