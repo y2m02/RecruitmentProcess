@@ -28,17 +28,13 @@
             .Name("Recruitments")
             .Columns(columns =>
             {
-                //columns.Command(command =>
-                //{
-                //    command.Custom("Editar").HtmlAttributes(new Dictionary<string, object>
-                //    {
-                //        ["class"] = "editButton",
-                //    });
-                //}).Width(90);
                 columns.Select().Width(50).ClientHeaderTemplate(" ");
                 columns.Bound(c => c.Id).Hidden();
                 columns.Bound(c => c.CandidateName).Groupable(false).Width(250);
-                columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
+                columns.Bound(c => c.CreatedDate)
+                    .Format("{0:dd/MM/yyyy}")
+                    .Filterable(filterable => filterable.UI("createdDateFilter"))
+                    .Width(150);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
                         .Multi(true)
@@ -83,7 +79,7 @@
             .Sortable()
             .Groupable(g => g.Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
             .Filterable(filterable => filterable
-                .Extra(true)
+                .Extra(false)
                 .Operators(op =>
                     op.ForString(str => str.Clear()
                         .Contains("Contiene")

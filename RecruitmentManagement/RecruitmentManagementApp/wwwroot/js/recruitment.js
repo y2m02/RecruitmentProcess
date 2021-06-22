@@ -112,16 +112,8 @@ window.$("#cbxStatus").on("change",
         removeErrorMessage("cbxStatus","lblStatusError");
     });
 
-
-//$("#Recruitments").delegate(".editButton",
-//    "click",
-//    function(e) {
-//        e.preventDefault();
-
-//        var grid = window.$("#Recruitments").data("kendoGrid");
-//        var rowData = grid.dataItem(window.$(this).closest("tr"));
-
-//        fillFields(rowData);
-
-//        window.$("#myModalRecruitment").modal();
-//    });
+function createdDateFilter(element) {
+    element.kendoDatePicker({
+        format: "dd/MM/yyyy" // set custom defined format
+    });
+}

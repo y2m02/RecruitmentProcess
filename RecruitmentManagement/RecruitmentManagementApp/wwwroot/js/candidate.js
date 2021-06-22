@@ -208,3 +208,9 @@ $("#txtEmail").on("input",
     function () {
         removeErrorMessage("txtEmail", "lblEmailError");
     });
+
+function createdDateFilter(element) {
+    element.kendoDatePicker({
+        format: "dd/MM/yyyy" // set custom defined format
+    });
+}

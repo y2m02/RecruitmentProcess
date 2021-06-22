@@ -33,7 +33,10 @@
                 columns.Bound(c => c.Name).Groupable(false).Width(200);
                 columns.Bound(c => c.PhoneNumber).Groupable(false).Width(150);
                 columns.Bound(c => c.Email).Groupable(false).Width(200);
-                columns.Bound(c => c.CreatedDate).Format("{0:dd/MM/yyyy}").Width(150);
+                columns.Bound(c => c.CreatedDate)
+                    .Format("{0:dd/MM/yyyy}")
+                    .Filterable(filterable => filterable.UI("createdDateFilter"))
+                    .Width(150);
                 columns.Bound(c => c.StatusDescription)
                     .Filterable(ftb => ftb
                         .Multi(true)
@@ -89,7 +92,7 @@
             .Sortable()
             .Groupable(g => g.Messages(m => m.Empty("Arrastre una columna hasta aquí para agrupar por dicha columna")))
             .Filterable(filterable => filterable
-                .Extra(true)
+                .Extra(false)
                 .Operators(op =>
                     op.ForString(str => str.Clear()
                         .Contains("Contiene")
@@ -124,7 +127,11 @@
                 .Ajax()
                 .PageSize(20)
                 .ServerOperation(false)
-                .Sort(s => s.Add("StatusDescription").Descending())
+                .Sort(s =>
+                {
+                    s.Add("StatusDescription").Descending();
+                    s.Add("Name").Ascending();
+                })
                 .Model(model => model.Id(p => p.Id))
                 .Read(read => read.Action("GetAll", "Candidate"))
                 .Group(group => group.Add("StatusDescription", typeof(string), ListSortDirection.Descending))
