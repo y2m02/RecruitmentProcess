@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var dataItem;
+
+$(function () {
     $("#btnEdit").removeClass("k-button k-button-icontext");
 
     $("#btnEdit").removeAttr("href");
@@ -62,8 +64,10 @@ function updateRecruitment() {
         success: function (result) {
             window.$('#myModalRecruitment').modal('toggle');
 
-            RefreshGrid('Recruitments');
-            
+            dataItem.set("Note", result.Note);
+            dataItem.set("Status", result.Status);
+            dataItem.set("StatusDescription", result.StatusDescription);
+
             $("#btnEdit").prop("hidden", true);
 
             document.body.style.cursor = 'default';
@@ -84,7 +88,7 @@ function editRecruitment() {
         return;
     }
 
-    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+    dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
 
     fillFields(dataItem);
 
@@ -112,16 +116,8 @@ window.$("#cbxStatus").on("change",
         removeErrorMessage("cbxStatus","lblStatusError");
     });
 
-
-//$("#Recruitments").delegate(".editButton",
-//    "click",
-//    function(e) {
-//        e.preventDefault();
-
-//        var grid = window.$("#Recruitments").data("kendoGrid");
-//        var rowData = grid.dataItem(window.$(this).closest("tr"));
-
-//        fillFields(rowData);
-
-//        window.$("#myModalRecruitment").modal();
-//    });
+function createdDateFilter(element) {
+    element.kendoDatePicker({
+        format: "dd/MM/yyyy" // set custom defined format
+    });
+}

@@ -18,10 +18,7 @@ namespace RecruitmentManagementApp.Controllers
             this.client = client;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         public async Task<JsonResult> GetAll([DataSourceRequest] DataSourceRequest request)
         {
@@ -35,11 +32,20 @@ namespace RecruitmentManagementApp.Controllers
         [HttpPost]
         public async Task<JsonResult> Upsert(UpsertCandidateRequest request)
         {
-            var response = request.IsUpdate()
-                ? await client.Put<string>(resource: "Candidate/Update", body: request).ConfigureAwait(false)
-                : await client.Post<string>(resource: "Candidate/Create", body: request).ConfigureAwait(false);
+            if (request.IsUpdate())
+            {
+                var updatedCandidate = await client
+                    .Put<CandidateViewModel>(resource: "Candidate/Update", body: request)
+                    .ConfigureAwait(false);
 
-            return Json(response);
+                return Json(new { isUpdate = true, data = updatedCandidate });
+            }
+
+            var createdCandidate = await client
+                .Post<CandidateViewModel>(resource: "Candidate/Create", body: request)
+                .ConfigureAwait(false);
+
+             return Json(new { isUpdate = false, data = createdCandidate });;
         }
 
         [HttpDelete]

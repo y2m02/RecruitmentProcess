@@ -18,10 +18,7 @@ namespace RecruitmentManagementApp.Controllers
             this.client = client;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         public async Task<JsonResult> GetAll([DataSourceRequest] DataSourceRequest request)
         {
@@ -48,7 +45,7 @@ namespace RecruitmentManagementApp.Controllers
         public async Task<JsonResult> Update(UpdateRecruitmentRequest request)
         {
             var response = await client
-                .Put<string>(resource: "Recruitment/Update", body: request)
+                .Put<RecruitmentViewModel>(resource: "Recruitment/Update", body: request)
                 .ConfigureAwait(false);
 
             return Json(response);
