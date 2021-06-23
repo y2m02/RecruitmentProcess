@@ -45,7 +45,7 @@ namespace RecruitmentManagementApp.Controllers
         public async Task<JsonResult> Update(UpdateRecruitmentRequest request)
         {
             var response = await client
-                .Put<object>(resource: "Recruitment/Update", body: request)
+                .Put<RecruitmentViewModel>(resource: "Recruitment/Update", body: request)
                 .ConfigureAwait(false);
 
             return Json(response);

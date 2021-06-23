@@ -24,7 +24,7 @@ namespace RecruitmentManagementApp.Models.ViewModels
         public RecruitmentStatus Status { get; set; }
 
         [DisplayName("Estado")]
-        public string StatusDescription => Status.GetDescription();
+        public string StatusDescription { get; set; }
 
         public List<RecruitmentUpdateHistoryViewModel> RecruitmentUpdateHistories { get; set; }
     }

@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿var dataItem;
+
+$(function () {
     $("#btnEdit").removeClass("k-button k-button-icontext");
 
     $("#btnEdit").removeAttr("href");
@@ -62,8 +64,10 @@ function updateRecruitment() {
         success: function (result) {
             window.$('#myModalRecruitment').modal('toggle');
 
-            RefreshGrid('Recruitments');
-            
+            dataItem.set("Note", result.Note);
+            dataItem.set("Status", result.Status);
+            dataItem.set("StatusDescription", result.StatusDescription);
+
             $("#btnEdit").prop("hidden", true);
 
             document.body.style.cursor = 'default';
@@ -84,7 +88,7 @@ function editRecruitment() {
         return;
     }
 
-    var dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
+    dataItem = allSelected.closest(".k-grid").data("kendoGrid").dataItem(allSelected);
 
     fillFields(dataItem);
 
