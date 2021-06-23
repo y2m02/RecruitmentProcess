@@ -15,5 +15,7 @@ namespace RecruitmentManagementApi.Models.Responses
         public string CandidateName { get; set; }
 
         public RecruitmentStatus Status { get; set; }
+
+        public string StatusDescription { get; set; }
     }
 }

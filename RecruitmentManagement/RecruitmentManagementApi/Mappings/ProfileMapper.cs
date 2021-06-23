@@ -77,6 +77,10 @@ namespace RecruitmentManagementApi.Mappings
                     member => member.MapFrom(field => field.RecruitmentId)
                 )
                 .ForMember(
+                    destination => destination.StatusDescription,
+                    member => member.MapFrom(field => field.Status.GetDescription())
+                )
+                .ForMember(
                     destination => destination.CandidateName,
                     member => member.MapFrom(field => field.Candidate.Name)
                 );
