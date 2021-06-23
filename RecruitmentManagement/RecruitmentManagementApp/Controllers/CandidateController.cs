@@ -34,18 +34,18 @@ namespace RecruitmentManagementApp.Controllers
         {
             if (request.IsUpdate())
             {
-                var updated = await client
+                var updatedCandidate = await client
                     .Put<CandidateViewModel>(resource: "Candidate/Update", body: request)
                     .ConfigureAwait(false);
 
-                return Json(new { isUpdate = true, data = updated });
+                return Json(new { isUpdate = true, data = updatedCandidate });
             }
 
-            var created = await client
+            var createdCandidate = await client
                 .Post<CandidateViewModel>(resource: "Candidate/Create", body: request)
                 .ConfigureAwait(false);
 
-             return Json(new { isUpdate = false, data = created });;
+             return Json(new { isUpdate = false, data = createdCandidate });;
         }
 
         [HttpDelete]

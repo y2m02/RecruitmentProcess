@@ -102,8 +102,6 @@ function upsertCandidate() {
 
             var candidate = result.data;
 
-            candidate.CreatedDate = formatDate(candidate.Date);
-
             if (result.isUpdate) {
                 dataItem.set("Name", candidate.Name);
                 dataItem.set("PhoneNumber", candidate.PhoneNumber);
@@ -111,6 +109,8 @@ function upsertCandidate() {
                 dataItem.set("Curriculum", candidate.Curriculum);
                 dataItem.set("GitHub", candidate.GitHub);
             } else {
+                candidate.CreatedDate = new Date(candidate.CreatedDate);
+
                 $("#Candidates").data("kendoGrid").dataSource.add(candidate);
             }
 
